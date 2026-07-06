@@ -2,10 +2,160 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="refresh" content="0; url=apps/neurocell-explorer/" />
-    <title>Neurolab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neurolab — Interactive Neuroscience Platform</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        background: #0f1117;
+        color: #e2e8f0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      header {
+        text-align: center;
+        padding: 4rem 1.5rem 2rem;
+        max-width: 700px;
+      }
+
+      header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #60a5fa, #a78bfa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      header p {
+        margin-top: 1rem;
+        font-size: 1.1rem;
+        color: #94a3b8;
+        line-height: 1.6;
+      }
+
+      .projects {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        padding: 2rem 1.5rem;
+        max-width: 900px;
+        width: 100%;
+      }
+
+      .card {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 12px;
+        padding: 2rem;
+        transition: transform 0.2s, border-color 0.2s;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        border-color: #60a5fa;
+      }
+
+      .card h2 {
+        font-size: 1.25rem;
+        color: #f1f5f9;
+        margin-bottom: 0.5rem;
+      }
+
+      .card p {
+        font-size: 0.95rem;
+        color: #94a3b8;
+        line-height: 1.5;
+        flex: 1;
+      }
+
+      .card .badge {
+        display: inline-block;
+        margin-top: 1rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.25rem 0.6rem;
+        border-radius: 4px;
+        background: #1e3a5f;
+        color: #60a5fa;
+        align-self: flex-start;
+      }
+
+      footer {
+        margin-top: auto;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #64748b;
+      }
+
+      footer a {
+        color: #60a5fa;
+        text-decoration: none;
+      }
+
+      footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
   </head>
   <body>
-    <p>Redirecting to <a href="apps/neurocell-explorer/">Neurocell Explorer</a>…</p>
+    <header>
+      <h1>🧠 Neurolab</h1>
+      <p>
+        Interactive neuroscience simulations for education and research. Explore
+        neural morphology, synaptic dynamics, and computational models through
+        hands-on web applications.
+      </p>
+    </header>
+
+    <section class="projects">
+      <a class="card" href="apps/neurocell-explorer/">
+        <h2>Neurocell Explorer</h2>
+        <p>
+          Visualize and explore neural cell morphologies from the NeuroMorpho.Org
+          database. Interactive 3D reconstruction viewer for pyramidal neurons,
+          interneurons, and more.
+        </p>
+        <span class="badge">App</span>
+      </a>
+
+      <a class="card" href="docs/neurocell-explorer/NEUROMORPHO_INTEGRATION.html">
+        <h2>Documentation</h2>
+        <p>
+          Scientific methodology, NeuroMorpho integration details, bibliography,
+          and teaching notes for Neurolab projects.
+        </p>
+        <span class="badge">Docs</span>
+      </a>
+    </section>
+
+    <footer>
+      <p>
+        Neurolab &mdash;
+        <a href="https://github.com/NeuroPsicoLocos" target="_blank" rel="noopener"
+          >NeuroPsicoLocos</a
+        >
+        &bull; Open-source neuroscience tools
+      </p>
+    </footer>
   </body>
 </html>
