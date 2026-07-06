@@ -134,3 +134,10 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Local working/reference media not required by the web app
+apps/neurocell-explorer/Images/

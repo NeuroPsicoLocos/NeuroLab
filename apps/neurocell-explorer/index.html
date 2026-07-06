@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NeuroCell Explorer</title>
+    <link rel="stylesheet" href="styles/main.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.165.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.165.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="scene-panel" aria-label="Atlas tridimensional">
+        <div id="scene" class="scene"></div>
+        <div id="labels" class="labels" aria-hidden="true"></div>
+        <div id="modelLoading" class="model-loading">Generando reconstrucción orgánica...</div>
+
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">NeuroCell Explorer</p>
+            <h1>Atlas tridimensional de células del sistema nervioso</h1>
+            <p class="hero-subtitle">Biblioteca biomédica interactiva para docencia universitaria, investigación y divulgación científica.</p>
+          </div>
+          <div class="mode-switch" aria-label="Modo de uso">
+            <button id="studentMode" class="is-active" type="button">Estudiante</button>
+            <button id="teacherMode" type="button">Docente</button>
+          </div>
+        </header>
+
+        <div class="scene-hud" aria-label="Herramientas de escena">
+          <button id="resetView" type="button" title="Restablecer vista">Vista</button>
+          <button id="addDendrite" type="button" title="Agregar dendrita">+ dendrita</button>
+          <button id="removeDendrite" type="button" title="Quitar última dendrita">- dendrita</button>
+        </div>
+
+        <div class="scale-hud" aria-label="Referencia de escala">
+          <span></span>
+          <strong>20 um</strong>
+        </div>
+      </section>
+
+      <aside class="control-panel" aria-label="Controles del laboratorio">
+        <section class="identity-panel">
+          <p class="eyebrow">Versión 1.0</p>
+          <h2>Biblioteca inicial</h2>
+          <p>Modelos orgánicos consistentes, atlas visual 2D y escena 3D manipulable.</p>
+          <p id="reconstructionSource" class="provenance-note">Fuente morfológica: generador educativo.</p>
+        </section>
+
+        <section class="panel-section">
+          <label class="field-label" for="cellType">Tipo celular</label>
+          <select id="cellType">
+            <option value="pyramidal">Neurona piramidal cortical, capa V</option>
+            <option value="multipolar">Interneurona Martinotti cortical SOM+</option>
+            <option value="astrocyte">Astrocito protoplásmico</option>
+            <option value="microglia">Microglía ramificada</option>
+          </select>
+        </section>
+
+        <section id="provenancePanel" class="panel-section provenance-panel" hidden>
+          <div class="section-header">
+            <h2>Procedencia científica</h2>
+            <a id="provenanceLink" href="#" target="_blank" rel="noreferrer">NeuroMorpho</a>
+          </div>
+          <dl class="metadata-grid">
+            <div>
+              <dt>ID</dt>
+              <dd id="provenanceId">-</dd>
+            </div>
+            <div>
+              <dt>Archivo</dt>
+              <dd id="provenanceArchive">-</dd>
+            </div>
+            <div>
+              <dt>Especie</dt>
+              <dd id="provenanceSpecies">-</dd>
+            </div>
+            <div>
+              <dt>Región</dt>
+              <dd id="provenanceRegion">-</dd>
+            </div>
+            <div>
+              <dt>Dominio</dt>
+              <dd id="provenanceDomain">-</dd>
+            </div>
+            <div>
+              <dt>DOI</dt>
+              <dd id="provenanceDoi">-</dd>
+            </div>
+          </dl>
+          <p id="provenanceStats" class="note"></p>
+          <p id="provenanceCaveat" class="science-caveat"></p>
+        </section>
+
+        <section id="atlasImagePanel" class="panel-section atlas-image-panel">
+          <div class="section-header">
+            <h2>Atlas visual</h2>
+            <button id="toggleAtlasImage" type="button">Ocultar</button>
+          </div>
+          <figure id="atlasFigure" class="atlas-figure">
+            <img id="atlasImage" src="assets/atlas/pyramidal-neuron-atlas.png" alt="Lámina anatómica de referencia" />
+            <figcaption id="atlasCaption">Referencia generada para neurona piramidal cortical.</figcaption>
+          </figure>
+        </section>
+
+        <section class="panel-section">
+          <h2>Capas anatómicas</h2>
+          <label class="check-row"><input id="toggleSoma" type="checkbox" checked /> Soma</label>
+          <label class="check-row"><input id="toggleDendrites" type="checkbox" checked /> <span id="branchLayerLabel">Dendritas</span></label>
+          <label class="check-row"><input id="toggleSpines" type="checkbox" checked /> <span id="spineLayerLabel">Espinas dendríticas</span></label>
+          <label class="check-row"><input id="toggleAxon" type="checkbox" checked /> <span id="axonLayerLabel">Axón</span></label>
+          <label class="check-row"><input id="toggleActivity" type="checkbox" checked /> Actividad funcional</label>
+          <label class="check-row"><input id="toggleContext" type="checkbox" checked /> Contexto glial</label>
+          <label class="check-row"><input id="toggleLabels" type="checkbox" checked /> Etiquetas</label>
+        </section>
+
+        <section class="panel-section">
+          <h2>Visualización</h2>
+          <label class="field-label" for="lightingMode">Iluminación</label>
+          <select id="lightingMode">
+            <option value="clinical">Clínica suave</option>
+            <option value="contrast">Contraste histológico</option>
+            <option value="darkfield">Campo oscuro</option>
+          </select>
+          <label class="check-row"><input id="toggleTransparency" type="checkbox" /> Transparencia de membrana</label>
+        </section>
+
+        <section id="pyramidalDetailPanel" class="panel-section atlas-panel">
+          <h2>Detalle piramidal</h2>
+          <div class="legend-list" aria-label="Leyenda anatómica">
+            <span><i class="swatch apical"></i>Dendrita apical</span>
+            <span><i class="swatch basal"></i>Dendritas basales</span>
+            <span><i class="swatch axon"></i>Axón</span>
+            <span><i class="swatch ais"></i>Segmento inicial</span>
+            <span><i class="swatch spine"></i>Espinas mushroom/thin</span>
+            <span><i class="swatch astro"></i>Proceso astrocítico</span>
+          </div>
+          <div class="detail-grid">
+            <article>
+              <strong>Espinas</strong>
+              <p>Cuellos finos y cabezas variables para comparar formas tipo mushroom y thin.</p>
+            </article>
+            <article>
+              <strong>Sinapsis</strong>
+              <p>Los puntos cálidos marcan contactos excitatorios esquemáticos sobre dendritas.</p>
+            </article>
+            <article>
+              <strong>Segmento inicial</strong>
+              <p>Zona proximal del axón resaltada como sitio didáctico de disparo.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="interneuronDetailPanel" class="panel-section atlas-panel" hidden>
+          <h2>Detalle Martinotti SOM+</h2>
+          <div class="legend-list" aria-label="Leyenda anatómica interneuronal">
+            <span><i class="swatch dendrite"></i>Dendritas locales</span>
+            <span><i class="swatch axon"></i>Axón ramificado</span>
+            <span><i class="swatch bouton"></i>Varicosidades inhibitorias</span>
+            <span><i class="swatch soma"></i>Soma reconstruido</span>
+          </div>
+          <div class="detail-grid">
+            <article>
+              <strong>Subtipo</strong>
+              <p>Interneurona Martinotti SOM+ de corteza visual primaria, capa 4.</p>
+            </article>
+            <article>
+              <strong>Salida</strong>
+              <p>El axón se representa con botones/varicosidades inhibitorias esquemáticas.</p>
+            </article>
+            <article>
+              <strong>Dato real</strong>
+              <p>La topología proviene de SWC; la membrana es render docente.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="functionPanel" class="panel-section function-panel">
+          <h2 id="functionTitle">Función neuronal</h2>
+          <div class="meter" aria-label="Potencial de membrana esquemático">
+            <div id="potentialBar" class="meter-bar"></div>
+            <div class="threshold-line"></div>
+          </div>
+          <div class="meter-labels">
+            <span id="potentialValue">-70 mV</span>
+            <span>umbral -55 mV</span>
+          </div>
+          <div class="button-grid">
+            <button id="exciteNeuron" type="button">Estímulo excitatorio</button>
+            <button id="inhibitNeuron" type="button">Estímulo inhibitorio</button>
+          </div>
+          <p id="activityStatus" class="note">Reposo: integración dendrítica esquemática.</p>
+        </section>
+
+        <section class="panel-section teacher-only" hidden>
+          <h2>Parámetros docentes</h2>
+          <label id="branchComplexityLabel" class="field-label" for="branchComplexity">Complejidad dendrítica</label>
+          <input id="branchComplexity" type="range" min="3" max="9" value="4" />
+          <label id="spineDensityLabel" class="field-label" for="spineDensity">Densidad de espinas</label>
+          <input id="spineDensity" type="range" min="0" max="1" value="0.55" step="0.05" />
+          <p class="note">Modelo visual educativo. No representa una reconstrucción anatómica real.</p>
+        </section>
+
+        <section class="panel-section content-card">
+          <h2 id="infoTitle">Anatomía</h2>
+          <p id="infoBody"></p>
+          <div class="tab-row" aria-label="Contenido científico">
+            <button class="info-tab is-active" data-topic="anatomy" type="button">Anatomía</button>
+            <button class="info-tab" data-topic="connectivity" type="button">Conectividad</button>
+            <button class="info-tab" data-topic="function" type="button">Función</button>
+            <button class="info-tab" data-topic="clinic" type="button">Clínica</button>
+          </div>
+        </section>
+
+        <section class="panel-section quiz-card student-only">
+          <h2>Autoevaluación</h2>
+          <p id="quizQuestion"></p>
+          <div id="quizAnswers" class="answer-list"></div>
+          <p id="quizFeedback" class="feedback" aria-live="polite"></p>
+        </section>
+      </aside>
+    </main>
+
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

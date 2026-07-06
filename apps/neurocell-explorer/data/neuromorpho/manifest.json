@@ -1,0 +1,68 @@
+{
+  "source": "NeuroMorpho.Org",
+  "source_url": "https://neuromorpho.org",
+  "license": "Creative Commons Attribution 4.0 International License",
+  "downloaded_at": "2026-06-30",
+  "last_updated_at": "2026-07-02",
+  "required_repository_citation": {
+    "name": "NeuroMorpho.Org",
+    "rrid": "SCR_002145",
+    "recommended_citation": "Tecuatl C, Ljungquist B, Ascoli GA (2024) Accelerating the continuous community sharing of digital neuromorphology data. FASEB Bioadv. 6(7):207-221. doi: 10.1096/fba.2024-00048"
+  },
+  "reconstructions": [
+    {
+      "local_id": "pyramidal_kisvarday_oi57rpy2_1",
+      "neuron_id": 10037,
+      "neuron_name": "oi57rpy2-1",
+      "archive": "Kisvarday",
+      "species": "cat",
+      "brain_region": ["neocortex", "occipital", "layer 2-3"],
+      "cell_type": ["pyramidal", "principal cell"],
+      "stain": "biocytin",
+      "protocol": "in vivo",
+      "domain": "Dendrites, Soma, Axon",
+      "physical_integrity": "Dendrites & Axon Complete",
+      "swc_path": "data/neuromorpho/swc/oi57rpy2-1.CNG.swc",
+      "metadata_path": "data/neuromorpho/metadata/oi57rpy2-1.json",
+      "swc_url": "https://neuromorpho.org/dableFiles/kisvarday/CNG%20version/oi57rpy2-1.CNG.swc",
+      "metadata_url": "https://neuromorpho.org/api/neuron/id/10037",
+      "png_url": "http://neuromorpho.org/images/imageFiles/Kisvarday/oi57rpy2-1.png",
+      "reference_pmid": ["20300651"],
+      "reference_doi": ["10.1371/journal.pcbi.1000711"],
+      "parser_stats": {
+        "nodes": 8024,
+        "sections": 210,
+        "dendrites": 71,
+        "axon": 139
+      },
+      "visualization_note": "The SWC skeleton and local radii are real NeuroMorpho.Org data. The rendered membrane surface, material, smoothing and dendritic spines are educational visual interpolation."
+    },
+    {
+      "local_id": "interneuron_tolias_2017_19_07_slice_4_cell7_rotated",
+      "neuron_id": 130610,
+      "neuron_name": "2017-19-07-slice-4-cell7-rotated",
+      "archive": "Tolias",
+      "species": "mouse",
+      "brain_region": ["neocortex", "occipital", "primary visual", "layer 4"],
+      "cell_type": ["interneuron", "Martinotti", "Somatostatin (SOM)-positive"],
+      "stain": "biocytin",
+      "protocol": "in vitro",
+      "domain": "Dendrites, Soma, Axon",
+      "physical_integrity": "Dendrites & Axon Complete",
+      "swc_path": "data/neuromorpho/swc/2017-19-07-slice-4-cell7-rotated.CNG.swc",
+      "metadata_path": "data/neuromorpho/metadata/2017-19-07-slice-4-cell7-rotated.json",
+      "swc_url": "https://neuromorpho.org/dableFiles/tolias/CNG%20version/2017-19-07-slice-4-cell7-rotated.CNG.swc",
+      "metadata_url": "https://neuromorpho.org/api/neuron/id/130610",
+      "png_url": "http://neuromorpho.org/images/imageFiles/Tolias/2017-19-07-slice-4-cell7-rotated.png",
+      "reference_pmid": ["31519874"],
+      "reference_doi": ["10.1038/s41467-019-12058-z"],
+      "parser_stats": {
+        "nodes": 15740,
+        "sections": 287,
+        "dendrites": 32,
+        "axon": 255
+      },
+      "visualization_note": "The SWC skeleton and local radii are real NeuroMorpho.Org data. The rendered membrane surface, material, smoothing and synaptic markers are educational visual interpolation."
+    }
+  ]
+}
