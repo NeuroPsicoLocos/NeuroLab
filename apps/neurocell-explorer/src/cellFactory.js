@@ -121,16 +121,17 @@ function createSwcCellModel(config, options = {}) {
   const scale = 0.032;
   const labelAnchors = [];
   const isPyramidal = config.morphologyStyle === "pyramidal-realistic";
+  const isPurkinje = config.morphologyStyle === "purkinje-realistic";
   const somaConfig = {
     ...config,
     somaScale: [
       Math.max(0.78, reconstruction.soma.radius * scale * 2.15),
-      Math.max(0.95, reconstruction.soma.radius * scale * (isPyramidal ? 2.55 : 2.1)),
-      Math.max(0.72, reconstruction.soma.radius * scale * 2.0)
+      Math.max(0.95, reconstruction.soma.radius * scale * (isPyramidal || isPurkinje ? 2.55 : 2.1)),
+      Math.max(0.72, reconstruction.soma.radius * scale * (isPurkinje ? 1.65 : 2.0))
     ]
   };
 
-  const soma = createOrganicSoma(somaConfig, isPyramidal ? "pyramidal" : "round", 31);
+  const soma = createOrganicSoma(somaConfig, isPyramidal ? "pyramidal" : (isPurkinje ? "purkinje" : "round"), 31);
   layers.soma.add(soma);
   labelAnchors.push({ key: "soma", text: "Soma SWC", position: new THREE.Vector3(0, 0.95, 0) });
 
@@ -138,8 +139,13 @@ function createSwcCellModel(config, options = {}) {
   const axonSections = reconstruction.sections.filter((section) => section.kind === "axon");
   const complexity = options.complexity ?? dendriticSections.length;
   const spineDensity = options.spineDensity ?? 0.55;
+  const dendriticLimit = Math.min(
+    dendriticSections.length,
+    config.rendering?.maxDendriticSections ?? dendriticSections.length,
+    Math.max(complexity * (config.rendering?.sectionMultiplier ?? 2), complexity * 2)
+  );
 
-  dendriticSections.slice(0, complexity * 2).forEach((section, index) => {
+  dendriticSections.slice(0, dendriticLimit).forEach((section, index) => {
     const points = resamplePoints(section.nodes.map((node) => swcNodeToVector(node, reconstruction.soma.center, scale)), 18);
     if (points.length < 2) return;
     const color = getSwcDendriteColor(config, section);
@@ -159,7 +165,7 @@ function createSwcCellModel(config, options = {}) {
     branch.userData.swcType = section.swcType;
     layers.dendrites.add(branch);
 
-    addOrganicSpines(points, layers.spines, config.colors.spine, spineDensity * spineMultiplier(section, isPyramidal), index + 300, isPyramidal);
+    addOrganicSpines(points, layers.spines, config.colors.spine, spineDensity * spineMultiplier(section, isPyramidal, isPurkinje, config), index + 300, isPyramidal || isPurkinje);
     addSynapticSites(points, layers.activity, config, index);
   });
 
@@ -199,6 +205,10 @@ function createSwcCellModel(config, options = {}) {
     labelAnchors.push({ key: "basal", text: "Dendritas basales SWC", position: basalTip });
     labelAnchors.push({ key: "spines", text: config.layerLabels?.spines ?? "Espinas", position: apicalTip.clone().lerp(new THREE.Vector3(0, 0, 0), 0.35) });
     labelAnchors.push({ key: "astro", text: "Proceso astrocítico", position: new THREE.Vector3(2.15, 1.1, 0.35) });
+  } else if (isPurkinje) {
+    const dendriteTip = findSectionTip(dendriticSections, "dendrite", reconstruction.soma.center, scale);
+    labelAnchors.push({ key: "dendrites", text: "Árbol dendrítico planar SWC", position: dendriteTip });
+    labelAnchors.push({ key: "spines", text: config.layerLabels?.spines ?? "Espinas dendríticas", position: dendriteTip.clone().lerp(new THREE.Vector3(0, 0.4, 0), 0.42) });
   } else {
     const dendriteTip = findSectionTip(dendriticSections, "dendrite", reconstruction.soma.center, scale);
     labelAnchors.push({ key: "dendrites", text: config.layerLabels?.branches ?? "Dendritas", position: dendriteTip });
@@ -267,7 +277,7 @@ function createOrganicSoma(config, somaType, seed) {
         Math.cos(theta),
         Math.sin(theta) * Math.sin(phi)
       );
-      const directionalTaper = somaType === "pyramidal" ? 1 + unit.y * 0.16 - Math.max(0, -unit.y) * 0.08 : 1;
+      const directionalTaper = somaType === "pyramidal" || somaType === "purkinje" ? 1 + unit.y * 0.16 - Math.max(0, -unit.y) * 0.08 : 1;
       const basalFlare = somaType === "pyramidal" && unit.y < 0.15 ? 1 + (0.15 - unit.y) * 0.18 : 1;
       const relief =
         1 +
@@ -278,6 +288,10 @@ function createOrganicSoma(config, somaType, seed) {
         position.y += Math.max(0, unit.y) * 0.1;
         position.x *= 1 + Math.max(0, -unit.y) * 0.22;
         position.z *= 1 + Math.max(0, -unit.y) * 0.14;
+      } else if (somaType === "purkinje") {
+        position.y += Math.max(0, unit.y) * 0.08 - Math.max(0, -unit.y) * 0.06;
+        position.x *= 1 + Math.max(0, unit.y) * 0.1;
+        position.z *= 0.86 + Math.max(0, -unit.y) * 0.08;
       }
       vertices.push(position.x, position.y, position.z);
       normals.push(unit.x, unit.y, unit.z);
@@ -660,11 +674,13 @@ function swcNodeToVector(node, center, scale) {
 }
 
 function getSwcDendriteColor(config, section) {
+  if (config.morphologyStyle === "purkinje-realistic") return config.colors.dendrite;
   if (config.morphologyStyle !== "pyramidal-realistic") return config.colors.dendrite;
   return section.kind === "apical" ? (config.colors.apical ?? config.colors.dendrite) : (config.colors.basal ?? config.colors.dendrite);
 }
 
-function spineMultiplier(section, isPyramidal) {
+function spineMultiplier(section, isPyramidal, isPurkinje, config) {
+  if (isPurkinje) return config.rendering?.spineMultiplier ?? 1.2;
   if (!isPyramidal) return 0.34;
   if (section.kind === "axon") return 0;
   if (section.kind === "apical") return 1.1;

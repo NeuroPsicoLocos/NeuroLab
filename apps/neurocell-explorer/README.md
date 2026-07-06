@@ -14,6 +14,7 @@ Construir una biblioteca web, modular y mantenible, para una futura plataforma d
 - Selector de tipo celular:
   - neurona piramidal cortical, capa V;
   - interneurona multipolar;
+  - celula de Purkinje cerebelosa;
   - astrocito protoplasmico;
   - microglia ramificada.
 - Capas independientes:
@@ -63,6 +64,14 @@ Construir una biblioteca web, modular y mantenible, para una futura plataforma d
 Los modelos incluidos son representaciones visuales educativas. No son reconstrucciones anatomicas reales ni simulaciones biofisicas. Las proporciones, grosores, ramificaciones, distribucion de espinas y dinamica electrica se simplifican para facilitar la ensenanza.
 
 Las imagenes del panel de atlas son referencias visuales generadas por IA y se usan como apoyo docente. No deben interpretarse como micrografias, reconstrucciones volumetricas ni evidencia experimental.
+
+## Disclosure NeuroPsicoLocos
+
+NeuroCell Explorer es un recurso educativo y de visualizacion cientifica desarrollado por NeuroPsicoLocos. No sustituye evaluacion clinica, diagnostico medico ni simulaciones biofisicas validadas.
+
+Cuando se indique procedencia NeuroMorpho.Org, el esqueleto SWC y los radios locales provienen de datos morfologicos reales. Las superficies renderizadas, materiales, espinas dendriticas, marcadores sinapticos y actividad visual son interpolaciones docentes.
+
+Contacto: admin@neuropsicolocos.com
 
 ## Generador organico
 
@@ -118,6 +127,21 @@ La interneurona tambien usa una reconstruccion real descargada de NeuroMorpho.Or
 
 El archivo SWC local esta en `data/neuromorpho/swc/2017-19-07-slice-4-cell7-rotated.CNG.swc`, los metadatos oficiales estan en `data/neuromorpho/metadata/2017-19-07-slice-4-cell7-rotated.json` y el manifiesto de procedencia esta en `data/neuromorpho/manifest.json`.
 
+La celula de Purkinje tambien usa una reconstruccion real descargada de NeuroMorpho.Org:
+
+- NeuroMorpho.Org ID: `10071`
+- Nombre: `Purkinje-slice-ageP35-4`
+- Archivo: `Dusart`
+- Tipo celular: Purkinje / celula principal
+- Region: cerebellum, cerebellar cortex, Purkinje layer
+- Especie: raton
+- Dominio: dendritas, soma, sin axon
+- Integridad fisica: dendritas completas
+
+El archivo SWC local esta en `data/neuromorpho/swc/Purkinje-slice-ageP35-4.CNG.swc`, los metadatos oficiales estan en `data/neuromorpho/metadata/Purkinje-slice-ageP35-4.json` y el manifiesto de procedencia esta en `data/neuromorpho/manifest.json`.
+
+Nota importante: este dataset no incluye axon. NeuroCell Explorer no inventa una reconstruccion axonal para esta Purkinje; la vista se concentra en soma y arbol dendritico planar.
+
 ## Estructura
 
 ```text
@@ -131,10 +155,12 @@ neurocell-lab-3d/
 │       ├── manifest.json
 │       ├── metadata/
 │       │   ├── oi57rpy2-1.json
-│       │   └── 2017-19-07-slice-4-cell7-rotated.json
+│       │   ├── 2017-19-07-slice-4-cell7-rotated.json
+│       │   └── Purkinje-slice-ageP35-4.json
 │       └── swc/
 │           ├── oi57rpy2-1.CNG.swc
-│           └── 2017-19-07-slice-4-cell7-rotated.CNG.swc
+│           ├── 2017-19-07-slice-4-cell7-rotated.CNG.swc
+│           └── Purkinje-slice-ageP35-4.CNG.swc
 ├── styles/
 │   └── main.css
 └── src/

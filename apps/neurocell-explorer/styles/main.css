@@ -249,8 +249,25 @@ button:hover {
 }
 
 .identity-panel h2 {
-  margin: 0 0 8px;
+  margin: 0;
   font-size: 20px;
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 10px;
+}
+
+.brand-lockup img {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  border: 1px solid rgba(24, 32, 34, 0.14);
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 8px 20px rgba(24, 32, 34, 0.12);
 }
 
 .identity-panel p:last-child {
@@ -565,6 +582,45 @@ select {
   min-height: 24px;
   margin: 10px 0 0;
   font-weight: 650;
+}
+
+.disclosure-panel {
+  margin-top: 8px;
+  padding: 14px;
+  border: 1px solid rgba(111, 143, 144, 0.32);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(232, 239, 237, 0.88), rgba(248, 249, 247, 0.96));
+}
+
+.disclosure-panel h2 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.disclosure-panel p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.disclosure-panel p + p {
+  margin-top: 8px;
+}
+
+.disclosure-panel a {
+  color: #2e5e61;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.disclosure-panel a:hover {
+  text-decoration: underline;
+}
+
+.contact-line {
+  padding-top: 8px;
+  border-top: 1px solid rgba(24, 32, 34, 0.1);
 }
 
 @media (max-width: 980px) {

@@ -98,6 +98,56 @@ export const cellTypes = {
     ],
     axon: [[0.15, -0.5, 0], [0.35, -1.2, -0.35], [0.15, -2.0, -0.55], [-0.45, -2.65, -0.6]]
   },
+  purkinje: {
+    name: "Célula de Purkinje cerebelosa",
+    reconstruction: {
+      format: "SWC",
+      status: "NeuroMorpho.Org ID 10071",
+      path: "data/neuromorpho/swc/Purkinje-slice-ageP35-4.CNG.swc",
+      metadataPath: "data/neuromorpho/metadata/Purkinje-slice-ageP35-4.json",
+      neuronId: 10071,
+      neuronName: "Purkinje-slice-ageP35-4",
+      archive: "Dusart",
+      sourceUrl: "https://neuromorpho.org/dableFiles/dusart/CNG%20version/Purkinje-slice-ageP35-4.CNG.swc",
+      metadataUrl: "https://neuromorpho.org/api/neuron/id/10071",
+      note: "Reconstrucción real de dendritas y soma descargada de NeuroMorpho.org. El archivo no incluye axón; el render no inventa una reconstrucción axonal."
+    },
+    atlas: {
+      image: "assets/atlas/purkinje-neuron-atlas.png",
+      caption: "Vista de referencia NeuroMorpho.org para una célula de Purkinje murina del archivo Dusart."
+    },
+    morphologyStyle: "purkinje-realistic",
+    rendering: {
+      sectionMultiplier: 28,
+      maxDendriticSections: 180,
+      spineMultiplier: 0.42
+    },
+    layerLabels: {
+      branches: "Árbol dendrítico planar",
+      spines: "Espinas dendríticas densas",
+      axon: "Axón no reconstruido",
+      addBranch: "+ rama planar",
+      removeBranch: "- rama planar",
+      complexity: "Densidad del árbol visible",
+      spineDensity: "Densidad de espinas"
+    },
+    colors: {
+      soma: 0xc6b3a0,
+      dendrite: 0x9e8ca8,
+      axon: 0x86a77f,
+      spine: 0xc596a2,
+      excitation: 0xf0b04d,
+      inhibition: 0x5a8bd4,
+      spike: 0xffd25b
+    },
+    somaScale: [1.08, 1.32, 0.82],
+    dendrites: [
+      [[0, 0.48, 0], [0.2, 1.25, 0], [-0.2, 2.2, 0.1], [0.1, 3.15, 0.05]],
+      [[0, 1.2, 0], [-0.9, 2.0, 0.08], [-1.8, 2.75, 0.12], [-2.8, 3.35, 0.08]],
+      [[0, 1.3, 0], [0.9, 2.0, -0.08], [1.8, 2.75, -0.12], [2.8, 3.35, -0.08]]
+    ],
+    axon: []
+  },
   astrocyte: {
     name: "Astrocito protoplásmico",
     layerLabels: {
@@ -170,6 +220,12 @@ export const scienceContent = {
     connectivity: "Las células Martinotti son interneuronas inhibitorias corticales que suelen contactar dendritas distales y contribuir al control local de neuronas piramidales.",
     function: "Participa en inhibición dendrítica, regulación del balance excitación-inhibición y modulación de actividad cortical recurrente.",
     clinic: "Alteraciones de interneuronas inhibitorias, incluyendo subtipos SOM+, se investigan en epilepsia, trastornos del neurodesarrollo y cambios de excitabilidad cortical."
+  },
+  purkinje: {
+    anatomy: "Neurona principal de la corteza cerebelosa con soma piriforme y un árbol dendrítico muy extenso, denso y relativamente planar. Esta entrada usa una reconstrucción real de NeuroMorpho.org con dendritas completas; el archivo seleccionado no contiene axón.",
+    connectivity: "Recibe entradas excitatorias de fibras paralelas y trepadoras en su arborización dendrítica, además de modulación inhibitoria local. Su salida real es inhibitoria hacia núcleos cerebelosos profundos, aunque el axón no está reconstruido en este SWC.",
+    function: "Integra patrones temporales y espaciales de entrada cerebelosa. En esta versión se enfatiza la anatomía somatodendrítica; la simulación de disparo axonal queda desactivada porque el dataset no incluye axón.",
+    clinic: "La vulnerabilidad de células de Purkinje se estudia en ataxias, trastornos del neurodesarrollo, daño cerebeloso, canalopatías y enfermedades neurodegenerativas con compromiso motor y cognitivo."
   },
   astrocyte: {
     anatomy: "Célula glial con soma central y procesos radiales. En la realidad, los astrocitos presentan dominios finos muy complejos que aquí se representan de forma esquemática.",

@@ -63,6 +63,33 @@
         "axon": 255
       },
       "visualization_note": "The SWC skeleton and local radii are real NeuroMorpho.Org data. The rendered membrane surface, material, smoothing and synaptic markers are educational visual interpolation."
+    },
+    {
+      "local_id": "purkinje_dusart_purkinje_slice_agep35_4",
+      "neuron_id": 10071,
+      "neuron_name": "Purkinje-slice-ageP35-4",
+      "archive": "Dusart",
+      "species": "mouse",
+      "brain_region": ["cerebellum", "cerebellar cortex", "Purkinje layer"],
+      "cell_type": ["Purkinje", "principal cell"],
+      "stain": "biocytin",
+      "protocol": "in vitro",
+      "domain": "Dendrites, Soma, No Axon",
+      "physical_integrity": "Dendrites Complete",
+      "swc_path": "data/neuromorpho/swc/Purkinje-slice-ageP35-4.CNG.swc",
+      "metadata_path": "data/neuromorpho/metadata/Purkinje-slice-ageP35-4.json",
+      "swc_url": "https://neuromorpho.org/dableFiles/dusart/CNG%20version/Purkinje-slice-ageP35-4.CNG.swc",
+      "metadata_url": "https://neuromorpho.org/api/neuron/id/10071",
+      "png_url": "http://neuromorpho.org/images/imageFiles/Dusart/Purkinje-slice-ageP35-4.png",
+      "reference_pmid": ["23719821"],
+      "reference_doi": ["10.1523/JNEUROSCI.2977-12.2013"],
+      "parser_stats": {
+        "nodes": 4173,
+        "sections": 613,
+        "dendrites": 613,
+        "axon": 0
+      },
+      "visualization_note": "The SWC skeleton and local radii are real NeuroMorpho.Org data. This reconstruction contains dendrites and soma but no axon; the rendered membrane surface, material, smoothing and dendritic spines are educational visual interpolation."
     }
   ]
 }

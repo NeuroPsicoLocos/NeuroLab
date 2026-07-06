@@ -47,8 +47,13 @@
 
       <aside class="control-panel" aria-label="Controles del laboratorio">
         <section class="identity-panel">
-          <p class="eyebrow">Versión 1.0</p>
-          <h2>Biblioteca inicial</h2>
+          <div class="brand-lockup">
+            <img src="assets/neuropsicolocos-logo.png" alt="Logo de NeuroPsicoLocos" />
+            <div>
+              <p class="eyebrow">Versión 1.0</p>
+              <h2>Biblioteca inicial</h2>
+            </div>
+          </div>
           <p>Modelos orgánicos consistentes, atlas visual 2D y escena 3D manipulable.</p>
           <p id="reconstructionSource" class="provenance-note">Fuente morfológica: generador educativo.</p>
         </section>
@@ -58,6 +63,7 @@
           <select id="cellType">
             <option value="pyramidal">Neurona piramidal cortical, capa V</option>
             <option value="multipolar">Interneurona Martinotti cortical SOM+</option>
+            <option value="purkinje">Célula de Purkinje cerebelosa</option>
             <option value="astrocyte">Astrocito protoplásmico</option>
             <option value="microglia">Microglía ramificada</option>
           </select>
@@ -224,6 +230,28 @@
           <div id="quizAnswers" class="answer-list"></div>
           <p id="quizFeedback" class="feedback" aria-live="polite"></p>
         </section>
+
+        <footer class="disclosure-panel" aria-label="Disclosure institucional y científico">
+          <div class="brand-lockup">
+            <img src="assets/neuropsicolocos-logo.png" alt="" aria-hidden="true" />
+            <div>
+              <p class="eyebrow">NeuroPsicoLocos</p>
+              <h2>Disclosure</h2>
+            </div>
+          </div>
+          <p>
+            NeuroCell Explorer es un recurso educativo y de visualización científica desarrollado por NeuroPsicoLocos.
+            No sustituye evaluación clínica, diagnóstico médico ni simulaciones biofísicas validadas.
+          </p>
+          <p>
+            Las reconstrucciones SWC provienen de NeuroMorpho.Org cuando se indica procedencia. Las superficies,
+            materiales, espinas, marcadores sinápticos y actividad visual son interpolaciones docentes para facilitar
+            la exploración anatómica.
+          </p>
+          <p class="contact-line">
+            Contacto: <a href="mailto:admin@neuropsicolocos.com">admin@neuropsicolocos.com</a>
+          </p>
+        </footer>
       </aside>
     </main>
 

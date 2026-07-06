@@ -297,10 +297,13 @@ function updateLayerControlLabels(config) {
 
 function updateFunctionalCopy(config) {
   const isInterneuron = state.cellKey === "multipolar";
-  controls.functionTitle.textContent = isInterneuron ? "Función inhibitoria" : "Función neuronal";
+  const isPurkinje = state.cellKey === "purkinje";
+  controls.functionTitle.textContent = isInterneuron ? "Función inhibitoria" : (isPurkinje ? "Integración cerebelosa" : "Función neuronal");
   controls.exciteNeuron.textContent = isInterneuron ? "Activar interneurona" : "Estímulo excitatorio";
   controls.inhibitNeuron.textContent = isInterneuron ? "Freno sináptico" : "Estímulo inhibitorio";
-  controls.activityStatus.textContent = isInterneuron
+  controls.activityStatus.textContent = isPurkinje
+    ? "Anatomía somatodendrítica: este SWC no incluye axón reconstruido."
+    : isInterneuron
     ? "Reposo: interneurona SOM+ lista para inhibición dendrítica esquemática."
     : "Reposo: integración dendrítica esquemática.";
   controls.spineLayerLabel.textContent = config.layerLabels?.spines ?? (isInterneuron ? "Contactos sinápticos" : "Espinas dendríticas");

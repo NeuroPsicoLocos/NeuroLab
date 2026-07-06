@@ -12,6 +12,7 @@ Three-dimensional educational atlas for exploring nervous system cell types. The
 
 - cortical pyramidal neuron reconstructed from a real NeuroMorpho.Org SWC file;
 - cortical Martinotti SOM+ interneuron reconstructed from a real NeuroMorpho.Org SWC file;
+- cerebellar Purkinje cell reconstructed from a real NeuroMorpho.Org SWC file with dendrites and soma, no axon in the selected dataset;
 - astrocyte and microglia educational models;
 - anatomy, connectivity, function, and clinical teaching panels;
 - student and teacher modes;
@@ -61,6 +62,14 @@ Important distinction:
 - SWC skeletons and local radii are real morphology data from NeuroMorpho.Org.
 - Rendered membranes, smoothing, spines, boutons, and activity markers are educational visual interpolations.
 
+## Disclosure
+
+NeuroCell Explorer is an educational and scientific visualization resource developed by NeuroPsicoLocos. It does not replace clinical evaluation, medical diagnosis, or validated biophysical simulation.
+
+When indicated, SWC reconstructions come from NeuroMorpho.Org. Rendered surfaces, materials, dendritic spines, synaptic markers, and activity effects are teaching-oriented visual interpolations.
+
+Contact: admin@neuropsicolocos.com
+
 See:
 
 ```text
@@ -71,10 +80,11 @@ docs/neurocell-explorer/NEUROMORPHO_INTEGRATION.md
 
 This repository is compatible with GitHub Pages as a static site.
 
-Recommended URL after publishing:
+Recommended URLs after publishing:
 
 ```text
 https://hromo-parra.github.io/Neurolab/apps/neurocell-explorer/
+https://neurolab.neuropsicolocos.com/apps/neurocell-explorer/
 ```
 
 If GitHub Pages is configured from the `main` branch root, the repository root also includes an `index.html` redirector, so this URL should open NeuroCell Explorer as well:
