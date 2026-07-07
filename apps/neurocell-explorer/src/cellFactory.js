@@ -146,7 +146,7 @@ function createSwcCellModel(config, options = {}) {
   );
 
   dendriticSections.slice(0, dendriticLimit).forEach((section, index) => {
-    const points = resamplePoints(section.nodes.map((node) => swcNodeToVector(node, reconstruction.soma.center, scale)), 18);
+    const points = swcSectionPoints(section, reconstruction.soma.center, scale, config, 18);
     if (points.length < 2) return;
     const color = getSwcDendriteColor(config, section);
     const startRadius = Math.max(0.018, section.nodes[0].radius * scale * 1.4);
@@ -170,7 +170,7 @@ function createSwcCellModel(config, options = {}) {
   });
 
   axonSections.slice(0, Math.max(8, complexity * 3)).forEach((section, index) => {
-    const points = resamplePoints(section.nodes.map((node) => swcNodeToVector(node, reconstruction.soma.center, scale)), 16);
+    const points = swcSectionPoints(section, reconstruction.soma.center, scale, config, 16);
     if (points.length < 2) return;
     const axon = createOrganicBranch(organicizePath(points, index + 500, 0.018), {
       color: config.colors.axon,
@@ -199,18 +199,18 @@ function createSwcCellModel(config, options = {}) {
 
   if (isPyramidal) {
     addAstrocyticProcess(layers.context, config);
-    const apicalTip = findSectionTip(dendriticSections, "apical", reconstruction.soma.center, scale);
-    const basalTip = findSectionTip(dendriticSections, "basal", reconstruction.soma.center, scale);
+    const apicalTip = findSectionTip(dendriticSections, "apical", reconstruction.soma.center, scale, config);
+    const basalTip = findSectionTip(dendriticSections, "basal", reconstruction.soma.center, scale, config);
     labelAnchors.push({ key: "apical", text: "Dendrita apical SWC", position: apicalTip });
     labelAnchors.push({ key: "basal", text: "Dendritas basales SWC", position: basalTip });
     labelAnchors.push({ key: "spines", text: config.layerLabels?.spines ?? "Espinas", position: apicalTip.clone().lerp(new THREE.Vector3(0, 0, 0), 0.35) });
     labelAnchors.push({ key: "astro", text: "Proceso astrocítico", position: new THREE.Vector3(2.15, 1.1, 0.35) });
   } else if (isPurkinje) {
-    const dendriteTip = findSectionTip(dendriticSections, "dendrite", reconstruction.soma.center, scale);
+    const dendriteTip = findSectionTip(dendriticSections, null, reconstruction.soma.center, scale, config);
     labelAnchors.push({ key: "dendrites", text: "Árbol dendrítico planar SWC", position: dendriteTip });
     labelAnchors.push({ key: "spines", text: config.layerLabels?.spines ?? "Espinas dendríticas", position: dendriteTip.clone().lerp(new THREE.Vector3(0, 0.4, 0), 0.42) });
   } else {
-    const dendriteTip = findSectionTip(dendriticSections, "dendrite", reconstruction.soma.center, scale);
+    const dendriteTip = findSectionTip(dendriticSections, "dendrite", reconstruction.soma.center, scale, config);
     labelAnchors.push({ key: "dendrites", text: config.layerLabels?.branches ?? "Dendritas", position: dendriteTip });
     labelAnchors.push({ key: "spines", text: config.layerLabels?.spines ?? "Contactos", position: dendriteTip.clone().lerp(new THREE.Vector3(0, 0, 0), 0.35) });
   }
@@ -665,12 +665,27 @@ function getBranchColor(config, index) {
   return config.colors.basal ?? config.colors.dendrite;
 }
 
-function swcNodeToVector(node, center, scale) {
-  return new THREE.Vector3(
+function swcNodeToVector(node, center, scale, config = null) {
+  const vector = new THREE.Vector3(
     (node.x - center.x) * scale,
     (node.y - center.y) * scale,
     (node.z - center.z) * scale
   );
+  return transformSwcVector(vector, config);
+}
+
+function transformSwcVector(vector, config) {
+  const transform = config?.rendering?.transform;
+  if (!transform) return vector;
+  vector.x *= transform.xScale ?? 1;
+  vector.y = vector.y * (transform.yScale ?? 1) + (transform.yOffset ?? 0);
+  vector.z *= transform.zScale ?? 1;
+  return vector;
+}
+
+function swcSectionPoints(section, center, scale, config, maxPoints) {
+  const points = section.nodes.map((node) => swcNodeToVector(node, center, scale, config));
+  return resamplePoints(points, maxPoints);
 }
 
 function getSwcDendriteColor(config, section) {
@@ -688,12 +703,19 @@ function spineMultiplier(section, isPyramidal, isPurkinje, config) {
   return 0.7;
 }
 
-function findSectionTip(sections, kind, center, scale) {
-  const selected = sections
-    .filter((section) => section.kind === kind)
-    .sort((a, b) => b.nodes.length - a.nodes.length)[0] ?? sections[0];
+function findSectionTip(sections, kind, center, scale, config = null) {
+  const matching = kind ? sections.filter((section) => section.kind === kind) : [];
+  const candidates = matching.length ? matching : sections;
+  const selected = candidates
+    .slice()
+    .sort((a, b) => sectionTipDistance(b, center, scale, config) - sectionTipDistance(a, center, scale, config))[0];
   if (!selected) return new THREE.Vector3();
-  return swcNodeToVector(selected.nodes.at(-1), center, scale);
+  return swcNodeToVector(selected.nodes.at(-1), center, scale, config);
+}
+
+function sectionTipDistance(section, center, scale, config) {
+  const tip = swcNodeToVector(section.nodes.at(-1), center, scale, config);
+  return tip.length() + section.nodes.length * 0.002;
 }
 
 function resamplePoints(points, maxPoints) {

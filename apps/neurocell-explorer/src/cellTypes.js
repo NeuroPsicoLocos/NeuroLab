@@ -118,9 +118,15 @@ export const cellTypes = {
     },
     morphologyStyle: "purkinje-realistic",
     rendering: {
-      sectionMultiplier: 28,
-      maxDendriticSections: 180,
-      spineMultiplier: 0.42
+      sectionMultiplier: 32,
+      maxDendriticSections: 220,
+      spineMultiplier: 0.32,
+      transform: {
+        xScale: 1.24,
+        yScale: 0.96,
+        zScale: 0.18,
+        yOffset: -0.28
+      }
     },
     layerLabels: {
       branches: "Árbol dendrítico planar",

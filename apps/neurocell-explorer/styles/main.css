@@ -475,12 +475,16 @@ select {
 .swatch.apical { background: #8d8ca3; }
 .swatch.basal { background: #8fa8c4; }
 .swatch.dendrite { background: #8b94a6; }
+.swatch.purkinje-dendrite { background: #9e8ca8; }
 .swatch.axon { background: #87ad8c; }
 .swatch.ais { background: #4f9a73; }
 .swatch.spine { background: #b98b97; }
 .swatch.bouton { background: #b98b97; }
 .swatch.soma { background: #b8b1a7; }
 .swatch.astro { background: #9bbeb0; }
+.swatch.missing-axon {
+  background: repeating-linear-gradient(45deg, #c3cdd0 0 3px, #f7faf9 3px 6px);
+}
 
 .detail-grid article {
   border: 1px solid var(--line);

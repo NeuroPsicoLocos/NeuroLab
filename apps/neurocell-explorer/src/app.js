@@ -35,6 +35,7 @@ const controls = {
   toggleTransparency: document.querySelector("#toggleTransparency"),
   pyramidalDetailPanel: document.querySelector("#pyramidalDetailPanel"),
   interneuronDetailPanel: document.querySelector("#interneuronDetailPanel"),
+  purkinjeDetailPanel: document.querySelector("#purkinjeDetailPanel"),
   functionPanel: document.querySelector("#functionPanel"),
   functionTitle: document.querySelector("#functionTitle"),
   potentialBar: document.querySelector("#potentialBar"),
@@ -277,9 +278,12 @@ function applyLayerVisibility() {
   controls.toggleActivity.disabled = layers.activity.children.length === 0;
   controls.toggleContext.disabled = layers.context.children.length === 0;
   labelsHost.hidden = !controls.toggleLabels.checked;
-  controls.functionPanel.hidden = layers.axon.children.length === 0;
+  const hasAxon = layers.axon.children.length > 0;
+  const isPurkinje = state.cellKey === "purkinje";
+  controls.functionPanel.hidden = !hasAxon && !isPurkinje;
   controls.pyramidalDetailPanel.hidden = state.cellKey !== "pyramidal";
   controls.interneuronDetailPanel.hidden = state.cellKey !== "multipolar";
+  controls.purkinjeDetailPanel.hidden = !isPurkinje;
 }
 
 function updateLayerControlLabels(config) {
@@ -465,17 +469,22 @@ function mountQuiz() {
 
 function addFunctionalInput(type) {
   const isInterneuron = state.cellKey === "multipolar";
+  const isPurkinje = state.cellKey === "purkinje";
   if (type === "excitation") {
     state.excitation = Math.min(1, state.excitation + 0.7);
-    controls.activityStatus.textContent = isInterneuron
+    controls.activityStatus.textContent = isPurkinje
+      ? "Entrada excitatoria: integración sobre el árbol dendrítico planar."
+      : isInterneuron
       ? "Activación SOM+: salida inhibitoria sobre compartimentos dendríticos."
       : "Entrada excitatoria: despolarización dendrítica esquemática.";
-    if (state.excitation >= 0.7 && state.inhibition < 0.45) {
+    if (!isPurkinje && state.excitation >= 0.7 && state.inhibition < 0.45) {
       triggerSpike();
     }
   } else {
     state.inhibition = Math.min(1, state.inhibition + 0.34);
-    controls.activityStatus.textContent = isInterneuron
+    controls.activityStatus.textContent = isPurkinje
+      ? "Entrada inhibitoria: modulación somática o dendrítica sin axón reconstruido."
+      : isInterneuron
       ? "Freno local: reducción de la probabilidad de disparo interneuronal."
       : "Entrada inhibitoria: hiperpolarización o freno de integración.";
   }
@@ -491,15 +500,17 @@ function resetFunctionalState() {
 }
 
 function updateFunctionalState() {
-  const isNeuron = cellTypes[state.cellKey].axon.length > 0;
-  if (!isNeuron || !state.cell) return;
+  const hasProceduralAxon = cellTypes[state.cellKey].axon.length > 0;
+  const hasRenderedAxon = (state.cell?.userData.layers.axon.children.length ?? 0) > 0;
+  const isPurkinje = state.cellKey === "purkinje";
+  if ((!hasProceduralAxon && !hasRenderedAxon && !isPurkinje) || !state.cell) return;
 
   state.excitation *= 0.982;
   state.inhibition *= 0.988;
   const targetPotential = -70 + state.excitation * 28 - state.inhibition * 18;
   state.membranePotential += (targetPotential - state.membranePotential) * 0.08;
 
-  if (state.membranePotential >= -55 && state.spikeTimer <= 0) {
+  if (!isPurkinje && state.membranePotential >= -55 && state.spikeTimer <= 0) {
     triggerSpike();
   }
 
