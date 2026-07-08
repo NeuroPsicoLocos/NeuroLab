@@ -1,0 +1,150 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: #e6edf3;
+  background: #05060a;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 10% 5%, rgba(58, 99, 173, 0.28), transparent 34%),
+    radial-gradient(circle at 90% 18%, rgba(151, 70, 219, 0.2), transparent 30%),
+    #04050a;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.lab-shell {
+  width: min(1024px, 100% - 2rem);
+  margin: 0 auto;
+  padding: 2.25rem 0 2.75rem;
+}
+
+.lab-header h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 2.5vw, 2.5rem);
+}
+
+.badge {
+  margin: 0 0 0.55rem;
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(61, 112, 235, 0.22);
+  color: #9ec4ff;
+  font-size: 0.82rem;
+}
+
+.lead {
+  color: #a9b5c7;
+  max-width: 72ch;
+  line-height: 1.5;
+}
+
+.panel {
+  margin-top: 1.25rem;
+}
+
+.panel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 16px;
+  background: rgba(8, 11, 18, 0.88);
+  padding: 1rem;
+  backdrop-filter: blur(2px);
+}
+
+.card h2 {
+  margin: 0 0 0.8rem;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.chip {
+  border: 1px solid rgba(71, 85, 105, 0.65);
+  background: #0d111a;
+  color: #d8e3f2;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  padding: 0.32rem 0.62rem;
+  cursor: pointer;
+}
+
+.chip.active {
+  border-color: rgba(96, 165, 250, 0.95);
+  background: rgba(37, 99, 235, 0.2);
+  color: #dbeafe;
+}
+
+.focus {
+  margin: 0.9rem 0 0.4rem;
+  color: #dbe5f5;
+}
+
+.classroom-use {
+  margin: 0;
+  color: #9fb3d1;
+  font-size: 0.95rem;
+}
+
+label {
+  margin: 0.75rem 0 0.35rem;
+  display: block;
+  color: #c2d2e8;
+  font-size: 0.92rem;
+}
+
+input[type='range'] {
+  width: 100%;
+}
+
+.score-card p {
+  margin: 0.75rem 0 0;
+  color: #a8b9cf;
+}
+
+.score-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.3rem;
+  margin-bottom: 0.7rem;
+}
+
+.progress {
+  width: 100%;
+  height: 11px;
+  border-radius: 999px;
+  background: rgba(71, 85, 105, 0.45);
+  overflow: hidden;
+}
+
+.progress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #6366f1);
+}

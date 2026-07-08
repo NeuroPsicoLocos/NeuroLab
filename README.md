@@ -30,18 +30,59 @@ Then visit:
 http://127.0.0.1:8005/apps/neurocell-explorer/
 ```
 
+### Attention Lab
+
+`apps/attention-lab/`
+
+Interactive cognitive attention simulator for classroom and online teaching. Features:
+
+- selectable theories: Broadbent, Treisman, Kahneman, Posner, and Stroop;
+- cognitive load and Stroop-style interference sliders;
+- real-time estimated attention index with visual progress bar.
+
+Built with React 19 + Vite + TypeScript. Source lives in `apps/attention-lab/src/`; the compiled
+output (`index.html` and `assets/`) is committed alongside the source so no build step is required
+for deployment.
+
+To develop locally:
+
+```bash
+cd apps/attention-lab/_project
+npm install
+npm run dev
+```
+
+To rebuild the production output after changing source files:
+
+```bash
+cd apps/attention-lab/_project
+npm run build
+```
+
+Commit the updated `index.html` and `assets/` files after rebuilding.
+
 ## Repository Structure
 
 ```text
 Neurolab/
 ├── README.md
+├── index.html                        ← home portal (links to both apps)
 ├── apps/
-│   └── neurocell-explorer/
-│       ├── index.html
-│       ├── styles/
-│       ├── src/
-│       ├── assets/
-│       └── data/
+│   ├── neurocell-explorer/           ← static vanilla JS app (no build step)
+│   │   ├── index.html
+│   │   ├── styles/
+│   │   ├── src/
+│   │   ├── assets/
+│   │   └── data/
+│   └── attention-lab/                ← React/Vite app (source + built output)
+│       ├── index.html                ← built entry (committed)
+│       ├── assets/                   ← hashed JS/CSS bundles (committed)
+│       └── _project/                 ← Vite project source (build from here)
+│           ├── index.html            ← Vite entry template
+│           ├── src/                  ← TypeScript source
+│           ├── package.json
+│           ├── vite.config.ts
+│           └── tsconfig*.json
 └── docs/
     └── neurocell-explorer/
         └── NEUROMORPHO_INTEGRATION.md
@@ -82,17 +123,16 @@ docs/neurocell-explorer/NEUROMORPHO_INTEGRATION.md
 
 ## GitHub Pages
 
-This repository is compatible with GitHub Pages as a static site.
+This repository is compatible with GitHub Pages as a static site (served from the `main` branch root).
 
-Recommended URLs after publishing:
+All app routes after publishing:
 
 ```text
-https://hromo-parra.github.io/Neurolab/apps/neurocell-explorer/
+https://neurolab.neuropsicolocos.com/                       ← home portal
 https://neurolab.neuropsicolocos.com/apps/neurocell-explorer/
+https://neurolab.neuropsicolocos.com/apps/attention-lab/
 ```
 
-If GitHub Pages is configured from the `main` branch root, the repository root also includes an `index.html` redirector, so this URL should open NeuroCell Explorer as well:
-
-```text
-https://hromo-parra.github.io/Neurolab/
-```
+The root `index.html` now serves as a home portal with cards linking to both apps (no redirect).
+Attention Lab built assets use `base: '/apps/attention-lab/'` so all asset paths are correct under
+the custom domain.
