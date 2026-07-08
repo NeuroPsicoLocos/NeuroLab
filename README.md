@@ -1,6 +1,19 @@
-# Neurolab
+# NeuroLab
 
 Interactive neuroscience simulations for education, research, and scientific visualization.
+
+Production site:
+
+```text
+https://neurolab.neuropsicolocos.com/
+https://neurolab.neuropsicolocos.com/apps/neurocell-explorer/
+```
+
+Official repository:
+
+```text
+https://github.com/NeuroPsicoLocos/NeuroLab
+```
 
 ## Apps
 
@@ -65,6 +78,7 @@ Important distinction:
 ## Roadmap Notes
 
 - Myelin, nodes of Ranvier, and internodal geometry are pending for cell types where axonal reconstruction is available. Do not add myelin to SWC datasets that do not include a reconstructed axon.
+- Phase 3 should stabilize the existing NeuroCell Explorer app before adding new modules. See `docs/neurocell-explorer/PROJECT_ORGANIZATION_AUDIT.md`.
 
 ## Disclosure
 
@@ -87,12 +101,11 @@ This repository is compatible with GitHub Pages as a static site.
 Recommended URLs after publishing:
 
 ```text
-https://hromo-parra.github.io/Neurolab/apps/neurocell-explorer/
 https://neurolab.neuropsicolocos.com/apps/neurocell-explorer/
 ```
 
 If GitHub Pages is configured from the `main` branch root, the repository root also includes an `index.html` redirector, so this URL should open NeuroCell Explorer as well:
 
 ```text
-https://hromo-parra.github.io/Neurolab/
+https://neurolab.neuropsicolocos.com/
 ```
