@@ -33,10 +33,12 @@ http://127.0.0.1:8005/apps/neurocell-explorer/
 ## Repository Structure
 
 ```text
-Neurolab/
+NeuroLab/
+├── index.html                  ← NeuroLab home portal (/)
+├── CNAME                       ← neurolab.neuropsicolocos.com
 ├── README.md
 ├── apps/
-│   └── neurocell-explorer/
+│   └── neurocell-explorer/     ← 3D simulator (/apps/neurocell-explorer/)
 │       ├── index.html
 │       ├── styles/
 │       ├── src/
@@ -82,17 +84,18 @@ docs/neurocell-explorer/NEUROMORPHO_INTEGRATION.md
 
 ## GitHub Pages
 
-This repository is compatible with GitHub Pages as a static site.
-
-Recommended URLs after publishing:
+This repository is a GitHub Pages static site deployed at:
 
 ```text
-https://hromo-parra.github.io/Neurolab/apps/neurocell-explorer/
-https://neurolab.neuropsicolocos.com/apps/neurocell-explorer/
+https://neurolab.neuropsicolocos.com
 ```
 
-If GitHub Pages is configured from the `main` branch root, the repository root also includes an `index.html` redirector, so this URL should open NeuroCell Explorer as well:
+### Routes
 
-```text
-https://hromo-parra.github.io/Neurolab/
-```
+| Path | Description |
+|------|-------------|
+| `/` | NeuroLab home portal |
+| `/apps/neurocell-explorer/` | NeuroCell Explorer 3D simulator |
+
+The root `index.html` renders a clean home portal with a link to NeuroCell Explorer.
+No automatic redirect is in place; the home page is the entry point.
