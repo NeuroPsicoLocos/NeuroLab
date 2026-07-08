@@ -47,7 +47,7 @@ for deployment.
 To develop locally:
 
 ```bash
-cd apps/attention-lab
+cd apps/attention-lab/_project
 npm install
 npm run dev
 ```
@@ -55,7 +55,7 @@ npm run dev
 To rebuild the production output after changing source files:
 
 ```bash
-cd apps/attention-lab
+cd apps/attention-lab/_project
 npm run build
 ```
 
@@ -77,10 +77,12 @@ Neurolab/
 │   └── attention-lab/                ← React/Vite app (source + built output)
 │       ├── index.html                ← built entry (committed)
 │       ├── assets/                   ← hashed JS/CSS bundles (committed)
-│       ├── src/                      ← TypeScript source
-│       ├── package.json
-│       ├── vite.config.ts
-│       └── tsconfig*.json
+│       └── _project/                 ← Vite project source (build from here)
+│           ├── index.html            ← Vite entry template
+│           ├── src/                  ← TypeScript source
+│           ├── package.json
+│           ├── vite.config.ts
+│           └── tsconfig*.json
 └── docs/
     └── neurocell-explorer/
         └── NEUROMORPHO_INTEGRATION.md
