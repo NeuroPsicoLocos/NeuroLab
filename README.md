@@ -62,6 +62,10 @@ Important distinction:
 - SWC skeletons and local radii are real morphology data from NeuroMorpho.Org.
 - Rendered membranes, smoothing, spines, boutons, and activity markers are educational visual interpolations.
 
+## Roadmap Notes
+
+- Myelin, nodes of Ranvier, and internodal geometry are pending for cell types where axonal reconstruction is available. Do not add myelin to SWC datasets that do not include a reconstructed axon.
+
 ## Disclosure
 
 NeuroCell Explorer is an educational and scientific visualization resource developed by NeuroPsicoLocos. It does not replace clinical evaluation, medical diagnosis, or validated biophysical simulation.

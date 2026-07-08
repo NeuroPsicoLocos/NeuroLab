@@ -120,12 +120,12 @@ export const cellTypes = {
     rendering: {
       sectionMultiplier: 32,
       maxDendriticSections: 220,
-      spineMultiplier: 0.32,
+      spineMultiplier: 0.16,
       transform: {
         xScale: 1.24,
-        yScale: 0.96,
+        yScale: 0.92,
         zScale: 0.18,
-        yOffset: -0.28
+        yOffset: -0.2
       }
     },
     layerLabels: {
@@ -184,22 +184,24 @@ export const cellTypes = {
   },
   microglia: {
     name: "Microglía ramificada",
+    morphologyStyle: "microglia-surveillance",
     layerLabels: {
       branches: "Procesos microgliales",
       spines: "Puntas de vigilancia",
-      axon: "Axón",
+      axon: "Sin axón",
       addBranch: "+ proceso",
       removeBranch: "- proceso",
       complexity: "Complejidad de procesos",
       spineDensity: "Densidad de puntas"
     },
     colors: {
-      soma: 0xb69b63,
-      dendrite: 0xc0a870,
+      soma: 0xa88744,
+      dendrite: 0xb79d58,
       axon: 0x6c8ea4,
-      spine: 0xe0b04f
+      spine: 0xd8b45a,
+      excitation: 0xf0c766
     },
-    somaScale: [0.82, 0.68, 0.74],
+    somaScale: [0.44, 0.36, 0.4],
     dendrites: [
       [[0, 0.28, 0], [-0.55, 0.95, 0.22], [-1.3, 1.35, 0.38], [-2.05, 1.42, 0.32]],
       [[0.18, 0.25, -0.08], [0.9, 0.85, -0.35], [1.6, 1.05, -0.55], [2.25, 0.92, -0.72]],
@@ -240,7 +242,7 @@ export const scienceContent = {
     clinic: "La reactividad astrocitaria aparece en lesión, neuroinflamación, epilepsia y enfermedades neurodegenerativas."
   },
   microglia: {
-    anatomy: "Célula glial inmunocompetente con soma pequeño y procesos finos, móviles y ramificados. El modelo muestra una microglía ramificada en vigilancia; no representa una reconstrucción real ni una célula ameboide activada.",
+    anatomy: "Célula glial inmunocompetente con soma pequeño y procesos finos, móviles y ramificados. El modelo incluye vigilancia ramificada, activación ameboide y un estado dark microglia esquemático; los tres estados son docentes y no sustituyen una reconstrucción real.",
     connectivity: "No forma circuitos axodendríticos como una neurona. Sus procesos contactan sinapsis, neuritas, vasos y otras células gliales de manera dinámica.",
     function: "Participa en vigilancia del microambiente, respuesta inmune, poda sináptica, remodelado de circuitos y eliminación de detritos celulares.",
     clinic: "La activación microglial y la neuroinflamación se estudian en lesión, dolor crónico, epilepsia, enfermedades neurodegenerativas y trastornos del neurodesarrollo."
@@ -248,10 +250,34 @@ export const scienceContent = {
 };
 
 export const quiz = {
-  question: "¿Qué estructura aumenta la superficie postsináptica y suele recibir contactos excitatorios?",
-  answers: [
-    { text: "Espina dendrítica", correct: true },
-    { text: "Vaina de mielina", correct: false },
-    { text: "Nodo de Ranvier", correct: false }
-  ]
+  default: {
+    question: "¿Qué estructura aumenta la superficie postsináptica y suele recibir contactos excitatorios?",
+    answers: [
+      { text: "Espina dendrítica", correct: true },
+      { text: "Vaina de mielina", correct: false },
+      { text: "Nodo de Ranvier", correct: false }
+    ],
+    correctFeedback: "Correcto: las espinas dendríticas son sitios postsinápticos frecuentes.",
+    incorrectFeedback: "Revisa la diferencia entre prolongaciones dendríticas, axón y mielina."
+  },
+  microglia: {
+    question: "¿Qué estado microglial representa un fenotipo oscuro, denso y asociado a estrés celular en este modelo docente?",
+    answers: [
+      { text: "Dark microglia", correct: true },
+      { text: "Formación de espinas dendríticas", correct: false },
+      { text: "Aparición de nodos de Ranvier", correct: false }
+    ],
+    correctFeedback: "Correcto: dark microglia se muestra aquí como un fenotipo oscuro, denso y perisináptico asociado a estrés.",
+    incorrectFeedback: "Recuerda que dark microglia no es una estructura neuronal; se representa como un estado microglial docente."
+  },
+  purkinje: {
+    question: "¿Qué rasgo anatómico domina la reconstrucción de una célula de Purkinje?",
+    answers: [
+      { text: "Árbol dendrítico planar y muy espinoso", correct: true },
+      { text: "Axón mielinizado largo en el modelo", correct: false },
+      { text: "Procesos de vigilancia inmunológica", correct: false }
+    ],
+    correctFeedback: "Correcto: la Purkinje se reconoce por su árbol dendrítico planar con alta densidad de espinas.",
+    incorrectFeedback: "Revisa el abanico somatodendrítico: en este SWC no se muestra axón reconstruido."
+  }
 };

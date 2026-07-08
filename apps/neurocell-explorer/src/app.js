@@ -33,6 +33,11 @@ const controls = {
   toggleLabels: document.querySelector("#toggleLabels"),
   lightingMode: document.querySelector("#lightingMode"),
   toggleTransparency: document.querySelector("#toggleTransparency"),
+  microgliaStatePanel: document.querySelector("#microgliaStatePanel"),
+  microgliaSurveillance: document.querySelector("#microgliaSurveillance"),
+  microgliaActivated: document.querySelector("#microgliaActivated"),
+  microgliaDark: document.querySelector("#microgliaDark"),
+  microgliaStateNote: document.querySelector("#microgliaStateNote"),
   pyramidalDetailPanel: document.querySelector("#pyramidalDetailPanel"),
   interneuronDetailPanel: document.querySelector("#interneuronDetailPanel"),
   purkinjeDetailPanel: document.querySelector("#purkinjeDetailPanel"),
@@ -40,6 +45,7 @@ const controls = {
   functionTitle: document.querySelector("#functionTitle"),
   potentialBar: document.querySelector("#potentialBar"),
   potentialValue: document.querySelector("#potentialValue"),
+  potentialThreshold: document.querySelector("#potentialThreshold"),
   activityStatus: document.querySelector("#activityStatus"),
   exciteNeuron: document.querySelector("#exciteNeuron"),
   inhibitNeuron: document.querySelector("#inhibitNeuron"),
@@ -68,6 +74,7 @@ const state = {
   inhibition: 0,
   spikeTimer: 0,
   pulseProgress: 0,
+  microgliaState: "surveillance",
   mountToken: 0
 };
 
@@ -154,13 +161,15 @@ async function mountCell() {
   try {
     state.cell = createCellModel(renderConfig, {
       complexity: Number(controls.branchComplexity.value),
-      spineDensity: Number(controls.spineDensity.value)
+      spineDensity: Number(controls.spineDensity.value),
+      microgliaState: state.microgliaState
     });
   } catch (error) {
     console.error(error);
     modelLoading.textContent = "No se pudo generar la malla 3D.";
     return;
   }
+  applyCellFraming();
   root.add(state.cell);
   resetFunctionalState();
   updateLayerControlLabels(renderConfig);
@@ -212,8 +221,10 @@ function bindEvents() {
   window.addEventListener("resize", resize);
   controls.cellType.addEventListener("change", () => {
     state.cellKey = controls.cellType.value;
+    applyCellSpecificSliderDefaults();
     void mountCell();
     updateInfo();
+    mountQuiz();
   });
 
   ["toggleSoma", "toggleDendrites", "toggleSpines", "toggleAxon", "toggleActivity", "toggleContext", "toggleLabels"].forEach((key) => {
@@ -227,6 +238,9 @@ function bindEvents() {
   controls.removeDendrite.addEventListener("click", removeEditableDendrite);
   controls.exciteNeuron.addEventListener("click", () => addFunctionalInput("excitation"));
   controls.inhibitNeuron.addEventListener("click", () => addFunctionalInput("inhibition"));
+  controls.microgliaSurveillance.addEventListener("click", () => setMicrogliaState("surveillance"));
+  controls.microgliaActivated.addEventListener("click", () => setMicrogliaState("activated"));
+  controls.microgliaDark.addEventListener("click", () => setMicrogliaState("dark"));
   controls.toggleAtlasImage.addEventListener("click", toggleAtlasFigure);
   controls.lightingMode.addEventListener("change", updateLightingMode);
   controls.toggleTransparency.addEventListener("change", updateTransparency);
@@ -239,6 +253,14 @@ function bindEvents() {
       updateInfo();
     });
   });
+}
+
+function applyCellSpecificSliderDefaults() {
+  const isPurkinje = state.cellKey === "purkinje";
+  controls.spineDensity.max = isPurkinje ? "0.7" : "1";
+  if (isPurkinje) {
+    controls.spineDensity.value = Math.min(Number(controls.spineDensity.value), 0.45).toString();
+  }
 }
 
 function updateTransparency() {
@@ -280,10 +302,36 @@ function applyLayerVisibility() {
   labelsHost.hidden = !controls.toggleLabels.checked;
   const hasAxon = layers.axon.children.length > 0;
   const isPurkinje = state.cellKey === "purkinje";
-  controls.functionPanel.hidden = !hasAxon && !isPurkinje;
+  const isMicroglia = state.cellKey === "microglia";
+  controls.functionPanel.hidden = !hasAxon && !isPurkinje && !isMicroglia;
   controls.pyramidalDetailPanel.hidden = state.cellKey !== "pyramidal";
   controls.interneuronDetailPanel.hidden = state.cellKey !== "multipolar";
   controls.purkinjeDetailPanel.hidden = !isPurkinje;
+  controls.microgliaStatePanel.hidden = state.cellKey !== "microglia";
+  updateMicrogliaStateControls();
+}
+
+function setMicrogliaState(nextState) {
+  if (state.microgliaState === nextState) return;
+  state.microgliaState = nextState;
+  state.excitation = nextState === "activated" ? 1 : nextState === "dark" ? 0.72 : 0;
+  state.inhibition = nextState === "surveillance" ? 0.35 : 0;
+  updateMicrogliaStateControls();
+  updatePotentialReadout();
+  if (state.cellKey === "microglia") void mountCell();
+}
+
+function updateMicrogliaStateControls() {
+  const isActivated = state.microgliaState === "activated";
+  const isDark = state.microgliaState === "dark";
+  controls.microgliaSurveillance.classList.toggle("is-active", !isActivated && !isDark);
+  controls.microgliaActivated.classList.toggle("is-active", isActivated);
+  controls.microgliaDark.classList.toggle("is-active", isDark);
+  controls.microgliaStateNote.textContent = isDark
+    ? "Dark microglia: fenotipo docente oscuro, denso y estresado, con procesos finos perisinápticos."
+    : isActivated
+    ? "Microglía activada: soma más ameboide, procesos retraídos y señal inflamatoria esquemática."
+    : "Microglía ramificada con procesos finos de vigilancia.";
 }
 
 function updateLayerControlLabels(config) {
@@ -302,10 +350,17 @@ function updateLayerControlLabels(config) {
 function updateFunctionalCopy(config) {
   const isInterneuron = state.cellKey === "multipolar";
   const isPurkinje = state.cellKey === "purkinje";
-  controls.functionTitle.textContent = isInterneuron ? "Función inhibitoria" : (isPurkinje ? "Integración cerebelosa" : "Función neuronal");
-  controls.exciteNeuron.textContent = isInterneuron ? "Activar interneurona" : "Estímulo excitatorio";
-  controls.inhibitNeuron.textContent = isInterneuron ? "Freno sináptico" : "Estímulo inhibitorio";
-  controls.activityStatus.textContent = isPurkinje
+  const isMicroglia = state.cellKey === "microglia";
+  controls.functionTitle.textContent = isMicroglia ? "Estado inmunológico" : isInterneuron ? "Función inhibitoria" : (isPurkinje ? "Integración cerebelosa" : "Función neuronal");
+  controls.exciteNeuron.textContent = isMicroglia ? "Señal de daño" : isInterneuron ? "Activar interneurona" : "Estímulo excitatorio";
+  controls.inhibitNeuron.textContent = isMicroglia ? "Resolución" : isInterneuron ? "Freno sináptico" : "Estímulo inhibitorio";
+  controls.activityStatus.textContent = isMicroglia
+    ? state.microgliaState === "dark"
+      ? "Dark microglia: representación docente de estado denso/estresado con vigilancia perisináptica."
+      : state.microgliaState === "activated"
+      ? "Microglía activada: morfología ameboide y señal inflamatoria esquemática."
+      : "Microglía en vigilancia: procesos dinámicos exploran el microambiente."
+    : isPurkinje
     ? "Anatomía somatodendrítica: este SWC no incluye axón reconstruido."
     : isInterneuron
     ? "Reposo: interneurona SOM+ lista para inhibición dendrítica esquemática."
@@ -404,7 +459,12 @@ function addEditableDendrite() {
   const dendrite = createEditableDendrite(
     state.editableDendrites.length + config.dendrites.length + 1,
     config.colors.dendrite,
-    config.colors.spine
+    config.colors.spine,
+    {
+      morphologyStyle: config.morphologyStyle,
+      baseDendriteCount: config.dendrites.length,
+      microgliaState: state.microgliaState
+    }
   );
   state.editableDendrites.push(dendrite);
   state.cell.userData.layers.dendrites.add(dendrite);
@@ -447,10 +507,13 @@ function updateInfo() {
 }
 
 function mountQuiz() {
-  document.querySelector("#quizQuestion").textContent = quiz.question;
+  const currentQuiz = quiz[state.cellKey] ?? quiz.default;
+  document.querySelector("#quizQuestion").textContent = currentQuiz.question;
   const answerHost = document.querySelector("#quizAnswers");
   const feedback = document.querySelector("#quizFeedback");
-  quiz.answers.forEach((answer) => {
+  answerHost.replaceChildren();
+  feedback.textContent = "";
+  currentQuiz.answers.forEach((answer) => {
     const button = document.createElement("button");
     button.type = "button";
     button.textContent = answer.text;
@@ -459,9 +522,7 @@ function mountQuiz() {
         item.classList.remove("is-correct", "is-wrong");
       });
       button.classList.add(answer.correct ? "is-correct" : "is-wrong");
-      feedback.textContent = answer.correct
-        ? "Correcto: las espinas dendríticas son sitios postsinápticos frecuentes."
-        : "Revisa la diferencia entre prolongaciones dendríticas, axón y mielina.";
+      feedback.textContent = answer.correct ? currentQuiz.correctFeedback : currentQuiz.incorrectFeedback;
     });
     answerHost.appendChild(button);
   });
@@ -470,6 +531,14 @@ function mountQuiz() {
 function addFunctionalInput(type) {
   const isInterneuron = state.cellKey === "multipolar";
   const isPurkinje = state.cellKey === "purkinje";
+  const isMicroglia = state.cellKey === "microglia";
+  if (isMicroglia) {
+    setMicrogliaState(type === "excitation" ? "activated" : "surveillance");
+    controls.activityStatus.textContent = type === "excitation"
+      ? "Señal de daño: transición esquemática hacia microglía activada."
+      : "Resolución: retorno esquemático hacia vigilancia ramificada.";
+    return;
+  }
   if (type === "excitation") {
     state.excitation = Math.min(1, state.excitation + 0.7);
     controls.activityStatus.textContent = isPurkinje
@@ -503,14 +572,23 @@ function updateFunctionalState() {
   const hasProceduralAxon = cellTypes[state.cellKey].axon.length > 0;
   const hasRenderedAxon = (state.cell?.userData.layers.axon.children.length ?? 0) > 0;
   const isPurkinje = state.cellKey === "purkinje";
-  if ((!hasProceduralAxon && !hasRenderedAxon && !isPurkinje) || !state.cell) return;
+  const isMicroglia = state.cellKey === "microglia";
+  if ((!hasProceduralAxon && !hasRenderedAxon && !isPurkinje && !isMicroglia) || !state.cell) return;
+
+  if (isMicroglia) {
+    const targetSignal = state.microgliaState === "activated" ? 0.82 : state.microgliaState === "dark" ? 0.62 : 0.18;
+    state.excitation += (targetSignal - state.excitation) * 0.045;
+    updatePotentialReadout();
+    updateActivityMeshes();
+    return;
+  }
 
   state.excitation *= 0.982;
   state.inhibition *= 0.988;
   const targetPotential = -70 + state.excitation * 28 - state.inhibition * 18;
   state.membranePotential += (targetPotential - state.membranePotential) * 0.08;
 
-  if (!isPurkinje && state.membranePotential >= -55 && state.spikeTimer <= 0) {
+  if (!isPurkinje && !isMicroglia && state.membranePotential >= -55 && state.spikeTimer <= 0) {
     triggerSpike();
   }
 
@@ -535,10 +613,20 @@ function triggerSpike() {
 }
 
 function updatePotentialReadout() {
+  if (state.cellKey === "microglia") {
+    const isActivated = state.microgliaState === "activated";
+    const isDark = state.microgliaState === "dark";
+    const percent = isActivated ? 78 : isDark ? 64 : 26;
+    controls.potentialBar.style.width = `${percent}%`;
+    controls.potentialValue.textContent = isActivated ? "activada" : isDark ? "dark" : "vigilancia";
+    controls.potentialThreshold.textContent = "umbral de activación";
+    return;
+  }
   const bounded = THREE.MathUtils.clamp(state.membranePotential, -80, -45);
   const percent = THREE.MathUtils.mapLinear(bounded, -80, -45, 4, 100);
   controls.potentialBar.style.width = `${percent}%`;
   controls.potentialValue.textContent = `${Math.round(state.membranePotential)} mV`;
+  controls.potentialThreshold.textContent = "umbral -55 mV";
 }
 
 function updateActivityMeshes() {
@@ -581,8 +669,28 @@ function pointAlongPath(path, progress) {
 }
 
 function resetView() {
-  camera.position.set(0, 1.2, 8.5);
-  orbit.target.set(0, 0.35, 0);
+  applyCellFraming();
+}
+
+function applyCellFraming() {
+  if (state.cellKey === "purkinje") {
+    state.cell?.scale.setScalar(0.84);
+    state.cell?.position.set(0, -0.55, 0);
+    camera.position.set(0, 1.1, 10.2);
+    orbit.target.set(0, 1.45, 0);
+  } else if (state.cellKey === "microglia") {
+    const isActivated = state.microgliaState === "activated";
+    const isDark = state.microgliaState === "dark";
+    state.cell?.scale.setScalar(isActivated ? 1.28 : isDark ? 1.12 : 1);
+    state.cell?.position.set(0, isActivated ? 0.08 : isDark ? 0.02 : 0, 0);
+    camera.position.set(0, 1.18, isActivated ? 7.25 : isDark ? 8 : 8.5);
+    orbit.target.set(0, isActivated ? 0.22 : isDark ? 0.3 : 0.35, 0);
+  } else {
+    state.cell?.scale.setScalar(1);
+    state.cell?.position.set(0, 0, 0);
+    camera.position.set(0, 1.2, 8.5);
+    orbit.target.set(0, 0.35, 0);
+  }
   orbit.update();
 }
 

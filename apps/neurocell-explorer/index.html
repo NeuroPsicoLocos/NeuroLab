@@ -137,6 +137,16 @@
           <label class="check-row"><input id="toggleTransparency" type="checkbox" /> Transparencia de membrana</label>
         </section>
 
+        <section id="microgliaStatePanel" class="panel-section" hidden>
+          <h2>Estado microglial</h2>
+          <div class="button-grid">
+            <button id="microgliaSurveillance" class="is-active" type="button">Vigilancia</button>
+            <button id="microgliaActivated" type="button">Activada</button>
+            <button id="microgliaDark" type="button">Dark</button>
+          </div>
+          <p id="microgliaStateNote" class="note">Microglía ramificada con procesos finos de vigilancia.</p>
+        </section>
+
         <section id="pyramidalDetailPanel" class="panel-section atlas-panel">
           <h2>Detalle piramidal</h2>
           <div class="legend-list" aria-label="Leyenda anatómica">
@@ -219,7 +229,7 @@
           </div>
           <div class="meter-labels">
             <span id="potentialValue">-70 mV</span>
-            <span>umbral -55 mV</span>
+            <span id="potentialThreshold">umbral -55 mV</span>
           </div>
           <div class="button-grid">
             <button id="exciteNeuron" type="button">Estímulo excitatorio</button>
