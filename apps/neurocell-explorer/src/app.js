@@ -2,66 +2,11 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { cellTypes, scienceContent, quiz } from "./cellTypes.js";
 import { createCellModel, createEditableDendrite } from "./cellFactory.js";
+import { collectControls, collectSceneElements, applyLearningMode } from "./ui/dom.js";
+import { mountQuizPanel, updateInfoPanel } from "./ui/contentPanels.js";
 
-const sceneHost = document.querySelector("#scene");
-const labelsHost = document.querySelector("#labels");
-const modelLoading = document.querySelector("#modelLoading");
-const controls = {
-  cellType: document.querySelector("#cellType"),
-  reconstructionSource: document.querySelector("#reconstructionSource"),
-  provenancePanel: document.querySelector("#provenancePanel"),
-  provenanceLink: document.querySelector("#provenanceLink"),
-  provenanceId: document.querySelector("#provenanceId"),
-  provenanceArchive: document.querySelector("#provenanceArchive"),
-  provenanceSpecies: document.querySelector("#provenanceSpecies"),
-  provenanceRegion: document.querySelector("#provenanceRegion"),
-  provenanceDomain: document.querySelector("#provenanceDomain"),
-  provenanceDoi: document.querySelector("#provenanceDoi"),
-  provenanceStats: document.querySelector("#provenanceStats"),
-  provenanceCaveat: document.querySelector("#provenanceCaveat"),
-  atlasImagePanel: document.querySelector("#atlasImagePanel"),
-  atlasFigure: document.querySelector("#atlasFigure"),
-  atlasImage: document.querySelector("#atlasImage"),
-  atlasCaption: document.querySelector("#atlasCaption"),
-  toggleAtlasImage: document.querySelector("#toggleAtlasImage"),
-  toggleSoma: document.querySelector("#toggleSoma"),
-  toggleDendrites: document.querySelector("#toggleDendrites"),
-  toggleSpines: document.querySelector("#toggleSpines"),
-  toggleAxon: document.querySelector("#toggleAxon"),
-  toggleActivity: document.querySelector("#toggleActivity"),
-  toggleContext: document.querySelector("#toggleContext"),
-  toggleLabels: document.querySelector("#toggleLabels"),
-  lightingMode: document.querySelector("#lightingMode"),
-  toggleTransparency: document.querySelector("#toggleTransparency"),
-  microgliaStatePanel: document.querySelector("#microgliaStatePanel"),
-  microgliaSurveillance: document.querySelector("#microgliaSurveillance"),
-  microgliaActivated: document.querySelector("#microgliaActivated"),
-  microgliaDark: document.querySelector("#microgliaDark"),
-  microgliaStateNote: document.querySelector("#microgliaStateNote"),
-  pyramidalDetailPanel: document.querySelector("#pyramidalDetailPanel"),
-  interneuronDetailPanel: document.querySelector("#interneuronDetailPanel"),
-  purkinjeDetailPanel: document.querySelector("#purkinjeDetailPanel"),
-  functionPanel: document.querySelector("#functionPanel"),
-  functionTitle: document.querySelector("#functionTitle"),
-  potentialBar: document.querySelector("#potentialBar"),
-  potentialValue: document.querySelector("#potentialValue"),
-  potentialThreshold: document.querySelector("#potentialThreshold"),
-  activityStatus: document.querySelector("#activityStatus"),
-  exciteNeuron: document.querySelector("#exciteNeuron"),
-  inhibitNeuron: document.querySelector("#inhibitNeuron"),
-  branchComplexity: document.querySelector("#branchComplexity"),
-  spineDensity: document.querySelector("#spineDensity"),
-  resetView: document.querySelector("#resetView"),
-  addDendrite: document.querySelector("#addDendrite"),
-  removeDendrite: document.querySelector("#removeDendrite"),
-  studentMode: document.querySelector("#studentMode"),
-  teacherMode: document.querySelector("#teacherMode"),
-  branchLayerLabel: document.querySelector("#branchLayerLabel"),
-  spineLayerLabel: document.querySelector("#spineLayerLabel"),
-  axonLayerLabel: document.querySelector("#axonLayerLabel"),
-  branchComplexityLabel: document.querySelector("#branchComplexityLabel"),
-  spineDensityLabel: document.querySelector("#spineDensityLabel")
-};
+const { sceneHost, labelsHost, modelLoading } = collectSceneElements();
+const controls = collectControls();
 
 const state = {
   cellKey: "pyramidal",
@@ -478,54 +423,19 @@ function removeEditableDendrite() {
 
 function setMode(mode) {
   state.mode = mode;
-  controls.studentMode.classList.toggle("is-active", mode === "student");
-  controls.teacherMode.classList.toggle("is-active", mode === "teacher");
-
-  document.querySelectorAll(".teacher-only").forEach((element) => {
-    element.hidden = mode !== "teacher";
-  });
-  document.querySelectorAll(".student-only").forEach((element) => {
-    element.hidden = mode !== "student";
-  });
+  applyLearningMode(mode, controls);
 }
 
 function updateInfo() {
-  const title = document.querySelector("#infoTitle");
-  const body = document.querySelector("#infoBody");
-  const topicNames = {
-    anatomy: "Anatomía",
-    connectivity: "Conectividad",
-    function: "Función",
-    clinic: "Clínica"
-  };
-
-  title.textContent = topicNames[state.activeTopic];
-  body.textContent = scienceContent[state.cellKey][state.activeTopic];
-  document.querySelectorAll(".info-tab").forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.topic === state.activeTopic);
+  updateInfoPanel({
+    cellKey: state.cellKey,
+    activeTopic: state.activeTopic,
+    scienceContent
   });
 }
 
 function mountQuiz() {
-  const currentQuiz = quiz[state.cellKey] ?? quiz.default;
-  document.querySelector("#quizQuestion").textContent = currentQuiz.question;
-  const answerHost = document.querySelector("#quizAnswers");
-  const feedback = document.querySelector("#quizFeedback");
-  answerHost.replaceChildren();
-  feedback.textContent = "";
-  currentQuiz.answers.forEach((answer) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.textContent = answer.text;
-    button.addEventListener("click", () => {
-      answerHost.querySelectorAll("button").forEach((item) => {
-        item.classList.remove("is-correct", "is-wrong");
-      });
-      button.classList.add(answer.correct ? "is-correct" : "is-wrong");
-      feedback.textContent = answer.correct ? currentQuiz.correctFeedback : currentQuiz.incorrectFeedback;
-    });
-    answerHost.appendChild(button);
-  });
+  mountQuizPanel(state.cellKey, quiz);
 }
 
 function addFunctionalInput(type) {
