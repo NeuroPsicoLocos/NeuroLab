@@ -3,10 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="refresh" content="0; url=/apps/neurocell-explorer/" />
+    <meta http-equiv="refresh" content="0; url=apps/neurocell-explorer/" />
     <title>NeuroLab</title>
     <script>
-      window.location.replace("/apps/neurocell-explorer/");
+      const appPath = window.location.protocol === "file:" ? "apps/neurocell-explorer/" : "/apps/neurocell-explorer/";
+      window.location.replace(appPath);
     </script>
     <style>
       :root {
@@ -73,7 +74,7 @@
     <main>
       <h1>NeuroLab</h1>
       <p>Redirigiendo a NeuroCell Explorer.</p>
-      <a href="/apps/neurocell-explorer/">Abrir NeuroCell Explorer</a>
+      <a href="apps/neurocell-explorer/">Abrir NeuroCell Explorer</a>
     </main>
   </body>
 </html>
