@@ -18,6 +18,7 @@ test("required GitHub Pages entry points and modules exist", async () => {
     "apps/electrophysiology-lab/src/app.js",
     "apps/electrophysiology-lab/src/core/signal.js",
     "apps/electrophysiology-lab/src/core/fieldPotential.js",
+    "apps/electrophysiology-lab/src/core/inference.js",
     "apps/neurocell-explorer/index.html",
     ".nojekyll",
     "CNAME",

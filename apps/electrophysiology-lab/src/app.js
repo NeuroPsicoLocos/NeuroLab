@@ -4,6 +4,7 @@ import {
   PAIRED_POPS_PROFILE,
   measurePopulationSpikes,
 } from "./core/fieldPotential.js";
+import { guessTimeUnit, suggestWorkbookAnalysis } from "./core/inference.js";
 import { columnValues, exportAnalysisWorkbook, parseWorkbook } from "./io/workbook.js";
 import { SignalPlot } from "./ui/plot.js";
 
@@ -17,6 +18,7 @@ const elements = {
   signalSelect: document.querySelector("#signal-select"),
   timeUnit: document.querySelector("#time-unit"),
   signalUnit: document.querySelector("#signal-unit"),
+  signalScopeHint: document.querySelector("#signal-scope-hint"),
   analysisMode: document.querySelector("#analysis-mode"),
   preliminaryControls: document.querySelector("#preliminary-controls"),
   popsControls: document.querySelector("#pops-controls"),
@@ -44,6 +46,8 @@ const elements = {
   qualityList: document.querySelector("#quality-list"),
   eventTableCard: document.querySelector("#event-table-card"),
   eventTableBody: document.querySelector("#event-table-body"),
+  smoothLegend: document.querySelector("#smooth-legend"),
+  pointsLegend: document.querySelector("#points-legend"),
   metrics: {
     samples: document.querySelector("#metric-samples"),
     rate: document.querySelector("#metric-rate"),
@@ -54,7 +58,14 @@ const elements = {
 };
 
 const plot = new SignalPlot(document.querySelector("#signal-canvas"));
-const state = { workbook: null, result: null, fieldResult: null, source: null };
+const state = {
+  workbook: null,
+  result: null,
+  fieldResult: null,
+  source: null,
+  inferredTimeUnit: "ms",
+  analysisSuggestion: "",
+};
 
 function numericOrUndefined(value) {
   if (value === "") return undefined;
@@ -64,13 +75,18 @@ function numericOrUndefined(value) {
 
 function currentSettings() {
   return {
-    timeUnit: elements.timeUnit.value,
+    timeUnit: resolvedTimeUnit(),
+    timeUnitSelection: elements.timeUnit.value,
     signalUnit: elements.signalUnit.value.trim() || "unidad arbitraria",
     sensitivity: Number(elements.sensitivity.value),
     refractoryMs: Math.max(0, Number(elements.refractory.value) || 0),
     saturationMin: numericOrUndefined(elements.saturationMin.value),
     saturationMax: numericOrUndefined(elements.saturationMax.value),
   };
+}
+
+function resolvedTimeUnit() {
+  return elements.timeUnit.value === "auto" ? state.inferredTimeUnit : elements.timeUnit.value;
 }
 
 function currentFieldSettings() {
@@ -105,6 +121,50 @@ function applyPopsProfile() {
   elements.popsArtifactDistance.disabled = paired;
 }
 
+function setAnalysisModeUi() {
+  const isPopulationSpike = elements.analysisMode.value === "population-spike";
+  elements.preliminaryControls.hidden = isPopulationSpike;
+  elements.popsControls.hidden = !isPopulationSpike;
+  elements.smoothLegend.hidden = !isPopulationSpike;
+  elements.pointsLegend.hidden = !isPopulationSpike;
+  updateSignalScopeHint();
+}
+
+function configureForWorkbook(workbook) {
+  const suggestion = suggestWorkbookAnalysis(workbook);
+  elements.analysisMode.value = suggestion.mode;
+  elements.popsProfile.value = suggestion.profile;
+  elements.popsExportScope.value = suggestion.exportScope;
+  state.analysisSuggestion = suggestion.message;
+  if (suggestion.mode === "population-spike") applyPopsProfile();
+  setAnalysisModeUi();
+}
+
+function updateSignalScopeHint() {
+  if (state.source?.type === "demo") {
+    elements.signalScopeHint.textContent = "Demostración con una señal sintética.";
+    return;
+  }
+  if (!state.workbook || elements.sheetSelect.value === "") {
+    elements.signalScopeHint.textContent = "La gráfica muestra una señal a la vez.";
+    return;
+  }
+  const sheet = state.workbook.sheets[Number(elements.sheetSelect.value)];
+  const timeIndex = Number(elements.timeSelect.value);
+  const signals = numericSignalColumns(sheet, timeIndex);
+  const activeIndex = Number(elements.signalSelect.value);
+  const activePosition = Math.max(0, signals.findIndex((column) => column.index === activeIndex)) + 1;
+  const scopeLabels = {
+    active: "solo la traza mostrada",
+    sheet: "todas las señales de esta hoja",
+    workbook: "todas las hojas compatibles",
+  };
+  const exportMessage = elements.analysisMode.value === "population-spike"
+    ? ` Al exportar se analizarán ${scopeLabels[elements.popsExportScope.value]}.`
+    : " Selecciona el método POPS para medir P1, P2 y P3.";
+  elements.signalScopeHint.textContent = `Mostrando señal ${activePosition} de ${signals.length || 1} en esta hoja.${exportMessage}`;
+}
+
 function convertTimeToMilliseconds(values, unit) {
   const factor = unit === "s" ? 1000 : unit === "us" ? 0.001 : 1;
   return values.map((value) => {
@@ -112,22 +172,6 @@ function convertTimeToMilliseconds(values, unit) {
     const numeric = Number(value);
     return Number.isFinite(numeric) ? numeric * factor : value;
   });
-}
-
-function guessTimeUnit(values, header = "") {
-  const normalizedHeader = header.toLowerCase();
-  if (/µs|\bus\b|microseg/.test(normalizedHeader)) return "us";
-  if (/\bms\b|miliseg/.test(normalizedHeader)) return "ms";
-  if (/\(s\)|segundo|seconds?/.test(normalizedHeader)) return "s";
-
-  const numeric = values.map(Number).filter(Number.isFinite);
-  if (numeric.length < 3) return "ms";
-  const deltas = numeric.slice(1).map((value, index) => value - numeric[index]).filter((delta) => delta > 0).sort((a, b) => a - b);
-  const medianDelta = deltas[Math.floor(deltas.length / 2)];
-  const duration = numeric.at(-1) - numeric[0];
-  // A sub-0.01 interval over a recording shorter than 100 units is usually a
-  // seconds axis in electrophysiology (e.g. 0.0001 s at 10 kHz).
-  return medianDelta < 0.01 && duration <= 100 ? "s" : "ms";
 }
 
 function formatMetric(value, unit = "") {
@@ -260,6 +304,13 @@ function analyzeCurrentSelection() {
     saturationMin: settings.saturationMin ?? Number.NEGATIVE_INFINITY,
     saturationMax: settings.saturationMax ?? Number.POSITIVE_INFINITY,
   });
+  if (result.stats.sampleRateHz > 1_000_000 || (result.stats.validRows > 1000 && result.stats.durationMs < 10)) {
+    result.flags.push({
+      level: "review",
+      code: "implausible_time_scale",
+      message: "La escala temporal produce una frecuencia mayor de 1 MHz o una duración demasiado corta. Revisa la unidad temporal.",
+    });
+  }
   const fieldResult = elements.analysisMode.value === "population-spike" && result.ok
     ? measurePopulationSpikes(result.timeMs, result.signal, currentFieldSettings())
     : null;
@@ -289,10 +340,15 @@ function activateSheet(sheetIndex = 0) {
   elements.timeSelect.value = String(guess.timeIndex);
   elements.signalSelect.value = String(guess.signalIndex);
   const inferredTimeUnit = guessTimeUnit(columnValues(sheet, guess.timeIndex), sheet.headers[guess.timeIndex]);
-  elements.timeUnit.value = inferredTimeUnit;
+  state.inferredTimeUnit = inferredTimeUnit;
+  const automaticOption = elements.timeUnit.querySelector('option[value="auto"]');
+  const unitLabels = { s: "segundos (s)", ms: "milisegundos (ms)", us: "microsegundos (µs)" };
+  automaticOption.textContent = `automática · ${unitLabels[inferredTimeUnit]}`;
+  elements.timeUnit.value = "auto";
   state.source = { type: "workbook" };
   elements.traceTitle.textContent = `${state.workbook.fileName} · ${sheet.name}`;
-  elements.fileStatus.textContent = `${state.workbook.fileName} · ${(state.workbook.fileSize / 1024).toFixed(1)} kB · unidad temporal sugerida: ${inferredTimeUnit}; confirmar`;
+  elements.fileStatus.textContent = `${state.workbook.fileName} · ${(state.workbook.fileSize / 1024).toFixed(1)} kB · ${state.analysisSuggestion} · tiempo: ${unitLabels[inferredTimeUnit]}`;
+  updateSignalScopeHint();
   analyzeCurrentSelection();
 }
 
@@ -344,7 +400,7 @@ function collectPopulationSpikeExports() {
     const guessed = guessColumns(sheet.headers);
     const timeIndex = isActiveSheet ? Number(elements.timeSelect.value) : guessed.timeIndex;
     const timeUnit = isActiveSheet
-      ? elements.timeUnit.value
+      ? resolvedTimeUnit()
       : guessTimeUnit(columnValues(sheet, timeIndex), sheet.headers[timeIndex]);
     const signalColumns = scope === "active" && isActiveSheet
       ? [{ header: sheet.headers[Number(elements.signalSelect.value)], index: Number(elements.signalSelect.value) }]
@@ -376,6 +432,7 @@ async function openFile(file) {
     fillSelect(elements.sheetSelect, state.workbook.sheets.map((sheet) => sheet.name));
     const firstUsableSheet = state.workbook.sheets.findIndex((sheet) => sheet.headers.length >= 2);
     elements.sheetSelect.value = String(firstUsableSheet);
+    configureForWorkbook(state.workbook);
     elements.fileStatus.textContent = `${file.name} · ${(file.size / 1024).toFixed(1)} kB · ${state.workbook.sheets.length} hoja(s)`;
     elements.fileStatus.className = "file-status success";
     activateSheet(firstUsableSheet);
@@ -396,7 +453,9 @@ function loadDemo() {
   elements.sheetSelect.disabled = true;
   elements.timeSelect.disabled = true;
   elements.signalSelect.disabled = true;
-  elements.timeUnit.value = "ms";
+  state.inferredTimeUnit = "ms";
+  elements.timeUnit.querySelector('option[value="auto"]').textContent = "automática · milisegundos (ms)";
+  elements.timeUnit.value = "auto";
   elements.signalUnit.value = "mV";
   elements.traceTitle.textContent = "Señal sintética · potencial de campo";
   elements.fileStatus.textContent = "Demostración determinística: 10 estímulos, 10 kHz, 1.1 s.";
@@ -458,20 +517,33 @@ async function exportExcel() {
 elements.fileInput.addEventListener("change", () => openFile(elements.fileInput.files[0]));
 elements.demoButton.addEventListener("click", loadDemo);
 elements.sheetSelect.addEventListener("change", () => activateSheet(Number(elements.sheetSelect.value)));
-elements.timeSelect.addEventListener("change", analyzeCurrentSelection);
-elements.signalSelect.addEventListener("change", analyzeCurrentSelection);
+elements.timeSelect.addEventListener("change", () => {
+  if (state.source?.type === "workbook") {
+    const sheet = state.workbook.sheets[Number(elements.sheetSelect.value)];
+    const timeIndex = Number(elements.timeSelect.value);
+    state.inferredTimeUnit = guessTimeUnit(columnValues(sheet, timeIndex), sheet.headers[timeIndex]);
+    const labels = { s: "segundos (s)", ms: "milisegundos (ms)", us: "microsegundos (µs)" };
+    elements.timeUnit.querySelector('option[value="auto"]').textContent = `automática · ${labels[state.inferredTimeUnit]}`;
+  }
+  updateSignalScopeHint();
+  analyzeCurrentSelection();
+});
+elements.signalSelect.addEventListener("change", () => {
+  updateSignalScopeHint();
+  analyzeCurrentSelection();
+});
 elements.timeUnit.addEventListener("change", analyzeCurrentSelection);
 elements.signalUnit.addEventListener("change", analyzeCurrentSelection);
 elements.analysisMode.addEventListener("change", () => {
-  const isPopulationSpike = elements.analysisMode.value === "population-spike";
-  elements.preliminaryControls.hidden = isPopulationSpike;
-  elements.popsControls.hidden = !isPopulationSpike;
+  setAnalysisModeUi();
   analyzeCurrentSelection();
 });
 elements.popsProfile.addEventListener("change", () => {
   applyPopsProfile();
+  updateSignalScopeHint();
   analyzeCurrentSelection();
 });
+elements.popsExportScope.addEventListener("change", updateSignalScopeHint);
 elements.sensitivity.addEventListener("input", () => {
   elements.sensitivityOutput.value = `${elements.sensitivity.value} MAD`;
   analyzeCurrentSelection();

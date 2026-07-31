@@ -101,6 +101,7 @@ details { margin-top: 16px; }
 summary { color: var(--teal); font-size: .78rem; font-weight: 750; cursor: pointer; }
 .field-grid.compact { margin-top: 12px; }
 .field-grid .export-scope { grid-column: 1 / -1; }
+.field-hint { margin: 12px 0 0; padding: 9px 10px; color: #395b57; background: var(--teal-pale); font-size: .72rem; line-height: 1.45; border-left: 2px solid var(--teal); }
 .method-note { margin: 16px 0 0; padding: 12px; color: #7a543c; background: #f7ece3; font-size: .74rem; line-height: 1.45; border-left: 2px solid var(--orange); }
 .mode-select { margin: 12px 0 16px; }
 .parameter-block { padding-top: 15px; border-top: 1px solid var(--line); }

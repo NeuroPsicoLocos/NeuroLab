@@ -14,7 +14,7 @@
     <meta property="og:image" content="https://neurolab.neuropsicolocos.com/assets/simulab-social.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
     <title>Electrophysiology Lab · Simu-LAB</title>
-    <link rel="stylesheet" href="styles/main.css?v=20260731" />
+    <link rel="stylesheet" href="styles/main.css?v=20260731-3" />
   </head>
   <body>
     <header class="app-header">
@@ -78,9 +78,10 @@
               <div class="field-grid">
                 <label>Hoja<select id="sheet-select" disabled></select></label>
                 <label>Tiempo<select id="time-select" disabled></select></label>
-                <label>Señal<select id="signal-select" disabled></select></label>
+                <label>Señal mostrada<select id="signal-select" disabled></select></label>
                 <label>Unidad temporal
                   <select id="time-unit">
+                    <option value="auto" selected>automática</option>
                     <option value="ms">milisegundos (ms)</option>
                     <option value="s">segundos (s)</option>
                     <option value="us">microsegundos (µs)</option>
@@ -88,6 +89,7 @@
                 </label>
                 <label>Unidad de señal<input id="signal-unit" type="text" value="mV" maxlength="12" /></label>
               </div>
+              <p class="field-hint" id="signal-scope-hint">La gráfica muestra una señal a la vez.</p>
             </div>
           </section>
 
@@ -172,9 +174,9 @@
           <div class="plot-card">
             <div class="plot-legend">
               <span class="raw-key">Señal cruda</span>
-              <span class="smooth-key">Señal suavizada</span>
+              <span class="smooth-key" id="smooth-legend" hidden>Señal suavizada</span>
               <span class="event-key">Artefacto</span>
-              <span class="points-key">P1 · P2 · P3</span>
+              <span class="points-key" id="points-legend" hidden>P1 · P2 · P3</span>
             </div>
             <canvas id="signal-canvas" aria-label="Gráfica de la señal electrofisiológica"></canvas>
           </div>
@@ -233,6 +235,6 @@
       <span>Herramienta de investigación en desarrollo; los resultados requieren revisión experta.</span>
     </footer>
 
-    <script type="module" src="src/app.js?v=20260731"></script>
+    <script type="module" src="src/app.js?v=20260731-3"></script>
   </body>
 </html>
