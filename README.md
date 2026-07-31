@@ -19,11 +19,12 @@ Primera base para analizar potenciales de campo y, por fases, registros de curre
 - gráfica Canvas de la señal cruda;
 - estimación robusta de frecuencia de muestreo y métricas descriptivas;
 - candidatos preliminares de artefacto mediante derivada y MAD;
+- perfil experimental POPS para medir espigas poblacionales extracelulares con puntos P1–P2–P3;
 - banderas de datos faltantes, muestreo irregular y posible saturación;
 - exportación de resumen, eventos, control de calidad y parámetros a Excel;
 - exportación JSON de la configuración para reproducibilidad.
 
-Los candidatos actuales **no son anotaciones fisiológicas validadas**. EPSP, IPSP, EPSC, IPSC, respuestas de campo y efectos farmacológicos requieren criterios y ventanas explícitas que se añadirán en fases posteriores. Véase el [README del módulo](apps/electrophysiology-lab/README.md).
+El perfil POPS reproduce el algoritmo histórico del proyecto y hace visibles sus ventanas, suavizado y umbrales. Sus puntos siguen requiriendo revisión experta. EPSP, IPSP, EPSC, IPSC y efectos farmacológicos tendrán perfiles separados; no deben inferirse a partir de la forma POPS. Véanse el [README del módulo](apps/electrophysiology-lab/README.md) y la [especificación POPS](docs/electrophysiology/POPS_METHOD.md).
 
 ### NeuroCell Explorer
 
@@ -76,6 +77,7 @@ NeuroLab/
 │   │   └── src/
 │   │       ├── app.js
 │   │       ├── core/signal.js         # Núcleo puro y comprobable
+│   │       ├── core/fieldPotential.js  # Perfil POPS y espiga poblacional
 │   │       ├── io/workbook.js         # Entrada/salida tabular
 │   │       └── ui/plot.js              # Visualización Canvas
 │   └── neurocell-explorer/

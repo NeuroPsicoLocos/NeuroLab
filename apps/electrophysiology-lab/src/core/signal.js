@@ -210,11 +210,14 @@ export function analyzeTrace(rawTimeMs, rawSignal, userOptions = {}) {
 }
 
 /** Create a deterministic teaching trace with ten field-potential responses. */
-export function createDemoTrace({ sampleRateHz = 10000, durationMs = 1100 } = {}) {
+export function createDemoTrace({
+  sampleRateHz = 10000,
+  durationMs = 1100,
+  stimulusTimesMs = Array.from({ length: 10 }, (_, index) => 100 + index * 100),
+} = {}) {
   const sampleCount = Math.round((durationMs / 1000) * sampleRateHz);
   const timeMs = new Array(sampleCount);
   const signal = new Array(sampleCount);
-  const stimulusTimesMs = Array.from({ length: 10 }, (_, index) => 100 + index * 100);
 
   for (let index = 0; index < sampleCount; index += 1) {
     const time = (index * 1000) / sampleRateHz;
@@ -228,7 +231,7 @@ export function createDemoTrace({ sampleRateHz = 10000, durationMs = 1100 } = {}
 
     for (const stimulusTime of stimulusTimesMs) {
       const elapsed = time - stimulusTime;
-      if (elapsed >= 0 && elapsed < 0.35) value += 1.7 * Math.exp(-elapsed / 0.07);
+      if (elapsed >= 0 && elapsed < 0.35) value += 4.5 * Math.exp(-elapsed / 0.07);
       if (elapsed >= 1.2 && elapsed < 30) {
         value += -0.82 * (1 - Math.exp(-(elapsed - 1.2) / 1.7)) * Math.exp(-(elapsed - 1.2) / 13);
       }

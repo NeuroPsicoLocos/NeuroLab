@@ -94,20 +94,65 @@
           <section class="panel-section">
             <div class="section-number">03</div>
             <div class="section-body">
-              <h2>Detección preliminar</h2>
-              <label class="range-field">
-                <span>Sensibilidad robusta <output id="sensitivity-output">8 MAD</output></span>
-                <input id="sensitivity" type="range" min="4" max="15" value="8" step="0.5" />
+              <h2>Análisis</h2>
+              <label class="mode-select">Método
+                <select id="analysis-mode">
+                  <option value="preliminary">Inspección preliminar</option>
+                  <option value="population-spike">Espiga poblacional · POPS experimental</option>
+                </select>
               </label>
-              <label>Periodo refractario (ms)<input id="refractory" type="number" min="0" step="1" value="50" /></label>
-              <details>
+
+              <div id="preliminary-controls" class="parameter-block">
+                <label class="range-field">
+                  <span>Sensibilidad robusta <output id="sensitivity-output">8 MAD</output></span>
+                  <input id="sensitivity" type="range" min="4" max="15" value="8" step="0.5" />
+                </label>
+                <label>Periodo refractario (ms)<input id="refractory" type="number" min="0" step="1" value="50" /></label>
+                <p class="method-note">Los marcadores naranjas son candidatos eléctricos basados en derivada y MAD, no eventos fisiológicos validados.</p>
+              </div>
+
+              <div id="pops-controls" class="parameter-block" hidden>
+                <label class="pops-profile">Protocolo POPS
+                  <select id="pops-profile">
+                    <option value="train">Tren de estímulos · High_Fr</option>
+                    <option value="paired">Dos estímulos · pops_detect</option>
+                  </select>
+                </label>
+                <label class="toggle-row">
+                  <input id="pops-smoothing" type="checkbox" checked />
+                  <span>Suavizado Savitzky–Golay 11/3</span>
+                </label>
+                <div class="field-grid compact">
+                  <label>Umbral de artefacto<input id="pops-artifact-threshold" type="number" min="0" step="0.01" value="0.3" /></label>
+                  <label>Distancia mínima (ms)<input id="pops-artifact-distance" type="number" min="0" step="1" value="15" /></label>
+                  <label>Prominencia P3<input id="pops-prominence" type="number" min="0" step="0.01" value="0.2" /></label>
+                  <label class="export-scope">Alcance al exportar
+                    <select id="pops-export-scope">
+                      <option value="active">Traza activa</option>
+                      <option value="sheet">Todas las señales de esta hoja</option>
+                      <option value="workbook">Todas las hojas compatibles</option>
+                    </select>
+                  </label>
+                </div>
+                <details>
+                  <summary>Ventanas fisiológicas del perfil POPS</summary>
+                  <div class="window-grid">
+                    <span>P1 tras estímulo</span><input id="p1-start" type="number" step="0.1" value="3" /><input id="p1-end" type="number" step="0.1" value="10" />
+                    <span>P2 tras P1</span><input id="p2-start" type="number" step="0.1" value="0" /><input id="p2-end" type="number" step="0.1" value="10" />
+                    <span>P3 tras P2</span><input id="p3-start" type="number" step="0.1" value="2" /><input id="p3-end" type="number" step="0.1" value="8" />
+                  </div>
+                  <small class="window-help">Cada fila indica inicio y fin en milisegundos. Los valores reproducen el notebook High_Fr.</small>
+                </details>
+                <p class="method-note">Mide una deflexión negativa entre dos puntos de flanco. Se interpreta como espiga poblacional extracelular; no como EPSP/IPSP individual.</p>
+              </div>
+
+              <details class="saturation-details">
                 <summary>Límites de saturación opcionales</summary>
                 <div class="field-grid compact">
                   <label>Inferior<input id="saturation-min" type="number" step="any" placeholder="Sin límite" /></label>
                   <label>Superior<input id="saturation-max" type="number" step="any" placeholder="Sin límite" /></label>
                 </div>
               </details>
-              <p class="method-note">Los marcadores naranjas son candidatos eléctricos basados en derivada y MAD, no eventos fisiológicos validados.</p>
             </div>
           </section>
         </aside>
@@ -125,7 +170,12 @@
           </div>
 
           <div class="plot-card">
-            <div class="plot-legend"><span class="raw-key">Señal cruda</span><span class="event-key">Candidato de artefacto</span></div>
+            <div class="plot-legend">
+              <span class="raw-key">Señal cruda</span>
+              <span class="smooth-key">Señal suavizada</span>
+              <span class="event-key">Artefacto</span>
+              <span class="points-key">P1 · P2 · P3</span>
+            </div>
             <canvas id="signal-canvas" aria-label="Gráfica de la señal electrofisiológica"></canvas>
           </div>
 
@@ -134,7 +184,7 @@
             <article><span>Frecuencia estimada</span><strong id="metric-rate">—</strong></article>
             <article><span>Duración</span><strong id="metric-duration">—</strong></article>
             <article><span>Pico a pico</span><strong id="metric-range">—</strong></article>
-            <article><span>Candidatos</span><strong id="metric-events">—</strong></article>
+            <article><span>Eventos / candidatos</span><strong id="metric-events">—</strong></article>
           </div>
 
           <section class="quality-card">
@@ -145,11 +195,33 @@
             <ul id="quality-list"><li class="neutral">Carga una traza para iniciar la revisión.</li></ul>
           </section>
 
+          <section class="event-table-card" id="event-table-card" hidden>
+            <div class="table-heading">
+              <div>
+                <p class="eyebrow">Medición experimental</p>
+                <h2>Espigas poblacionales</h2>
+              </div>
+              <span class="method-badge">Perfil POPS legado reproducido</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Evento</th><th>Estímulo (ms)</th><th>P1 (ms)</th><th>P2 (ms)</th><th>P3 (ms)</th>
+                    <th>Amplitud</th><th>τ1–2 (ms)</th><th>τ2–3 (ms)</th><th>SNR</th><th>Confianza</th><th>Revisión</th>
+                  </tr>
+                </thead>
+                <tbody id="event-table-body"></tbody>
+              </table>
+            </div>
+            <p class="table-note">La confianza es una puntuación heurística transparente para priorizar revisión; no es una probabilidad fisiológica.</p>
+          </section>
+
           <section class="scope-card">
             <h2>Alcance de esta fase</h2>
             <div>
-              <p><strong>Incluye:</strong> importación, inspección, estimación del muestreo, detección preliminar de artefactos, banderas y trazabilidad.</p>
-              <p><strong>Siguiente fase:</strong> ventanas fisiológicas explícitas, línea base, puntos de respuesta, métricas, revisión manual y series farmacológicas.</p>
+              <p><strong>Incluye:</strong> importación, señal cruda, control de calidad y reproducción configurable del perfil POPS para espigas poblacionales.</p>
+              <p><strong>Siguiente fase:</strong> corrección manual auditable, otros perfiles de potencial de campo y series temporales de farmacología.</p>
             </div>
           </section>
         </section>

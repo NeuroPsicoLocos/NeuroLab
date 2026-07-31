@@ -57,7 +57,13 @@ export class SignalPlot {
       return;
     }
 
-    const { timeMs, signal, candidates } = this.result;
+    const {
+      timeMs,
+      signal,
+      candidates = [],
+      processedSignal = null,
+      responseEvents = [],
+    } = this.result;
     const margins = { top: 20, right: 20, bottom: 42, left: 62 };
     const plotWidth = width - margins.left - margins.right;
     const plotHeight = height - margins.top - margins.bottom;
@@ -96,19 +102,22 @@ export class SignalPlot {
     context.beginPath();
     context.rect(margins.left, margins.top, plotWidth, plotHeight);
     context.clip();
-    context.strokeStyle = "#126d67";
-    context.lineWidth = 1.35;
-    context.beginPath();
-
     // At most two points per horizontal pixel keeps large workbooks responsive.
     const stride = Math.max(1, Math.floor(signal.length / Math.max(plotWidth * 2, 1)));
-    for (let index = 0; index < signal.length; index += stride) {
-      const x = xScale(timeMs[index]);
-      const y = yScale(signal[index]);
-      if (index === 0) context.moveTo(x, y);
-      else context.lineTo(x, y);
-    }
-    context.stroke();
+    const drawTrace = (values, color, lineWidth) => {
+      context.strokeStyle = color;
+      context.lineWidth = lineWidth;
+      context.beginPath();
+      for (let index = 0; index < values.length; index += stride) {
+        const x = xScale(timeMs[index]);
+        const y = yScale(values[index]);
+        if (index === 0) context.moveTo(x, y);
+        else context.lineTo(x, y);
+      }
+      context.stroke();
+    };
+    if (processedSignal) drawTrace(signal, "rgba(105, 122, 119, 0.5)", 0.9);
+    drawTrace(processedSignal ?? signal, "#126d67", 1.35);
 
     for (const candidate of candidates) {
       const x = xScale(candidate.timeMs);
@@ -123,6 +132,32 @@ export class SignalPlot {
       context.beginPath();
       context.arc(x, yScale(candidate.value), 3.5, 0, Math.PI * 2);
       context.fill();
+    }
+
+    const pointStyles = {
+      p1: { color: "#d99a32", label: "1" },
+      p2: { color: "#2b8a64", label: "2" },
+      p3: { color: "#b64b4b", label: "3" },
+    };
+    for (const event of responseEvents) {
+      if (!event.valid) continue;
+      for (const pointName of ["p1", "p2", "p3"]) {
+        const point = event[pointName];
+        const style = pointStyles[pointName];
+        const x = xScale(point.timeMs);
+        const y = yScale(point.value);
+        context.fillStyle = style.color;
+        context.strokeStyle = "#fffef9";
+        context.lineWidth = 1.5;
+        context.beginPath();
+        context.arc(x, y, 4.3, 0, Math.PI * 2);
+        context.fill();
+        context.stroke();
+        context.fillStyle = style.color;
+        context.font = "800 9px system-ui";
+        context.textAlign = "center";
+        context.fillText(style.label, x, y - 7);
+      }
     }
     context.restore();
 

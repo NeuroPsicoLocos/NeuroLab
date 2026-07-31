@@ -4,14 +4,21 @@ Módulo de Simu-LAB para inspección y análisis reproducible de registros elect
 
 ## Estado actual
 
-La fase 1 es una base segura de importación, inspección y trazabilidad. Funciona con potenciales de campo tabulados y prepara una arquitectura común para:
+La aplicación dispone de una base segura de importación, inspección y trazabilidad. Funciona con potenciales de campo tabulados y prepara una arquitectura común para:
 
 1. potenciales de campo evocados;
 2. current clamp: EPSP e IPSP;
 3. voltage clamp: EPSC e IPSC;
 4. series temporales de farmacología.
 
-En esta fase, los eventos detectados son únicamente **candidatos de artefacto de estímulo** basados en cambios abruptos. No se clasifican respuestas sinápticas ni se aplican todavía filtros o correcciones de línea base.
+Hay dos métodos disponibles:
+
+- **Inspección preliminar:** candidatos de artefacto mediante derivada y MAD; no asigna fisiología.
+- **Espiga poblacional · POPS experimental:** reproducción configurable de `High_Fr.ipynb` para trenes y `pops_detect.ipynb` para dos estímulos, con Savitzky–Golay 11/3 y puntos P1–P2–P3.
+
+La exportación POPS puede abarcar la traza activa, todas las columnas numéricas de la hoja activa o todas las hojas compatibles del libro. Cada resultado conserva hoja y nombre de columna.
+
+POPS se interpreta aquí como una medición de **espiga poblacional extracelular**. No clasifica respuestas sinápticas de una neurona individual como EPSP, IPSP, EPSC o IPSC.
 
 ## Formato de entrada
 
@@ -35,9 +42,25 @@ La unidad temporal se convierte internamente a milisegundos. La señal se conser
 
 Este procedimiento es deliberadamente preliminar. Su rendimiento debe validarse con registros reales representativos antes de usarse como criterio automático de inclusión.
 
+## Perfil POPS reproducido
+
+El protocolo de tren conserva los parámetros del notebook de alta frecuencia:
+
+- umbral absoluto del artefacto: 0.3 unidades de señal por muestra;
+- distancia mínima entre artefactos: 15 ms;
+- P1: máximo entre 3 y 10 ms tras el artefacto;
+- P2: mínimo hasta 10 ms después de P1;
+- P3: máximo entre 2 y 8 ms después de P2, con prominencia mínima 0.2;
+- amplitud: `((P1 + P3) / 2) - P2`.
+
+El protocolo pareado busca el cambio derivativo más grande antes de 60 ms y antes de 150 ms, conserva el margen de cinco muestras del notebook y usa sus ventanas P1 1–10 ms, P2 0–15 ms y P3 0–20 ms. Si ambas búsquedas seleccionan el mismo artefacto se genera una bandera explícita.
+
+La aplicación añade línea base robusta, SNR y una puntuación de revisión. La puntuación no es una probabilidad y no sustituye la inspección de la gráfica. La especificación y sus límites están en [`docs/electrophysiology/POPS_METHOD.md`](../../docs/electrophysiology/POPS_METHOD.md).
+
 ## Arquitectura
 
 - `src/core/signal.js`: funciones puras de análisis y señal sintética.
+- `src/core/fieldPotential.js`: suavizado y medición POPS independiente de la interfaz.
 - `src/io/workbook.js`: adaptación de libros de cálculo y exportación.
 - `src/ui/plot.js`: gráfica Canvas de alta densidad.
 - `src/app.js`: estado de interfaz y coordinación.
@@ -52,7 +75,7 @@ No se deben confirmar en Git datos humanos identificables ni registros crudos pr
 
 ## Próximas fases
 
-- especificación por protocolo de polaridad, ventanas y criterios fisiológicos;
+- perfiles adicionales por protocolo de polaridad, ventanas y criterios fisiológicos;
 - línea base robusta, filtros opcionales con respuesta documentada y señal original visible;
 - anotaciones manuales y correcciones auditables;
 - confianza por evento, motivos de exclusión y gráficas de control de calidad;
