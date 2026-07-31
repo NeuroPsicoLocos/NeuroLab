@@ -4,9 +4,14 @@ import {
   PAIRED_POPS_PROFILE,
   measurePopulationSpikes,
 } from "./core/fieldPotential.js";
-import { guessTimeUnit, isImplausibleTimeScale, suggestWorkbookAnalysis } from "./core/inference.js?v=20260731-4";
+import {
+  guessTimeUnit,
+  isImplausibleTimeScale,
+  signalColumnChoices,
+  suggestWorkbookAnalysis,
+} from "./core/inference.js?v=20260731-5";
 import { columnValues, exportAnalysisWorkbook, parseWorkbook } from "./io/workbook.js";
-import { SignalPlot } from "./ui/plot.js?v=20260731-4";
+import { SignalPlot } from "./ui/plot.js?v=20260731-5";
 
 const elements = {
   fileInput: document.querySelector("#file-input"),
@@ -212,6 +217,13 @@ function updateQuality(result, fieldResult = null) {
     if (reviewEvents.length) {
       appendQualityItem("review", `${reviewEvents.length} de ${validEvents.length} evento(s) requieren revisión de puntos o prominencia.`);
     }
+    const fallbackEvents = validEvents.filter((event) => event.flags.includes("p3_prominence_fallback"));
+    if (fallbackEvents.length) {
+      appendQualityItem(
+        "review",
+        `${fallbackEvents.length} evento(s): P3 no alcanzó la prominencia mínima; el punto mostrado es el máximo local provisional y requiere confirmación manual.`,
+      );
+    }
     if (validEvents.length) {
       appendQualityItem("info", `${validEvents.length} espiga(s) poblacional(es) medidas con el perfil POPS reproducido.`);
     }
@@ -253,7 +265,9 @@ function renderEventTable(fieldResult, signalUnit) {
     const statusCell = document.createElement("td");
     const status = document.createElement("span");
     status.className = `review-pill${event.valid && !event.reviewRequired ? " accept" : ""}`;
-    status.textContent = event.valid && !event.reviewRequired ? "Aceptable" : "Revisar";
+    const p3Fallback = event.valid && event.flags.includes("p3_prominence_fallback");
+    status.textContent = event.valid && !event.reviewRequired ? "Aceptable" : p3Fallback ? "Revisar P3" : "Revisar";
+    if (event.flags?.length) status.title = event.flags.join(", ");
     statusCell.append(status);
     row.append(statusCell);
     elements.eventTableBody.append(row);
@@ -342,6 +356,16 @@ function fillSelect(select, labels) {
   select.disabled = !labels.length;
 }
 
+function fillSignalSelect(sheet, timeIndex, preferredIndex) {
+  const choices = signalColumnChoices(sheet.headers, timeIndex);
+  elements.signalSelect.replaceChildren(
+    ...choices.map(({ header, index }) => new Option(header, String(index))),
+  );
+  const preferredAvailable = choices.some(({ index }) => index === preferredIndex);
+  elements.signalSelect.value = String(preferredAvailable ? preferredIndex : choices[0]?.index ?? "");
+  elements.signalSelect.disabled = !choices.length;
+}
+
 function guessColumns(headers) {
   const normalized = headers.map((header) => header.toLowerCase());
   const timeIndex = normalized.findIndex((header) => /time|tiempo|ms|seg/.test(header));
@@ -355,10 +379,9 @@ function guessColumns(headers) {
 function activateSheet(sheetIndex = 0) {
   const sheet = state.workbook.sheets[sheetIndex];
   fillSelect(elements.timeSelect, sheet.headers);
-  fillSelect(elements.signalSelect, sheet.headers);
   const guess = guessColumns(sheet.headers);
   elements.timeSelect.value = String(guess.timeIndex);
-  elements.signalSelect.value = String(guess.signalIndex);
+  fillSignalSelect(sheet, guess.timeIndex, guess.signalIndex);
   const inferredTimeUnit = guessTimeUnit(columnValues(sheet, guess.timeIndex), sheet.headers[guess.timeIndex]);
   state.inferredTimeUnit = inferredTimeUnit;
   const automaticOption = elements.timeUnit.querySelector('option[value="auto"]');
@@ -541,6 +564,8 @@ elements.timeSelect.addEventListener("change", () => {
   if (state.source?.type === "workbook") {
     const sheet = state.workbook.sheets[Number(elements.sheetSelect.value)];
     const timeIndex = Number(elements.timeSelect.value);
+    const previousSignalIndex = Number(elements.signalSelect.value);
+    fillSignalSelect(sheet, timeIndex, previousSignalIndex);
     state.inferredTimeUnit = guessTimeUnit(columnValues(sheet, timeIndex), sheet.headers[timeIndex]);
     const labels = { s: "segundos (s)", ms: "milisegundos (ms)", us: "microsegundos (µs)" };
     elements.timeUnit.querySelector('option[value="auto"]').textContent = `automática · ${labels[state.inferredTimeUnit]}`;

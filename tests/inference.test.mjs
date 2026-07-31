@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import {
   guessTimeUnit,
   isImplausibleTimeScale,
+  signalColumnChoices,
   suggestWorkbookAnalysis,
 } from "../apps/electrophysiology-lab/src/core/inference.js";
 
@@ -35,4 +36,15 @@ test("known POPS books select the correct protocol and whole-workbook export", (
 test("implausible scales flag the 10 MHz interpretation but accept 10 kHz", () => {
   assert.equal(isImplausibleTimeScale({ sampleRateHz: 10_000_000, validRows: 9900, durationMs: 0.99 }), true);
   assert.equal(isImplausibleTimeScale({ sampleRateHz: 10_000, validRows: 9900, durationMs: 989.9 }), false);
+});
+
+test("signal choices exclude the selected time column and preserve workbook indices", () => {
+  assert.deepEqual(signalColumnChoices(["A", "B", "C"], 0), [
+    { header: "B", index: 1 },
+    { header: "C", index: 2 },
+  ]);
+  assert.deepEqual(signalColumnChoices(["A", "B", "C"], 1), [
+    { header: "A", index: 0 },
+    { header: "C", index: 2 },
+  ]);
 });

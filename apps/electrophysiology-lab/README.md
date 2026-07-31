@@ -32,6 +32,7 @@ Se aceptan XLSX, XLS, CSV, TSV y TXT. Cada traza debe tener como mínimo:
 - tiempo estrictamente creciente.
 
 La unidad temporal se convierte internamente a milisegundos. La señal se conserva en la unidad declarada por la persona usuaria.
+La columna elegida como tiempo se excluye automáticamente del selector de señal para evitar analizar el eje temporal como si fuera un registro electrofisiológico.
 
 ## Método preliminar
 

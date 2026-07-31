@@ -181,7 +181,8 @@ export class SignalPlot {
         context.fillStyle = style.color;
         context.font = "800 9px system-ui";
         context.textAlign = "center";
-        context.fillText(style.label, x, y - 7);
+        const provisionalP3 = pointName === "p3" && event.flags?.includes("p3_prominence_fallback");
+        context.fillText(provisionalP3 ? "3*" : style.label, x, y - 7);
       }
     }
     context.restore();

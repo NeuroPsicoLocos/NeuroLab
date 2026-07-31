@@ -55,3 +55,10 @@ export function isImplausibleTimeScale(stats) {
   if (!stats) return false;
   return stats.sampleRateHz > 1_000_000 || (stats.validRows > 1000 && stats.durationMs < 10);
 }
+
+/** Keeps original workbook indices while removing the active time column. */
+export function signalColumnChoices(headers, timeIndex) {
+  return headers
+    .map((header, index) => ({ header, index }))
+    .filter(({ index }) => index !== timeIndex);
+}
