@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Electrophysiology Lab de Simu-LAB: importación local, visualización y control de calidad de registros electrofisiológicos."
+    />
+    <meta name="theme-color" content="#10282a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Electrophysiology Lab · Simu-LAB" />
+    <meta property="og:description" content="Importación local, visualización y control de calidad de registros electrofisiológicos." />
+    <meta property="og:image" content="https://neurolab.neuropsicolocos.com/assets/simulab-social.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>Electrophysiology Lab · Simu-LAB</title>
+    <link rel="stylesheet" href="styles/main.css?v=20260731" />
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="brand" href="../../" aria-label="Volver a Simu-LAB">
+        <img src="../neurocell-explorer/assets/neuropsicolocos-logo.png" alt="" />
+        <span><strong>Simu-LAB</strong><small>Electrophysiology Lab</small></span>
+      </a>
+      <div class="header-actions">
+        <span class="local-badge">Procesamiento local</span>
+        <a href="../../">Todos los laboratorios</a>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <section class="intro">
+        <div>
+          <p class="eyebrow">Beta metodológica · fase 1</p>
+          <h1>Inspecciona primero. Mide después.</h1>
+          <p>
+            Carga un registro, confirma sus columnas y revisa candidatos de artefacto antes de aplicar criterios
+            fisiológicos. Esta versión no asigna todavía EPSP, IPSP, EPSC o IPSC automáticamente.
+          </p>
+        </div>
+        <aside>
+          <strong>Privacidad</strong>
+          <p>El archivo se abre en este navegador. Simu-LAB no lo carga a un servidor.</p>
+        </aside>
+      </section>
+
+      <nav class="module-tabs" aria-label="Módulos electrofisiológicos">
+        <button class="active" type="button" aria-current="page">
+          <span>Activo</span> Potenciales de campo
+        </button>
+        <button type="button" disabled><span>Planificado</span> Current clamp</button>
+        <button type="button" disabled><span>Planificado</span> Voltage clamp</button>
+        <button type="button" disabled><span>Planificado</span> Farmacología temporal</button>
+      </nav>
+
+      <div class="workspace">
+        <aside class="control-panel" aria-label="Configuración del análisis">
+          <section class="panel-section">
+            <div class="section-number">01</div>
+            <div class="section-body">
+              <h2>Datos de entrada</h2>
+              <p class="section-help">Formatos aceptados: XLSX, XLS, CSV, TSV y TXT.</p>
+              <label class="drop-zone" id="drop-zone" for="file-input">
+                <input id="file-input" type="file" accept=".xlsx,.xls,.csv,.tsv,.txt" />
+                <span class="upload-mark" aria-hidden="true">＋</span>
+                <strong>Selecciona o arrastra un archivo</strong>
+                <small>El contenido permanece en tu dispositivo</small>
+              </label>
+              <button class="text-button" id="demo-button" type="button">Usar señal sintética de demostración</button>
+              <p class="file-status" id="file-status" aria-live="polite">Ningún archivo seleccionado.</p>
+            </div>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-number">02</div>
+            <div class="section-body">
+              <h2>Asignación de columnas</h2>
+              <div class="field-grid">
+                <label>Hoja<select id="sheet-select" disabled></select></label>
+                <label>Tiempo<select id="time-select" disabled></select></label>
+                <label>Señal<select id="signal-select" disabled></select></label>
+                <label>Unidad temporal
+                  <select id="time-unit">
+                    <option value="ms">milisegundos (ms)</option>
+                    <option value="s">segundos (s)</option>
+                    <option value="us">microsegundos (µs)</option>
+                  </select>
+                </label>
+                <label>Unidad de señal<input id="signal-unit" type="text" value="mV" maxlength="12" /></label>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-number">03</div>
+            <div class="section-body">
+              <h2>Detección preliminar</h2>
+              <label class="range-field">
+                <span>Sensibilidad robusta <output id="sensitivity-output">8 MAD</output></span>
+                <input id="sensitivity" type="range" min="4" max="15" value="8" step="0.5" />
+              </label>
+              <label>Periodo refractario (ms)<input id="refractory" type="number" min="0" step="1" value="50" /></label>
+              <details>
+                <summary>Límites de saturación opcionales</summary>
+                <div class="field-grid compact">
+                  <label>Inferior<input id="saturation-min" type="number" step="any" placeholder="Sin límite" /></label>
+                  <label>Superior<input id="saturation-max" type="number" step="any" placeholder="Sin límite" /></label>
+                </div>
+              </details>
+              <p class="method-note">Los marcadores naranjas son candidatos eléctricos basados en derivada y MAD, no eventos fisiológicos validados.</p>
+            </div>
+          </section>
+        </aside>
+
+        <section class="results-panel" aria-label="Resultados preliminares">
+          <div class="results-toolbar">
+            <div>
+              <p class="eyebrow">Traza activa</p>
+              <h2 id="trace-title">Sin datos</h2>
+            </div>
+            <div class="toolbar-actions">
+              <button id="config-button" type="button" disabled>Exportar configuración</button>
+              <button id="excel-button" class="primary" type="button" disabled>Exportar Excel</button>
+            </div>
+          </div>
+
+          <div class="plot-card">
+            <div class="plot-legend"><span class="raw-key">Señal cruda</span><span class="event-key">Candidato de artefacto</span></div>
+            <canvas id="signal-canvas" aria-label="Gráfica de la señal electrofisiológica"></canvas>
+          </div>
+
+          <div class="metric-grid" id="metric-grid">
+            <article><span>Muestras válidas</span><strong id="metric-samples">—</strong></article>
+            <article><span>Frecuencia estimada</span><strong id="metric-rate">—</strong></article>
+            <article><span>Duración</span><strong id="metric-duration">—</strong></article>
+            <article><span>Pico a pico</span><strong id="metric-range">—</strong></article>
+            <article><span>Candidatos</span><strong id="metric-events">—</strong></article>
+          </div>
+
+          <section class="quality-card">
+            <div>
+              <p class="eyebrow">Control de calidad</p>
+              <h2 id="quality-title">Pendiente de datos</h2>
+            </div>
+            <ul id="quality-list"><li class="neutral">Carga una traza para iniciar la revisión.</li></ul>
+          </section>
+
+          <section class="scope-card">
+            <h2>Alcance de esta fase</h2>
+            <div>
+              <p><strong>Incluye:</strong> importación, inspección, estimación del muestreo, detección preliminar de artefactos, banderas y trazabilidad.</p>
+              <p><strong>Siguiente fase:</strong> ventanas fisiológicas explícitas, línea base, puntos de respuesta, métricas, revisión manual y series farmacológicas.</p>
+            </div>
+          </section>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <span>Simu-LAB · NeuroPsicoLocos</span>
+      <span>Herramienta de investigación en desarrollo; los resultados requieren revisión experta.</span>
+    </footer>
+
+    <script type="module" src="src/app.js?v=20260731"></script>
+  </body>
+</html>

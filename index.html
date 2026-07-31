@@ -3,78 +3,180 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="refresh" content="0; url=apps/neurocell-explorer/" />
-    <title>NeuroLab</title>
-    <script>
-      const appPath = window.location.protocol === "file:" ? "apps/neurocell-explorer/" : "/apps/neurocell-explorer/";
-      window.location.replace(appPath);
-    </script>
-    <style>
-      :root {
-        color-scheme: light;
-        --bg: #e8eceb;
-        --ink: #182022;
-        --muted: #5f6d70;
-        --accent: #2e5e61;
-        --line: #cfd8d6;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        display: grid;
-        min-height: 100vh;
-        margin: 0;
-        place-items: center;
-        background: radial-gradient(circle at 50% 35%, #f8faf8 0, var(--bg) 68%);
-        color: var(--ink);
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      }
-
-      main {
-        width: min(640px, calc(100vw - 32px));
-        padding: 28px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: rgba(248, 249, 247, 0.92);
-        box-shadow: 0 20px 60px rgba(24, 32, 34, 0.12);
-      }
-
-      p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.5;
-      }
-
-      h1 {
-        margin: 0 0 10px;
-        font-size: clamp(30px, 5vw, 52px);
-        line-height: 1;
-        letter-spacing: 0;
-      }
-
-      a {
-        display: inline-flex;
-        align-items: center;
-        min-height: 42px;
-        margin-top: 22px;
-        padding: 0 14px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: #fff;
-        color: var(--accent);
-        font-weight: 800;
-        text-decoration: none;
-      }
-    </style>
+    <meta
+      name="description"
+      content="Simu-LAB: laboratorios interactivos de neurociencias, electrofisiología, visualización científica y topología."
+    />
+    <meta name="theme-color" content="#10282a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Simu-LAB · NeuroPsicoLocos" />
+    <meta property="og:description" content="Laboratorios abiertos de neurociencias, análisis y docencia." />
+    <meta property="og:url" content="https://neurolab.neuropsicolocos.com/" />
+    <meta property="og:image" content="https://neurolab.neuropsicolocos.com/assets/simulab-social.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>Simu-LAB · NeuroPsicoLocos</title>
+    <link rel="stylesheet" href="styles/portal.css?v=20260731-simulab" />
   </head>
   <body>
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="Simu-LAB, inicio">
+        <img src="apps/neurocell-explorer/assets/neuropsicolocos-logo.png" alt="" />
+        <span>
+          <strong>Simu-LAB</strong>
+          <small>NeuroPsicoLocos</small>
+        </span>
+      </a>
+      <nav aria-label="Navegación principal">
+        <a href="#laboratorios">Laboratorios</a>
+        <a href="#principios">Principios</a>
+        <a href="https://github.com/NeuroPsicoLocos/NeuroLab">GitHub</a>
+      </nav>
+    </header>
+
     <main>
-      <h1>NeuroLab</h1>
-      <p>Redirigiendo a NeuroCell Explorer.</p>
-      <a href="apps/neurocell-explorer/">Abrir NeuroCell Explorer</a>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Simulación · análisis · docencia</p>
+          <h1 id="hero-title">Un laboratorio digital para explorar sistemas complejos.</h1>
+          <p class="hero-lead">
+            Simu-LAB reúne herramientas interactivas de neurociencias, electrofisiología y topología en una plataforma
+            abierta. Cada módulo distingue los datos reales, el análisis cuantitativo y las simplificaciones docentes.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="apps/electrophysiology-lab/">Abrir Electrophysiology Lab</a>
+            <a class="button secondary" href="apps/neurocell-explorer/">Explorar células 3D</a>
+          </div>
+        </div>
+
+        <div class="signal-card" aria-label="Representación esquemática de una señal electrofisiológica">
+          <div class="signal-header">
+            <span>Registro local</span>
+            <strong>10 kHz</strong>
+          </div>
+          <div class="signal-grid" aria-hidden="true">
+            <span class="trace trace-a"></span>
+            <span class="trace trace-b"></span>
+            <i class="stimulus one"></i>
+            <i class="stimulus two"></i>
+            <i class="stimulus three"></i>
+          </div>
+          <div class="signal-footer">
+            <span><i class="dot accepted"></i> Datos crudos preservados</span>
+            <span><i class="dot local"></i> Procesamiento local</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="laboratorios" class="labs-section" aria-labelledby="labs-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Biblioteca modular</p>
+            <h2 id="labs-title">Laboratorios</h2>
+          </div>
+          <p>Cada aplicación mantiene su propio método científico y comparte una identidad visual común.</p>
+        </div>
+
+        <div class="lab-grid">
+          <article class="lab-card featured">
+            <div class="card-topline">
+              <span class="status beta">Beta inicial</span>
+              <span class="card-index">01</span>
+            </div>
+            <div class="lab-icon electrophysiology" aria-hidden="true"><span></span></div>
+            <p class="lab-domain">Electrofisiología</p>
+            <h3>Electrophysiology Lab</h3>
+            <p>
+              Importación local, visualización, validación de señales y base modular para potenciales de campo,
+              current clamp, voltage clamp y farmacología temporal.
+            </p>
+            <ul>
+              <li>XLSX, XLS y CSV en el navegador</li>
+              <li>Control de calidad reproducible</li>
+              <li>Exportación de resultados y configuración</li>
+            </ul>
+            <a class="card-link" href="apps/electrophysiology-lab/">Abrir laboratorio <span>→</span></a>
+          </article>
+
+          <article class="lab-card">
+            <div class="card-topline">
+              <span class="status ready">Disponible</span>
+              <span class="card-index">02</span>
+            </div>
+            <div class="lab-icon cell" aria-hidden="true"><span></span></div>
+            <p class="lab-domain">Neuroanatomía</p>
+            <h3>NeuroCell Explorer</h3>
+            <p>
+              Atlas 3D de células del sistema nervioso con reconstrucciones SWC, procedencia científica y modos
+              estudiante y docente.
+            </p>
+            <ul>
+              <li>Morfologías de NeuroMorpho.Org</li>
+              <li>Anatomía, conectividad, función y clínica</li>
+              <li>Exploración tridimensional</li>
+            </ul>
+            <a class="card-link" href="apps/neurocell-explorer/">Abrir explorador <span>→</span></a>
+          </article>
+
+          <article class="lab-card">
+            <div class="card-topline">
+              <span class="status external">Proyecto asociado</span>
+              <span class="card-index">03</span>
+            </div>
+            <div class="lab-icon topology" aria-hidden="true"><span></span></div>
+            <p class="lab-domain">Topología y psicoanálisis</p>
+            <h3>Topological Lab</h3>
+            <p>
+              Exploración interactiva del nudo borromeo, los registros RSI y otros objetos topológicos utilizados en
+              la enseñanza del pensamiento lacaniano.
+            </p>
+            <ul>
+              <li>Nudo Borromeo interactivo</li>
+              <li>Recorrido conceptual guiado</li>
+              <li>Integración completa planificada</li>
+            </ul>
+            <a class="card-link" href="https://github.com/tf6vwzpyyv-arch/nudo-borromeo">
+              Ver proyecto <span>↗</span>
+            </a>
+          </article>
+        </div>
+      </section>
+
+      <section id="principios" class="principles" aria-labelledby="principles-title">
+        <div>
+          <p class="eyebrow">Criterios de la plataforma</p>
+          <h2 id="principles-title">Ciencia visible, decisiones trazables.</h2>
+        </div>
+        <div class="principle-grid">
+          <article>
+            <span>01</span>
+            <h3>Privacidad local</h3>
+            <p>Los archivos seleccionados se procesan en el dispositivo y no se envían a un servidor de Simu-LAB.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>Procedencia</h3>
+            <p>Las fuentes, parámetros, simplificaciones y transformaciones deben permanecer disponibles para revisión.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Reproducibilidad</h3>
+            <p>La configuración puede exportarse junto con métricas, banderas de calidad y motivos de exclusión.</p>
+          </article>
+        </div>
+      </section>
     </main>
+
+    <footer>
+      <div>
+        <strong>Simu-LAB</strong>
+        <p>Plataforma abierta de NeuroPsicoLocos para docencia, investigación y visualización científica.</p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:admin@neuropsicolocos.com">Contacto</a>
+        <a href="https://github.com/NeuroPsicoLocos/NeuroLab">Código fuente</a>
+      </div>
+    </footer>
   </body>
 </html>
