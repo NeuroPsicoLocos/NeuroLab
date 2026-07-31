@@ -14,7 +14,7 @@
     <meta property="og:image" content="https://neurolab.neuropsicolocos.com/assets/simulab-social.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
     <title>Electrophysiology Lab · Simu-LAB</title>
-    <link rel="stylesheet" href="styles/main.css?v=20260731-4" />
+    <link rel="stylesheet" href="styles/main.css?v=20260731-7" />
   </head>
   <body>
     <header class="app-header">
@@ -128,13 +128,12 @@
                   <label>Umbral de artefacto<input id="pops-artifact-threshold" type="number" min="0" step="0.01" value="0.3" /></label>
                   <label>Distancia mínima (ms)<input id="pops-artifact-distance" type="number" min="0" step="1" value="15" /></label>
                   <label>Prominencia P3<input id="pops-prominence" type="number" min="0" step="0.01" value="0.2" /></label>
-                  <label class="export-scope">Alcance al exportar
-                    <select id="pops-export-scope">
-                      <option value="active">Traza activa</option>
-                      <option value="sheet">Todas las señales de esta hoja</option>
-                      <option value="workbook">Todas las hojas compatibles</option>
-                    </select>
-                  </label>
+                  <div class="export-scope fixed-scope">
+                    <span>Alcance al exportar</span>
+                    <strong>Solo la traza mostrada</strong>
+                    <small>Para exportar otra señal, selecciónala arriba y crea un nuevo archivo.</small>
+                    <input id="pops-export-scope" type="hidden" value="active" />
+                  </div>
                 </div>
                 <details>
                   <summary>Ventanas fisiológicas del perfil POPS</summary>
@@ -150,6 +149,7 @@
 
               <details class="saturation-details">
                 <summary>Límites de saturación opcionales</summary>
+                <p class="saturation-help">Introduce los límites físicos conocidos del amplificador o del sistema de adquisición, en la misma unidad que la señal. Las muestras iguales o fuera de esos valores se marcan como posible saturación; no se recortan ni se corrigen. Déjalos vacíos si no conoces los límites.</p>
                 <div class="field-grid compact">
                   <label>Inferior<input id="saturation-min" type="number" step="any" placeholder="Sin límite" /></label>
                   <label>Superior<input id="saturation-max" type="number" step="any" placeholder="Sin límite" /></label>
@@ -167,7 +167,7 @@
             </div>
             <div class="toolbar-actions">
               <button id="config-button" type="button" disabled>Exportar configuración</button>
-              <button id="excel-button" class="primary" type="button" disabled>Exportar Excel</button>
+              <button id="excel-button" class="primary" type="button" disabled>Exportar esta traza</button>
             </div>
           </div>
 
@@ -241,6 +241,6 @@
       <span>Herramienta de investigación en desarrollo; los resultados requieren revisión experta.</span>
     </footer>
 
-    <script type="module" src="src/app.js?v=20260731-6"></script>
+    <script type="module" src="src/app.js?v=20260731-7"></script>
   </body>
 </html>

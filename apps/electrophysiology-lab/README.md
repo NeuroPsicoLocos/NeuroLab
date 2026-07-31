@@ -16,7 +16,7 @@ Hay dos métodos disponibles:
 - **Inspección preliminar:** candidatos de artefacto mediante derivada y MAD; no asigna fisiología.
 - **Espiga poblacional · POPS experimental:** reproducción configurable de `High_Fr.ipynb` para trenes y `pops_detect.ipynb` para dos estímulos, con Savitzky–Golay 11/3 y puntos P1–P2–P3.
 
-La exportación POPS puede abarcar la traza activa, todas las columnas numéricas de la hoja activa o todas las hojas compatibles del libro. Cada resultado conserva hoja y nombre de columna.
+La exportación POPS genera un archivo por cada traza mostrada. El nombre del archivo conserva libro, hoja y columna; para exportar otra señal se selecciona esa columna y se crea un archivo nuevo. Esta separación evita mezclar trazas con distinta longitud o calidad en un mismo resultado.
 
 Para libros POPS conocidos, la unidad temporal y el protocolo se proponen automáticamente. Si una selección produce una escala inverosímil —por ejemplo, 10 MHz y menos de 1 ms para 9,900 muestras— la aplicación prueba la unidad inferida, conserva una bandera de trazabilidad y pide confirmación. La gráfica permite alternar entre **Respuesta**, que centra la escala en P1–P3, y **Traza completa**, que conserva visibles los artefactos extremos.
 

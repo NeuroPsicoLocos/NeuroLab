@@ -65,16 +65,25 @@ export function columnValues(sheet, columnIndex) {
   return sheet.rows.map((row) => row[columnIndex]);
 }
 
+function safeFilePart(value, stripExtension = false) {
+  const normalized = String(value ?? "");
+  return (stripExtension ? normalized.replace(/\.[^.]+$/, "") : normalized)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9_-]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "sin-nombre";
+}
+
+export function buildTraceExportBaseName(fileName, sheetName, signalHeader) {
+  return `simulab_${safeFilePart(fileName, true)}_${safeFilePart(sheetName)}_${safeFilePart(signalHeader)}`;
+}
+
 export async function exportAnalysisWorkbook(
-  { fileName, sheetName, timeHeader, signalHeader, result, fieldResult, batchFieldResults = [], settings },
+  { fileName, sheetName, timeHeader, signalHeader, result, fieldResult, settings },
   sheetJsModule = null,
 ) {
   const XLSX = sheetJsModule ?? await loadSheetJs();
-  const populationSources = batchFieldResults.length
-    ? batchFieldResults
-    : fieldResult
-      ? [{ sheetName, signalHeader, fieldResult }]
-      : [];
+  const populationSources = fieldResult ? [{ sheetName, signalHeader, fieldResult }] : [];
   const exportedPopulationEvents = populationSources.flatMap((source) => source.fieldResult.events);
   const summaryRows = [
     ["Campo", "Valor"],
@@ -82,7 +91,7 @@ export async function exportAnalysisWorkbook(
     ["Hoja de origen", sheetName],
     ["Columna temporal", timeHeader],
     ["Columna de señal", signalHeader],
-    ["Estado", result.ok ? "Analizable" : "Excluido"],
+    ["Estado", fieldResult ? (fieldResult.ok ? "Analizable" : "Revisar/excluir") : result.ok ? "Analizable" : "Excluido"],
     ["Muestras válidas", result.stats.validRows],
     ["Muestras faltantes", result.stats.missingCount],
     ["Frecuencia de muestreo (Hz)", result.stats.sampleRateHz],
@@ -94,7 +103,7 @@ export async function exportAnalysisWorkbook(
     ["Método fisiológico", fieldResult ? "Espiga poblacional · perfil POPS experimental" : "Inspección preliminar"],
     ["Trazas POPS exportadas", fieldResult ? populationSources.length : "No aplicado"],
     ["Eventos POPS válidos", fieldResult ? exportedPopulationEvents.filter((event) => event.valid).length : "No aplicado"],
-    ["Eventos POPS para revisión", fieldResult ? exportedPopulationEvents.filter((event) => event.reviewRequired).length : "No aplicado"],
+    ["Eventos POPS para revisión", fieldResult ? exportedPopulationEvents.filter((event) => !event.valid || event.reviewRequired).length : "No aplicado"],
   ];
   const eventRows = [
     ["Evento", "Índice", "Tiempo (ms)", "Señal", "Derivada absoluta", "Razón sobre umbral"],
@@ -113,7 +122,7 @@ export async function exportAnalysisWorkbook(
   ];
   const parameterRows = [
     ["Parámetro", "Valor"],
-    ["Versión del esquema", "simulab-ephys-0.2"],
+    ["Versión del esquema", "simulab-ephys-0.3"],
     ["Fecha de exportación (ISO 8601)", new Date().toISOString()],
     ["Unidad temporal de entrada", settings.timeUnit],
     ["Unidad de señal", settings.signalUnit],
@@ -207,5 +216,5 @@ export async function exportAnalysisWorkbook(
     XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(populationSpikeRows), "Mediciones_POPS");
     XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(populationTraceQcRows), "Trazas_QC");
   }
-  XLSX.writeFileXLSX(workbook, `simulab_${fileName.replace(/\.[^.]+$/, "") || "analisis"}.xlsx`);
+  XLSX.writeFileXLSX(workbook, `${buildTraceExportBaseName(fileName, sheetName, signalHeader)}.xlsx`);
 }

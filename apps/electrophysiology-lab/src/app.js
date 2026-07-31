@@ -10,7 +10,12 @@ import {
   signalColumnChoices,
   suggestWorkbookAnalysis,
 } from "./core/inference.js?v=20260731-5";
-import { columnValues, exportAnalysisWorkbook, parseWorkbook } from "./io/workbook.js?v=20260731-6";
+import {
+  buildTraceExportBaseName,
+  columnValues,
+  exportAnalysisWorkbook,
+  parseWorkbook,
+} from "./io/workbook.js?v=20260731-7";
 import { SignalPlot } from "./ui/plot.js?v=20260731-6";
 
 const elements = {
@@ -162,13 +167,8 @@ function updateSignalScopeHint() {
   const signals = numericSignalColumns(sheet, timeIndex);
   const activeIndex = Number(elements.signalSelect.value);
   const activePosition = Math.max(0, signals.findIndex((column) => column.index === activeIndex)) + 1;
-  const scopeLabels = {
-    active: "solo la traza mostrada",
-    sheet: "todas las señales de esta hoja",
-    workbook: "todas las hojas compatibles",
-  };
   const exportMessage = elements.analysisMode.value === "population-spike"
-    ? ` Al exportar se analizarán ${scopeLabels[elements.popsExportScope.value]}.`
+    ? " Al exportar se incluirá únicamente esta traza."
     : " Selecciona el método POPS para medir P1, P2 y P3.";
   elements.signalScopeHint.textContent = `Mostrando señal ${activePosition} de ${signals.length || 1} en esta hoja.${exportMessage}`;
 }
@@ -409,23 +409,6 @@ function activateSheet(sheetIndex = 0) {
   analyzeCurrentSelection();
 }
 
-function analyzeFieldColumn(sheet, timeIndex, signalIndex, timeUnit) {
-  const settings = currentSettings();
-  const timeValues = convertTimeToMilliseconds(columnValues(sheet, timeIndex), timeUnit);
-  const signalValues = columnValues(sheet, signalIndex);
-  const result = analyzeTrace(timeValues, signalValues, {
-    sensitivity: settings.sensitivity,
-    refractoryMs: settings.refractoryMs,
-    saturationMin: settings.saturationMin ?? Number.NEGATIVE_INFINITY,
-    saturationMax: settings.saturationMax ?? Number.POSITIVE_INFINITY,
-  });
-  if (!result.ok) return null;
-  return {
-    result,
-    fieldResult: measurePopulationSpikes(result.timeMs, result.signal, currentFieldSettings()),
-  };
-}
-
 function numericSignalColumns(sheet, timeIndex) {
   return sheet.headers
     .map((header, index) => ({ header, index }))
@@ -437,44 +420,6 @@ function numericSignalColumns(sheet, timeIndex) {
       const numericCount = nonEmpty.filter((value) => Number.isFinite(Number(value))).length;
       return numericCount / nonEmpty.length >= 0.9;
     });
-}
-
-function collectPopulationSpikeExports() {
-  if (elements.analysisMode.value !== "population-spike") return [];
-  if (state.source.type === "demo") {
-    return [{ sheetName: "Demostración", signalHeader: "Potencial (mV)", fieldResult: state.fieldResult }];
-  }
-
-  const scope = elements.popsExportScope.value;
-  const activeSheetIndex = Number(elements.sheetSelect.value);
-  const sheets = scope === "workbook"
-    ? state.workbook.sheets.map((sheet, index) => ({ sheet, index }))
-    : [{ sheet: state.workbook.sheets[activeSheetIndex], index: activeSheetIndex }];
-  const exports = [];
-
-  for (const { sheet, index: sheetIndex } of sheets) {
-    const isActiveSheet = sheetIndex === activeSheetIndex;
-    const guessed = guessColumns(sheet.headers);
-    const timeIndex = isActiveSheet ? Number(elements.timeSelect.value) : guessed.timeIndex;
-    const timeUnit = isActiveSheet
-      ? resolvedTimeUnit()
-      : guessTimeUnit(columnValues(sheet, timeIndex), sheet.headers[timeIndex]);
-    const signalColumns = scope === "active" && isActiveSheet
-      ? [{ header: sheet.headers[Number(elements.signalSelect.value)], index: Number(elements.signalSelect.value) }]
-      : numericSignalColumns(sheet, timeIndex);
-
-    for (const signalColumn of signalColumns) {
-      const analysis = analyzeFieldColumn(sheet, timeIndex, signalColumn.index, timeUnit);
-      if (analysis?.fieldResult) {
-        exports.push({
-          sheetName: sheet.name,
-          signalHeader: signalColumn.header,
-          fieldResult: analysis.fieldResult,
-        });
-      }
-    }
-  }
-  return exports;
 }
 
 async function openFile(file) {
@@ -522,7 +467,7 @@ function loadDemo() {
 
 function exportConfiguration() {
   const configuration = {
-    schema: "simulab-ephys-0.2",
+    schema: "simulab-ephys-0.3",
     exportedAt: new Date().toISOString(),
     source: state.source?.type === "demo" ? "synthetic_demo" : state.workbook?.fileName,
     sheet: state.source?.type === "demo" ? "Demostración" : state.workbook?.sheets[Number(elements.sheetSelect.value)]?.name,
@@ -531,7 +476,7 @@ function exportConfiguration() {
     analysisMode: elements.analysisMode.value,
     settings: currentSettings(),
     fieldPotentialSettings: elements.analysisMode.value === "population-spike" ? currentFieldSettings() : null,
-    exportScope: elements.analysisMode.value === "population-spike" ? elements.popsExportScope.value : "active",
+    exportScope: "active",
     methodologicalNote: elements.analysisMode.value === "population-spike"
       ? "Perfil POPS experimental para espiga poblacional extracelular; puntos y confianza requieren validación experta."
       : "Los eventos exportados son candidatos de artefacto y requieren validación experta.",
@@ -539,7 +484,10 @@ function exportConfiguration() {
   const blob = new Blob([JSON.stringify(configuration, null, 2)], { type: "application/json" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = "simulab_electrophysiology_config.json";
+  const sourceName = state.source?.type === "demo" ? "demo_potencial_campo.xlsx" : state.workbook?.fileName;
+  const sheetName = state.source?.type === "demo" ? "Demostración" : state.workbook?.sheets[Number(elements.sheetSelect.value)]?.name;
+  const signalName = elements.signalSelect.selectedOptions[0]?.textContent;
+  link.download = `${buildTraceExportBaseName(sourceName, sheetName, signalName)}_config.json`;
   link.click();
   URL.revokeObjectURL(link.href);
 }
@@ -551,7 +499,6 @@ async function exportExcel() {
   try {
     const demo = state.source.type === "demo";
     const sheet = demo ? null : state.workbook.sheets[Number(elements.sheetSelect.value)];
-    const batchFieldResults = collectPopulationSpikeExports();
     await exportAnalysisWorkbook({
       fileName: demo ? "demo_potencial_campo.xlsx" : state.workbook.fileName,
       sheetName: demo ? "Demostración" : sheet.name,
@@ -559,15 +506,14 @@ async function exportExcel() {
       signalHeader: elements.signalSelect.selectedOptions[0]?.textContent,
       result: state.result,
       fieldResult: state.fieldResult,
-      batchFieldResults,
-      settings: { ...currentSettings(), popsExportScope: elements.popsExportScope.value },
+      settings: { ...currentSettings(), popsExportScope: "active" },
     });
   } catch (error) {
     console.error(error);
     window.alert(`No fue posible exportar el libro: ${error.message}`);
   } finally {
     elements.excelButton.disabled = false;
-    elements.excelButton.textContent = "Exportar Excel";
+    elements.excelButton.textContent = "Exportar esta traza";
   }
 }
 

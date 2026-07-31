@@ -18,11 +18,11 @@ test("millisecond labels and typical millisecond axes remain milliseconds", () =
   assert.equal(guessTimeUnit([0, 0.1, 0.2, 0.3], ""), "ms");
 });
 
-test("known POPS books select the correct protocol and whole-workbook export", () => {
+test("known POPS books select the correct protocol and trace-by-trace export", () => {
   const paired = suggestWorkbookAnalysis({ fileName: "PopSpikes.xlsx", sheets: [{ name: "condicion F" }] });
   assert.deepEqual(
     { mode: paired.mode, profile: paired.profile, exportScope: paired.exportScope },
-    { mode: "population-spike", profile: "paired", exportScope: "workbook" },
+    { mode: "population-spike", profile: "paired", exportScope: "active" },
   );
 
   const train = suggestWorkbookAnalysis({
@@ -31,6 +31,7 @@ test("known POPS books select the correct protocol and whole-workbook export", (
   });
   assert.equal(train.profile, "train");
   assert.equal(train.mode, "population-spike");
+  assert.equal(train.exportScope, "active");
 });
 
 test("implausible scales flag the 10 MHz interpretation but accept 10 kHz", () => {

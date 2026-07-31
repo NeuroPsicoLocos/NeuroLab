@@ -30,7 +30,7 @@ export function suggestWorkbookAnalysis(workbook) {
     return {
       mode: "population-spike",
       profile: "paired",
-      exportScope: "workbook",
+      exportScope: "active",
       message: "POPS de dos estímulos aplicado automáticamente",
     };
   }
@@ -38,7 +38,7 @@ export function suggestWorkbookAnalysis(workbook) {
     return {
       mode: "population-spike",
       profile: "train",
-      exportScope: "workbook",
+      exportScope: "active",
       message: "POPS de tren de estímulos aplicado automáticamente",
     };
   }
