@@ -63,12 +63,32 @@ export class SignalPlot {
       candidates = [],
       processedSignal = null,
       responseEvents = [],
+      viewMode = "full",
     } = this.result;
     const margins = { top: 20, right: 20, bottom: 42, left: 62 };
     const plotWidth = width - margins.left - margins.right;
     const plotHeight = height - margins.top - margins.bottom;
-    const timeRange = range(timeMs);
-    const signalRange = range(signal);
+    const fullTimeRange = range(timeMs);
+    const validEvents = responseEvents.filter((event) => event.valid);
+    const responsePoints = validEvents.flatMap((event) => [event.p1, event.p2, event.p3]);
+    const responseArtifacts = validEvents.map((event) => event.artifact);
+    const useResponseView = viewMode === "response" && responsePoints.length > 0;
+    const responseStart = Math.min(...responseArtifacts.map((artifact) => artifact.timeMs)) - 8;
+    const responseEnd = Math.max(...responsePoints.map((point) => point.timeMs)) + 12;
+    const timeRange = useResponseView
+      ? {
+        minimum: Math.max(fullTimeRange.minimum, responseStart),
+        maximum: Math.min(fullTimeRange.maximum, responseEnd),
+      }
+      : fullTimeRange;
+    const responseYValues = validEvents.flatMap((event) => [
+      event.p1.value,
+      event.p2.value,
+      event.p3.value,
+      event.baseline - (event.baselineSigma || 0) * 3,
+      event.baseline + (event.baselineSigma || 0) * 3,
+    ]).filter(Number.isFinite);
+    const signalRange = useResponseView ? range(responseYValues) : range(signal);
     const signalPadding = Math.max((signalRange.maximum - signalRange.minimum) * 0.08, 1e-9);
     const yMinimum = signalRange.minimum - signalPadding;
     const yMaximum = signalRange.maximum + signalPadding;
@@ -108,10 +128,15 @@ export class SignalPlot {
       context.strokeStyle = color;
       context.lineWidth = lineWidth;
       context.beginPath();
+      let started = false;
       for (let index = 0; index < values.length; index += stride) {
+        if (timeMs[index] < timeRange.minimum || timeMs[index] > timeRange.maximum) continue;
         const x = xScale(timeMs[index]);
         const y = yScale(values[index]);
-        if (index === 0) context.moveTo(x, y);
+        if (!started) {
+          context.moveTo(x, y);
+          started = true;
+        }
         else context.lineTo(x, y);
       }
       context.stroke();

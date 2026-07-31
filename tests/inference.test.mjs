@@ -1,7 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { guessTimeUnit, suggestWorkbookAnalysis } from "../apps/electrophysiology-lab/src/core/inference.js";
+import {
+  guessTimeUnit,
+  isImplausibleTimeScale,
+  suggestWorkbookAnalysis,
+} from "../apps/electrophysiology-lab/src/core/inference.js";
 
 test("headerless POPS time axis is inferred as seconds", () => {
   const time = Array.from({ length: 9900 }, (_, index) => index * 0.0001);
@@ -26,4 +30,9 @@ test("known POPS books select the correct protocol and whole-workbook export", (
   });
   assert.equal(train.profile, "train");
   assert.equal(train.mode, "population-spike");
+});
+
+test("implausible scales flag the 10 MHz interpretation but accept 10 kHz", () => {
+  assert.equal(isImplausibleTimeScale({ sampleRateHz: 10_000_000, validRows: 9900, durationMs: 0.99 }), true);
+  assert.equal(isImplausibleTimeScale({ sampleRateHz: 10_000, validRows: 9900, durationMs: 989.9 }), false);
 });

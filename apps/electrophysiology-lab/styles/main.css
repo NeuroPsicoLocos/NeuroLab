@@ -130,6 +130,8 @@ summary { color: var(--teal); font-size: .78rem; font-weight: 750; cursor: point
 .plot-legend .event-key::before { background: var(--orange); }
 .plot-legend .raw-key::before { background: #9aa5a2; }
 .plot-legend .points-key::before { height: 7px; background: linear-gradient(90deg, #d99a32 0 33%, #2b8a64 33% 66%, #b64b4b 66%); }
+.plot-view-control { margin-right: auto; display: flex; align-items: center; gap: 7px; color: #41504f; font-weight: 750; }
+.plot-view-control select { width: auto; min-height: 30px; padding: 4px 28px 4px 8px; font-size: .7rem; }
 #signal-canvas { width: 100%; height: clamp(300px, 38vw, 530px); display: block; }
 
 .metric-grid { margin-top: 14px; display: grid; grid-template-columns: repeat(5, 1fr); border: 1px solid var(--line); }

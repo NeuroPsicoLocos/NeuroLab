@@ -18,6 +18,8 @@ Hay dos métodos disponibles:
 
 La exportación POPS puede abarcar la traza activa, todas las columnas numéricas de la hoja activa o todas las hojas compatibles del libro. Cada resultado conserva hoja y nombre de columna.
 
+Para libros POPS conocidos, la unidad temporal y el protocolo se proponen automáticamente. Si una selección produce una escala inverosímil —por ejemplo, 10 MHz y menos de 1 ms para 9,900 muestras— la aplicación prueba la unidad inferida, conserva una bandera de trazabilidad y pide confirmación. La gráfica permite alternar entre **Respuesta**, que centra la escala en P1–P3, y **Traza completa**, que conserva visibles los artefactos extremos.
+
 POPS se interpreta aquí como una medición de **espiga poblacional extracelular**. No clasifica respuestas sinápticas de una neurona individual como EPSP, IPSP, EPSC o IPSC.
 
 ## Formato de entrada

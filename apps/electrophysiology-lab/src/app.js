@@ -4,9 +4,9 @@ import {
   PAIRED_POPS_PROFILE,
   measurePopulationSpikes,
 } from "./core/fieldPotential.js";
-import { guessTimeUnit, suggestWorkbookAnalysis } from "./core/inference.js";
+import { guessTimeUnit, isImplausibleTimeScale, suggestWorkbookAnalysis } from "./core/inference.js?v=20260731-4";
 import { columnValues, exportAnalysisWorkbook, parseWorkbook } from "./io/workbook.js";
-import { SignalPlot } from "./ui/plot.js";
+import { SignalPlot } from "./ui/plot.js?v=20260731-4";
 
 const elements = {
   fileInput: document.querySelector("#file-input"),
@@ -48,6 +48,7 @@ const elements = {
   eventTableBody: document.querySelector("#event-table-body"),
   smoothLegend: document.querySelector("#smooth-legend"),
   pointsLegend: document.querySelector("#points-legend"),
+  plotView: document.querySelector("#plot-view"),
   metrics: {
     samples: document.querySelector("#metric-samples"),
     rate: document.querySelector("#metric-rate"),
@@ -127,6 +128,8 @@ function setAnalysisModeUi() {
   elements.popsControls.hidden = !isPopulationSpike;
   elements.smoothLegend.hidden = !isPopulationSpike;
   elements.pointsLegend.hidden = !isPopulationSpike;
+  elements.plotView.value = isPopulationSpike ? "response" : "full";
+  elements.plotView.disabled = !isPopulationSpike;
   updateSignalScopeHint();
 }
 
@@ -267,6 +270,7 @@ function renderResult(result, fieldResult = null) {
       candidates: fieldResult.artifacts,
       processedSignal: fieldResult.processedSignal,
       responseEvents: fieldResult.events,
+      viewMode: elements.plotView.value,
     }
     : result;
   plot.setData(plotResult, { time: "ms", signal: settings.signalUnit });
@@ -287,6 +291,7 @@ function analyzeCurrentSelection() {
   if (!state.source) return;
   const settings = currentSettings();
   let timeValues;
+  let rawTimeValues;
   let signalValues;
 
   if (state.source.type === "demo") {
@@ -294,17 +299,32 @@ function analyzeCurrentSelection() {
     signalValues = state.source.trace.signal;
   } else {
     const sheet = state.workbook.sheets[Number(elements.sheetSelect.value)];
-    timeValues = convertTimeToMilliseconds(columnValues(sheet, Number(elements.timeSelect.value)), settings.timeUnit);
+    rawTimeValues = columnValues(sheet, Number(elements.timeSelect.value));
+    timeValues = convertTimeToMilliseconds(rawTimeValues, settings.timeUnit);
     signalValues = columnValues(sheet, Number(elements.signalSelect.value));
   }
 
-  const result = analyzeTrace(timeValues, signalValues, {
+  const analyze = (times) => analyzeTrace(times, signalValues, {
     sensitivity: settings.sensitivity,
     refractoryMs: settings.refractoryMs,
     saturationMin: settings.saturationMin ?? Number.NEGATIVE_INFINITY,
     saturationMax: settings.saturationMax ?? Number.POSITIVE_INFINITY,
   });
-  if (result.stats.sampleRateHz > 1_000_000 || (result.stats.validRows > 1000 && result.stats.durationMs < 10)) {
+  let result = analyze(timeValues);
+  if (rawTimeValues && isImplausibleTimeScale(result.stats) && state.inferredTimeUnit !== settings.timeUnit) {
+    const correctedTimes = convertTimeToMilliseconds(rawTimeValues, state.inferredTimeUnit);
+    const correctedResult = analyze(correctedTimes);
+    if (!isImplausibleTimeScale(correctedResult.stats)) {
+      result = correctedResult;
+      elements.timeUnit.value = "auto";
+      result.flags.push({
+        level: "info",
+        code: "time_scale_auto_corrected",
+        message: `Escala temporal corregida automáticamente a ${state.inferredTimeUnit === "s" ? "segundos" : "microsegundos"}; confirma la unidad del equipo.`,
+      });
+    }
+  }
+  if (isImplausibleTimeScale(result.stats)) {
     result.flags.push({
       level: "review",
       code: "implausible_time_scale",
@@ -533,6 +553,9 @@ elements.signalSelect.addEventListener("change", () => {
   analyzeCurrentSelection();
 });
 elements.timeUnit.addEventListener("change", analyzeCurrentSelection);
+elements.plotView.addEventListener("change", () => {
+  if (state.result) renderResult(state.result, state.fieldResult);
+});
 elements.signalUnit.addEventListener("change", analyzeCurrentSelection);
 elements.analysisMode.addEventListener("change", () => {
   setAnalysisModeUi();
@@ -581,3 +604,4 @@ for (const eventName of ["dragleave", "drop"]) {
   });
 }
 elements.dropZone.addEventListener("drop", (event) => openFile(event.dataTransfer.files[0]));
+setAnalysisModeUi();

@@ -49,3 +49,9 @@ export function suggestWorkbookAnalysis(workbook) {
     message: "Inspección preliminar aplicada",
   };
 }
+
+/** Detects a likely unit mismatch without assuming a particular acquisition system. */
+export function isImplausibleTimeScale(stats) {
+  if (!stats) return false;
+  return stats.sampleRateHz > 1_000_000 || (stats.validRows > 1000 && stats.durationMs < 10);
+}
