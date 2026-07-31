@@ -3,15 +3,15 @@ import {
   LEGACY_POPS_PROFILE,
   PAIRED_POPS_PROFILE,
   measurePopulationSpikes,
-} from "./core/fieldPotential.js";
+} from "./core/fieldPotential.js?v=20260731-6";
 import {
   guessTimeUnit,
   isImplausibleTimeScale,
   signalColumnChoices,
   suggestWorkbookAnalysis,
 } from "./core/inference.js?v=20260731-5";
-import { columnValues, exportAnalysisWorkbook, parseWorkbook } from "./io/workbook.js";
-import { SignalPlot } from "./ui/plot.js?v=20260731-5";
+import { columnValues, exportAnalysisWorkbook, parseWorkbook } from "./io/workbook.js?v=20260731-6";
+import { SignalPlot } from "./ui/plot.js?v=20260731-6";
 
 const elements = {
   fileInput: document.querySelector("#file-input"),
@@ -214,6 +214,13 @@ function updateQuality(result, fieldResult = null) {
     if (fieldResult.flags.includes("incomplete_response_window")) {
       appendQualityItem("review", "Al menos un estímulo no tiene una ventana completa para P1, P2 y P3.");
     }
+    const rejectedP3Events = fieldResult.events.filter((event) => event.flags.includes("p3_prominence_not_met"));
+    if (rejectedP3Events.length) {
+      appendQualityItem(
+        "review",
+        `${rejectedP3Events.length} estímulo(s) sin respuesta POPS: no se encontró un P3 con la prominencia mínima. Se conservan los artefactos para revisión manual, pero no se reporta amplitud.`,
+      );
+    }
     if (reviewEvents.length) {
       appendQualityItem("review", `${reviewEvents.length} de ${validEvents.length} evento(s) requieren revisión de puntos o prominencia.`);
     }
@@ -266,7 +273,14 @@ function renderEventTable(fieldResult, signalUnit) {
     const status = document.createElement("span");
     status.className = `review-pill${event.valid && !event.reviewRequired ? " accept" : ""}`;
     const p3Fallback = event.valid && event.flags.includes("p3_prominence_fallback");
-    status.textContent = event.valid && !event.reviewRequired ? "Aceptable" : p3Fallback ? "Revisar P3" : "Revisar";
+    const p3Rejected = !event.valid && event.flags.includes("p3_prominence_not_met");
+    status.textContent = event.valid && !event.reviewRequired
+      ? "Aceptable"
+      : p3Rejected
+        ? "Sin P3"
+        : p3Fallback
+          ? "Revisar P3"
+          : "Revisar";
     if (event.flags?.length) status.title = event.flags.join(", ");
     statusCell.append(status);
     row.append(statusCell);

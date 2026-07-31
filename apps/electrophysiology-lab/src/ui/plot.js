@@ -14,6 +14,16 @@ function formatNumber(value) {
   return value.toFixed(absolute >= 10 ? 1 : 2);
 }
 
+function quantile(values, fraction) {
+  if (!values.length) return Number.NaN;
+  const sorted = [...values].sort((a, b) => a - b);
+  const position = (sorted.length - 1) * fraction;
+  const lower = Math.floor(position);
+  const upper = Math.ceil(position);
+  if (lower === upper) return sorted[lower];
+  return sorted[lower] + (sorted[upper] - sorted[lower]) * (position - lower);
+}
+
 export class SignalPlot {
   constructor(canvas) {
     this.canvas = canvas;
@@ -71,24 +81,32 @@ export class SignalPlot {
     const fullTimeRange = range(timeMs);
     const validEvents = responseEvents.filter((event) => event.valid);
     const responsePoints = validEvents.flatMap((event) => [event.p1, event.p2, event.p3]);
-    const responseArtifacts = validEvents.map((event) => event.artifact);
-    const useResponseView = viewMode === "response" && responsePoints.length > 0;
+    const responseArtifacts = candidates.length ? candidates : validEvents.map((event) => event.artifact);
+    const useResponseView = viewMode === "response" && responseArtifacts.length > 0;
     const responseStart = Math.min(...responseArtifacts.map((artifact) => artifact.timeMs)) - 8;
-    const responseEnd = Math.max(...responsePoints.map((point) => point.timeMs)) + 12;
+    const responseEnd = responsePoints.length
+      ? Math.max(...responsePoints.map((point) => point.timeMs)) + 12
+      : Math.max(...responseArtifacts.map((artifact) => artifact.timeMs)) + 50;
     const timeRange = useResponseView
       ? {
         minimum: Math.max(fullTimeRange.minimum, responseStart),
         maximum: Math.min(fullTimeRange.maximum, responseEnd),
       }
       : fullTimeRange;
-    const responseYValues = validEvents.flatMap((event) => [
+    let responseYValues = validEvents.flatMap((event) => [
       event.p1.value,
       event.p2.value,
       event.p3.value,
       event.baseline - (event.baselineSigma || 0) * 3,
       event.baseline + (event.baselineSigma || 0) * 3,
     ]).filter(Number.isFinite);
-    const signalRange = useResponseView ? range(responseYValues) : range(signal);
+    if (useResponseView && !responseYValues.length) {
+      const visibleValues = (processedSignal ?? signal).filter(
+        (value, index) => timeMs[index] >= timeRange.minimum && timeMs[index] <= timeRange.maximum && Number.isFinite(value),
+      );
+      responseYValues = [quantile(visibleValues, 0.02), quantile(visibleValues, 0.98)].filter(Number.isFinite);
+    }
+    const signalRange = useResponseView && responseYValues.length ? range(responseYValues) : range(signal);
     const signalPadding = Math.max((signalRange.maximum - signalRange.minimum) * 0.08, 1e-9);
     const yMinimum = signalRange.minimum - signalPadding;
     const yMaximum = signalRange.maximum + signalPadding;

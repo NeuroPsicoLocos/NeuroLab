@@ -56,7 +56,7 @@ El protocolo de tren conserva los parámetros del notebook de alta frecuencia:
 - P3: máximo entre 2 y 8 ms después de P2, con prominencia mínima 0.2;
 - amplitud: `((P1 + P3) / 2) - P2`.
 
-El protocolo pareado busca el cambio derivativo más grande antes de 60 ms y antes de 150 ms, conserva el margen de cinco muestras del notebook y usa sus ventanas P1 1–10 ms, P2 0–15 ms y P3 0–20 ms. Si ambas búsquedas seleccionan el mismo artefacto se genera una bandera explícita.
+El protocolo pareado busca el cambio derivativo más grande antes de 60 ms y antes de 150 ms, conserva el margen de cinco muestras del notebook y usa sus ventanas P1 1–10 ms, P2 0–15 ms y P3 0–20 ms. P3 debe alcanzar prominencia 0.3; de lo contrario se conserva el artefacto para revisión, pero no se reporta una respuesta ni una amplitud. Si ambas búsquedas seleccionan el mismo artefacto se genera una bandera explícita.
 
 La aplicación añade línea base robusta, SNR y una puntuación de revisión. La puntuación no es una probabilidad y no sustituye la inspección de la gráfica. La especificación y sus límites están en [`docs/electrophysiology/POPS_METHOD.md`](../../docs/electrophysiology/POPS_METHOD.md).
 

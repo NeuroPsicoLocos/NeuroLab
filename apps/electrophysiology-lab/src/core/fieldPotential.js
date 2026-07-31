@@ -32,6 +32,7 @@ export const PAIRED_POPS_PROFILE = Object.freeze({
   p3StartMs: 0,
   p3EndMs: 20,
   p3Prominence: 0.3,
+  requireP3Prominence: true,
 });
 
 function resolveSettings(options) {
@@ -211,6 +212,16 @@ function measureEvent(eventNumber, artifact, timeMs, signal, settings, previousA
 
   const p1 = pointAt(p1Index, timeMs, signal, artifactTime);
   const p2 = pointAt(p2Index, timeMs, signal, artifactTime);
+  if (settings.requireP3Prominence && p3Selection.usedFallback) {
+    return {
+      valid: false,
+      eventNumber,
+      artifact,
+      p1,
+      p2,
+      flags: ["p3_prominence_not_met"],
+    };
+  }
   const p3 = pointAt(p3Selection.index, timeMs, signal, artifactTime);
   const amplitude = ((p1.value + p3.value) / 2) - p2.value;
   const tau12Ms = p2.timeMs - p1.timeMs;
@@ -307,7 +318,10 @@ export function measurePopulationSpikes(timeMs, rawSignal, options = {}) {
   );
   if (!artifacts.length) flags.push("no_artifacts");
   if (new Set(artifacts.map((artifact) => artifact.index)).size !== artifacts.length) flags.push("duplicate_artifact_windows");
-  if (events.some((event) => !event.valid)) flags.push("incomplete_response_window");
+  if (events.some((event) => !event.valid && !event.flags.includes("p3_prominence_not_met"))) {
+    flags.push("incomplete_response_window");
+  }
+  if (events.some((event) => event.flags.includes("p3_prominence_not_met"))) flags.push("p3_prominence_not_met");
   if (events.some((event) => event.reviewRequired)) flags.push("events_require_review");
   return {
     ok: artifacts.length > 0 && events.some((event) => event.valid),

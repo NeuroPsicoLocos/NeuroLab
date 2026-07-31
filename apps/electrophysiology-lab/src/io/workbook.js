@@ -192,7 +192,7 @@ export async function exportAnalysisWorkbook(
         source.fieldResult.ok ? "Analizable" : "Revisar/excluir",
         source.fieldResult.artifacts.length,
         source.fieldResult.events.filter((event) => event.valid).length,
-        source.fieldResult.events.filter((event) => event.reviewRequired).length,
+        source.fieldResult.events.filter((event) => !event.valid || event.reviewRequired).length,
         source.fieldResult.flags.join("; "),
       ]),
     ]

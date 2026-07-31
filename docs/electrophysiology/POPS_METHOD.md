@@ -36,7 +36,7 @@ También se calculan latencias, τ1–2, τ2–3, pendiente P1–P3, línea base
 3. Conservar cinco muestras posteriores como final de la región de artefacto.
 4. P1: máximo entre 1 y 10 ms después del final de esa región.
 5. P2: mínimo desde la muestra posterior a P1 hasta 15 ms después.
-6. P3: máximo hasta 20 ms después de P2, intentando prominencia 0.3.
+6. P3: máximo hasta 20 ms después de P2, con prominencia mínima obligatoria de 0.3. Si no existe, el estímulo queda sin respuesta POPS y se conserva como caso para revisión manual.
 7. Aplicar la misma fórmula de amplitud.
 
 Como la segunda búsqueda incluye también la primera ventana, puede seleccionar dos veces el mismo artefacto cuando el primero sea el de mayor derivada. Simu-LAB conserva el comportamiento para reproducibilidad, pero genera la bandera `duplicate_artifact_windows`.
@@ -48,7 +48,7 @@ La implementación JavaScript se comparó localmente con `PS-frequencies.xlsx` y
 - Se detectaron 10 eventos en 10 Hz, 10 en 30 Hz y 10 en 50 Hz.
 - Para el primer evento de 10 Hz se reprodujeron P1 = 0.0394 s, P2 = 0.0429 s y P3 = 0.0464 s.
 - La amplitud reproducida fue 0.4524557868764569 mV; la tabla histórica registra 0.4524557868764582 mV. La diferencia es compatible con redondeo numérico.
-- En `PopSpikes.xlsx`, condición F, columna B, el protocolo pareado reprodujo P1/P2/P3 = 0.0401/0.0476/0.0509 s y amplitud 0.08192173227272728 mV para el primer evento.
+- En `PopSpikes.xlsx`, condición F, columna B, ninguno de los dos estímulos alcanza la prominencia P3 de 0.3; se esperan 0 respuestas válidas y 2 artefactos conservados para revisión.
 
 ## Supuestos que deben permanecer visibles
 

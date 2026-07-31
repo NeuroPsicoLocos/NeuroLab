@@ -54,9 +54,31 @@ test("invalid physiological windows are rejected explicitly", () => {
 });
 
 test("paired POPS profile reproduces two fixed artifact search windows", () => {
-  const demo = createDemoTrace({ durationMs: 200, stimulusTimesMs: [35, 95] });
-  demo.signal[950] += 3; // make the second artifact stronger, as in the legacy paired recording
-  const result = measurePopulationSpikes(demo.timeMs, demo.signal, { profile: "paired" });
+  const timeMs = Array.from({ length: 2000 }, (_, index) => index / 10);
+  const signal = Array.from({ length: 2000 }, () => 0);
+  signal[350] = 4;
+  signal[400] = 1;
+  signal[450] = -2;
+  signal[500] = 1;
+  signal[950] = 6;
+  signal[1000] = 1;
+  signal[1050] = -2;
+  signal[1100] = 1;
+  const result = measurePopulationSpikes(timeMs, signal, { profile: "paired", smoothing: false });
   assert.deepEqual(result.artifacts.map((artifact) => Math.round(artifact.timeMs)), [35, 95]);
   assert.equal(result.events.filter((event) => event.valid).length, 2);
+});
+
+test("paired POPS rejects responses whose P3 does not meet minimum prominence", () => {
+  const timeMs = Array.from({ length: 2000 }, (_, index) => index / 10);
+  const signal = Array.from({ length: 2000 }, () => 0);
+  signal[350] = 4;
+  signal[351] = -4;
+  signal[950] = 6;
+  signal[951] = -6;
+  const result = measurePopulationSpikes(timeMs, signal, { profile: "paired", smoothing: false });
+  assert.deepEqual(result.artifacts.map((artifact) => Math.round(artifact.timeMs)), [35, 95]);
+  assert.equal(result.events.filter((event) => event.valid).length, 0);
+  assert.ok(result.events.every((event) => event.flags.includes("p3_prominence_not_met")));
+  assert.ok(result.flags.includes("p3_prominence_not_met"));
 });
