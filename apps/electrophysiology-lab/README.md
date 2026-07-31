@@ -34,6 +34,8 @@ Se aceptan XLSX, XLS, CSV, TSV y TXT. Cada traza debe tener como mínimo:
 La unidad temporal se convierte internamente a milisegundos. La señal se conserva en la unidad declarada por la persona usuaria.
 La columna elegida como tiempo se excluye automáticamente del selector de señal para evitar analizar el eje temporal como si fuera un registro electrofisiológico.
 
+Los límites de saturación son opcionales y solo deben introducirse cuando se conocen los límites físicos del equipo. Sirven para generar una bandera; no recortan ni corrigen la señal. En la demostración, la vista de respuesta incluye toda la amplitud para que un artefacto fuera del rango fisiológico no parezca saturación del registro.
+
 ## Método preliminar
 
 1. Se eliminan del análisis los pares que no sean numéricos, manteniendo su conteo como indicador de calidad.

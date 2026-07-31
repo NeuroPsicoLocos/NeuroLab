@@ -19,6 +19,8 @@ test("synthetic demo is deterministic and exposes ten stimulus artifacts", () =>
   assert.equal(result.stats.validRows, 11000);
   assert.ok(Math.abs(result.stats.sampleRateHz - 10000) < 0.01);
   assert.equal(result.candidates.length, 10);
+  assert.equal(result.stats.saturatedCount, 0);
+  assert.equal(result.flags.some((flag) => flag.code === "possible_saturation"), false);
   assert.deepEqual(result.candidates.map((candidate) => Math.round(candidate.timeMs)), first.stimulusTimesMs);
 });
 

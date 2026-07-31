@@ -120,7 +120,9 @@ summary { color: var(--teal); font-size: .78rem; font-weight: 750; cursor: point
 .fixed-scope strong { color: var(--ink); font-size: .74rem; }
 .fixed-scope small, .saturation-help { color: var(--muted); font-size: .66rem; line-height: 1.45; }
 .saturation-details { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--line); }
-.saturation-help { margin: 12px 0; padding: 10px 12px; background: #eef4f0; border-left: 3px solid var(--teal); }
+.saturation-details h3 { margin: 0; color: var(--teal); font-size: .78rem; }
+.saturation-help { margin: 9px 0 12px; padding: 10px 12px; background: #eef4f0; border-left: 3px solid var(--teal); }
+.saturation-fields { margin-top: 10px; }
 
 .results-panel { min-width: 0; padding: 30px; }
 .results-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; }

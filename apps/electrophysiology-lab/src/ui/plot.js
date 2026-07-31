@@ -74,6 +74,7 @@ export class SignalPlot {
       processedSignal = null,
       responseEvents = [],
       viewMode = "full",
+      includeFullSignalRange = false,
     } = this.result;
     const margins = { top: 20, right: 20, bottom: 42, left: 62 };
     const plotWidth = width - margins.left - margins.right;
@@ -100,11 +101,16 @@ export class SignalPlot {
       event.baseline - (event.baselineSigma || 0) * 3,
       event.baseline + (event.baselineSigma || 0) * 3,
     ]).filter(Number.isFinite);
-    if (useResponseView && !responseYValues.length) {
+    if (useResponseView) {
       const visibleValues = (processedSignal ?? signal).filter(
         (value, index) => timeMs[index] >= timeRange.minimum && timeMs[index] <= timeRange.maximum && Number.isFinite(value),
       );
-      responseYValues = [quantile(visibleValues, 0.02), quantile(visibleValues, 0.98)].filter(Number.isFinite);
+      if (includeFullSignalRange && visibleValues.length) {
+        const visibleRange = range(visibleValues);
+        responseYValues.push(visibleRange.minimum, visibleRange.maximum);
+      } else if (!responseYValues.length) {
+        responseYValues = [quantile(visibleValues, 0.02), quantile(visibleValues, 0.98)].filter(Number.isFinite);
+      }
     }
     const signalRange = useResponseView && responseYValues.length ? range(responseYValues) : range(signal);
     const signalPadding = Math.max((signalRange.maximum - signalRange.minimum) * 0.08, 1e-9);

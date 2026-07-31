@@ -16,7 +16,7 @@ import {
   exportAnalysisWorkbook,
   parseWorkbook,
 } from "./io/workbook.js?v=20260731-7";
-import { SignalPlot } from "./ui/plot.js?v=20260731-6";
+import { SignalPlot } from "./ui/plot.js?v=20260731-8";
 
 const elements = {
   fileInput: document.querySelector("#file-input"),
@@ -299,6 +299,7 @@ function renderResult(result, fieldResult = null) {
       processedSignal: fieldResult.processedSignal,
       responseEvents: fieldResult.events,
       viewMode: elements.plotView.value,
+      includeFullSignalRange: state.source?.type === "demo",
     }
     : result;
   plot.setData(plotResult, { time: "ms", signal: settings.signalUnit });
@@ -513,7 +514,7 @@ async function exportExcel() {
     window.alert(`No fue posible exportar el libro: ${error.message}`);
   } finally {
     elements.excelButton.disabled = false;
-    elements.excelButton.textContent = "Exportar esta traza";
+    elements.excelButton.textContent = "Exportar Excel";
   }
 }
 

@@ -14,7 +14,7 @@
     <meta property="og:image" content="https://neurolab.neuropsicolocos.com/assets/simulab-social.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
     <title>Electrophysiology Lab · Simu-LAB</title>
-    <link rel="stylesheet" href="styles/main.css?v=20260731-7" />
+    <link rel="stylesheet" href="styles/main.css?v=20260731-8" />
   </head>
   <body>
     <header class="app-header">
@@ -147,14 +147,17 @@
                 <p class="method-note">Mide una deflexión negativa entre dos puntos de flanco. Se interpreta como espiga poblacional extracelular; no como EPSP/IPSP individual.</p>
               </div>
 
-              <details class="saturation-details">
-                <summary>Límites de saturación opcionales</summary>
+              <div class="saturation-details">
+                <h3>Límites de saturación opcionales</h3>
                 <p class="saturation-help">Introduce los límites físicos conocidos del amplificador o del sistema de adquisición, en la misma unidad que la señal. Las muestras iguales o fuera de esos valores se marcan como posible saturación; no se recortan ni se corrigen. Déjalos vacíos si no conoces los límites.</p>
-                <div class="field-grid compact">
-                  <label>Inferior<input id="saturation-min" type="number" step="any" placeholder="Sin límite" /></label>
-                  <label>Superior<input id="saturation-max" type="number" step="any" placeholder="Sin límite" /></label>
-                </div>
-              </details>
+                <details>
+                  <summary>Configurar límites conocidos</summary>
+                  <div class="field-grid compact saturation-fields">
+                    <label>Inferior<input id="saturation-min" type="number" step="any" placeholder="Sin límite" /></label>
+                    <label>Superior<input id="saturation-max" type="number" step="any" placeholder="Sin límite" /></label>
+                  </div>
+                </details>
+              </div>
             </div>
           </section>
         </aside>
@@ -167,7 +170,7 @@
             </div>
             <div class="toolbar-actions">
               <button id="config-button" type="button" disabled>Exportar configuración</button>
-              <button id="excel-button" class="primary" type="button" disabled>Exportar esta traza</button>
+              <button id="excel-button" class="primary" type="button" disabled>Exportar Excel</button>
             </div>
           </div>
 
@@ -241,6 +244,6 @@
       <span>Herramienta de investigación en desarrollo; los resultados requieren revisión experta.</span>
     </footer>
 
-    <script type="module" src="src/app.js?v=20260731-7"></script>
+    <script type="module" src="src/app.js?v=20260731-8"></script>
   </body>
 </html>
