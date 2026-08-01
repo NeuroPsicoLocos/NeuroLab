@@ -71,7 +71,7 @@ Las señales compatibles de cada hoja se recorren como barridos mediante flechas
 - conservar una nota breve por traza;
 - consultar el avance y los conteos de aceptación y rechazo.
 
-Una barra de revisión rápida permanece unida al encabezado de la gráfica para evitar desplazamientos largos en Safari o pantallas amplias. Repite las mismas acciones sin crear decisiones distintas. Cuando el foco no está en un campo de texto, pueden usarse `A` para aceptar y avanzar, `R` para rechazar y avanzar, y `P` para guardar como pendiente. Los atajos se desactivan durante la corrección gráfica de puntos.
+La única barra de decisión permanece unida al encabezado de la gráfica para evitar desplazamientos largos en Safari o pantallas amplias. Reúne las flechas de traza anterior/siguiente, el estado actual y las acciones de revisión; el panel superior conserva únicamente el progreso y la nota auditable. Cuando el foco no está en un campo de texto, pueden usarse `A` para aceptar y avanzar, `R` para rechazar y avanzar, y `P` para guardar como pendiente. Los atajos se desactivan durante la corrección gráfica de puntos.
 
 La revisión se conserva en `localStorage`, únicamente en el navegador y dispositivo actuales. Cada decisión queda vinculada al archivo de origen, hoja, columna y configuración analítica. Si cambian parámetros que pueden alterar la detección, la decisión se presenta como desactualizada y requiere una nueva revisión.
 

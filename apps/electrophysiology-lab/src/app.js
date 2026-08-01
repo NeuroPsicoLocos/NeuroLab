@@ -77,12 +77,8 @@ const elements = {
   reviewTitle: document.querySelector("#review-title"),
   reviewProgress: document.querySelector("#review-progress"),
   reviewNote: document.querySelector("#review-note"),
-  reviewPending: document.querySelector("#review-pending"),
-  reviewReject: document.querySelector("#review-reject"),
-  reviewAccept: document.querySelector("#review-accept"),
   reviewStorageNote: document.querySelector("#review-storage-note"),
   quickReviewBar: document.querySelector("#quick-review-bar"),
-  quickReviewTrace: document.querySelector("#quick-review-trace"),
   quickReviewDecision: document.querySelector("#quick-review-decision"),
   quickReviewPending: document.querySelector("#quick-review-pending"),
   quickReviewReject: document.querySelector("#quick-review-reject"),
@@ -410,14 +406,10 @@ function updateReviewUi() {
     elements.reviewTitle.textContent = record ? `${decisionLabel(record.decision)}${correctionSuffix}` : "Pendiente de decisión";
     elements.reviewWorkflow.dataset.status = record?.decision ?? "pending";
   }
-  elements.quickReviewTrace.textContent = `${elements.tracePosition.textContent} · ${elements.traceSignalName.textContent}`;
   elements.quickReviewDecision.textContent = elements.reviewTitle.textContent;
   elements.quickReviewBar.dataset.status = elements.reviewWorkflow.dataset.status;
   if (document.activeElement !== elements.reviewNote) elements.reviewNote.value = record?.note ?? "";
   state.activeReviewTraceKey = activeTraceKey;
-  const atLastTrace = choices.findIndex((choice) => choice.index === Number(elements.signalSelect.value)) >= choices.length - 1;
-  elements.reviewAccept.textContent = atLastTrace ? "Aceptar" : "Aceptar y siguiente";
-  elements.reviewReject.textContent = atLastTrace ? "Rechazar" : "Rechazar y siguiente";
 }
 
 function storeCurrentReview(decision, { advance = false } = {}) {
@@ -975,9 +967,6 @@ elements.signalPrevious.addEventListener("click", () => navigateSignal(-1));
 elements.signalNext.addEventListener("click", () => navigateSignal(1));
 elements.tracePrevious.addEventListener("click", () => navigateSignal(-1));
 elements.traceNext.addEventListener("click", () => navigateSignal(1));
-elements.reviewPending.addEventListener("click", () => storeCurrentReview("pending"));
-elements.reviewReject.addEventListener("click", () => storeCurrentReview("rejected", { advance: true }));
-elements.reviewAccept.addEventListener("click", () => storeCurrentReview("accepted", { advance: true }));
 elements.quickReviewPending.addEventListener("click", () => storeCurrentReview("pending"));
 elements.quickReviewReject.addEventListener("click", () => storeCurrentReview("rejected", { advance: true }));
 elements.quickReviewAccept.addEventListener("click", () => storeCurrentReview("accepted", { advance: true }));

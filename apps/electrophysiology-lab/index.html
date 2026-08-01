@@ -14,7 +14,7 @@
     <meta property="og:image" content="https://neurolab.neuropsicolocos.com/assets/simulab-social.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
     <title>Electrophysiology Lab · Simu-LAB</title>
-    <link rel="stylesheet" href="styles/main.css?v=20260801-2" />
+    <link rel="stylesheet" href="styles/main.css?v=20260801-3" />
   </head>
   <body>
     <header class="app-header">
@@ -174,11 +174,6 @@
             <div class="trace-heading">
               <p class="eyebrow">Traza activa</p>
               <h2 id="trace-title">Sin datos</h2>
-              <div class="trace-navigator" id="trace-navigator" hidden>
-                <button id="trace-previous" type="button" aria-label="Ir a la traza anterior" title="Traza anterior">←</button>
-                <span><strong id="trace-position">Traza —</strong><small id="trace-signal-name">—</small></span>
-                <button id="trace-next" type="button" aria-label="Ir a la traza siguiente" title="Traza siguiente">→</button>
-              </div>
             </div>
             <div class="toolbar-actions">
               <button id="config-button" type="button" disabled>Exportar configuración</button>
@@ -197,12 +192,7 @@
             <label class="review-note">Nota de revisión
               <textarea id="review-note" rows="2" placeholder="Observación opcional sobre esta traza"></textarea>
             </label>
-            <div class="review-actions">
-              <button id="review-pending" type="button">Guardar pendiente</button>
-              <button id="review-reject" class="reject" type="button">Rechazar y siguiente</button>
-              <button id="review-accept" class="accept" type="button">Aceptar y siguiente</button>
-            </div>
-            <p class="review-storage-note" id="review-storage-note">Las decisiones se guardan en este navegador y se incluyen al exportar Excel.</p>
+            <p class="review-storage-note" id="review-storage-note">Usa la barra junto a la gráfica para decidir. Las decisiones se guardan en este navegador y se incluyen al exportar Excel.</p>
           </section>
 
           <section class="point-editor" id="point-editor" hidden aria-labelledby="point-editor-title">
@@ -230,10 +220,15 @@
           </section>
 
           <div class="plot-card">
-            <div class="quick-review-bar" id="quick-review-bar" hidden aria-label="Revisión rápida de la traza">
-              <div class="quick-review-state">
-                <span id="quick-review-trace">Traza —</span>
-                <strong id="quick-review-decision">Pendiente</strong>
+            <div class="quick-review-bar" id="quick-review-bar" hidden aria-label="Navegación y revisión de la traza">
+              <div class="quick-trace-navigator" id="trace-navigator" hidden>
+                <button id="trace-previous" type="button" aria-label="Ir a la traza anterior" title="Traza anterior">←</button>
+                <div class="quick-review-state">
+                  <span id="trace-position">Traza —</span>
+                  <small id="trace-signal-name">—</small>
+                  <strong id="quick-review-decision">Pendiente</strong>
+                </div>
+                <button id="trace-next" type="button" aria-label="Ir a la traza siguiente" title="Traza siguiente">→</button>
               </div>
               <div class="quick-review-actions">
                 <button id="quick-review-pending" type="button" title="Guardar pendiente · tecla P">Pendiente <kbd>P</kbd></button>
@@ -311,6 +306,6 @@
     </footer>
 
     <script defer src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-    <script defer src="src/app.bundle.js?v=20260801-3"></script>
+    <script defer src="src/app.bundle.js?v=20260801-4"></script>
   </body>
 </html>

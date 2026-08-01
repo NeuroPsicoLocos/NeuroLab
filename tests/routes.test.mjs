@@ -17,6 +17,10 @@ test("electrophysiology lab exposes review controls beside the plot", async () =
   assert.match(page, /id="quick-review-bar"/);
   assert.match(page, /id="quick-review-accept"/);
   assert.match(page, /id="quick-review-reject"/);
+  assert.match(page, /id="trace-previous"/);
+  assert.match(page, /id="trace-next"/);
+  assert.doesNotMatch(page, /id="review-accept"/);
+  assert.doesNotMatch(page, /id="review-reject"/);
 });
 
 test("required GitHub Pages entry points and modules exist", async () => {
