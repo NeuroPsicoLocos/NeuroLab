@@ -141,3 +141,14 @@ dist
 
 # Local working/reference media not required by the web app
 apps/neurocell-explorer/Images/
+
+# Private/raw electrophysiology data (keep only small documented fixtures in Git)
+apps/electrophysiology-lab/data/private/
+*.abf
+*.nwb
+*.h5
+*.hdf5
+
+# Large local recordings are not part of the GitHub Pages site
+*.mov
+*.mp4
