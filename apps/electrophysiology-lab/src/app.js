@@ -22,8 +22,9 @@ import {
   emptyReviewState,
   isReviewCurrent,
   loadReviewState,
+  reviewDecisionFromShortcut,
   storeReviewRecord,
-} from "./core/review.js?v=20260731-1";
+} from "./core/review.js?v=20260801-2";
 import {
   appendCorrectionAudit,
   applyPointCorrections,
@@ -80,6 +81,12 @@ const elements = {
   reviewReject: document.querySelector("#review-reject"),
   reviewAccept: document.querySelector("#review-accept"),
   reviewStorageNote: document.querySelector("#review-storage-note"),
+  quickReviewBar: document.querySelector("#quick-review-bar"),
+  quickReviewTrace: document.querySelector("#quick-review-trace"),
+  quickReviewDecision: document.querySelector("#quick-review-decision"),
+  quickReviewPending: document.querySelector("#quick-review-pending"),
+  quickReviewReject: document.querySelector("#quick-review-reject"),
+  quickReviewAccept: document.querySelector("#quick-review-accept"),
   pointEditor: document.querySelector("#point-editor"),
   correctionEvent: document.querySelector("#correction-event"),
   pointButtons: [...document.querySelectorAll("[data-point]")],
@@ -376,9 +383,11 @@ function decisionLabel(decision) {
 function updateReviewUi() {
   if (!state.source) {
     elements.reviewWorkflow.hidden = true;
+    elements.quickReviewBar.hidden = true;
     return;
   }
   elements.reviewWorkflow.hidden = false;
+  elements.quickReviewBar.hidden = false;
   const choices = activeSignalChoices();
   const sheetName = currentTraceIdentity()?.sheetName ?? "";
   const records = choices.map((choice) => state.reviews.traces[buildTraceReviewKey(sheetName, choice.header)]);
@@ -401,6 +410,9 @@ function updateReviewUi() {
     elements.reviewTitle.textContent = record ? `${decisionLabel(record.decision)}${correctionSuffix}` : "Pendiente de decisión";
     elements.reviewWorkflow.dataset.status = record?.decision ?? "pending";
   }
+  elements.quickReviewTrace.textContent = `${elements.tracePosition.textContent} · ${elements.traceSignalName.textContent}`;
+  elements.quickReviewDecision.textContent = elements.reviewTitle.textContent;
+  elements.quickReviewBar.dataset.status = elements.reviewWorkflow.dataset.status;
   if (document.activeElement !== elements.reviewNote) elements.reviewNote.value = record?.note ?? "";
   state.activeReviewTraceKey = activeTraceKey;
   const atLastTrace = choices.findIndex((choice) => choice.index === Number(elements.signalSelect.value)) >= choices.length - 1;
@@ -966,6 +978,9 @@ elements.traceNext.addEventListener("click", () => navigateSignal(1));
 elements.reviewPending.addEventListener("click", () => storeCurrentReview("pending"));
 elements.reviewReject.addEventListener("click", () => storeCurrentReview("rejected", { advance: true }));
 elements.reviewAccept.addEventListener("click", () => storeCurrentReview("accepted", { advance: true }));
+elements.quickReviewPending.addEventListener("click", () => storeCurrentReview("pending"));
+elements.quickReviewReject.addEventListener("click", () => storeCurrentReview("rejected", { advance: true }));
+elements.quickReviewAccept.addEventListener("click", () => storeCurrentReview("accepted", { advance: true }));
 elements.correctionEvent.addEventListener("change", () => {
   state.correctionEventNumber = Number(elements.correctionEvent.value);
   setCorrectionArmed(false);
@@ -981,6 +996,17 @@ for (const button of elements.pointButtons) {
 elements.armCorrection.addEventListener("click", () => setCorrectionArmed(!state.correctionArmed));
 elements.restorePoint.addEventListener("click", restoreSelectedPoint);
 elements.restoreAllPoints.addEventListener("click", restoreAllPoints);
+
+document.addEventListener("keydown", (event) => {
+  const target = event.target;
+  const typing = target instanceof HTMLElement
+    && (target.matches("input, textarea, select") || target.isContentEditable);
+  if (typing || event.repeat || event.metaKey || event.ctrlKey || event.altKey || state.correctionArmed || !state.source) return;
+  const decision = reviewDecisionFromShortcut(event.key);
+  if (!decision) return;
+  event.preventDefault();
+  storeCurrentReview(decision, { advance: decision !== "pending" });
+});
 
 for (const eventName of ["dragenter", "dragover"]) {
   elements.dropZone.addEventListener(eventName, (event) => {

@@ -45,3 +45,11 @@ export function storeReviewRecord(storage, sessionKey, traceKey, record, current
 export function isReviewCurrent(record, analysisFingerprint) {
   return Boolean(record?.analysisFingerprint && record.analysisFingerprint === analysisFingerprint);
 }
+
+export function reviewDecisionFromShortcut(key) {
+  const normalized = String(key ?? "").toLowerCase();
+  if (normalized === "a") return "accepted";
+  if (normalized === "r") return "rejected";
+  if (normalized === "p") return "pending";
+  return null;
+}

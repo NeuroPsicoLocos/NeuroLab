@@ -7,6 +7,7 @@ import {
   buildTraceReviewKey,
   isReviewCurrent,
   loadReviewState,
+  reviewDecisionFromShortcut,
   storeReviewRecord,
 } from "../apps/electrophysiology-lab/src/core/review.js";
 
@@ -39,4 +40,11 @@ test("manual review records persist per file, sheet, and trace", () => {
 test("invalid saved review data falls back safely", () => {
   const storage = { getItem: () => "not-json" };
   assert.deepEqual(loadReviewState(storage, "key"), { schema: REVIEW_SCHEMA, traces: {} });
+});
+
+test("review shortcuts map only the documented unmodified keys", () => {
+  assert.equal(reviewDecisionFromShortcut("A"), "accepted");
+  assert.equal(reviewDecisionFromShortcut("r"), "rejected");
+  assert.equal(reviewDecisionFromShortcut("P"), "pending");
+  assert.equal(reviewDecisionFromShortcut("Enter"), null);
 });

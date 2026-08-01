@@ -12,6 +12,13 @@ test("portal links to both local laboratories", async () => {
   assert.match(portal, /apps\/neurocell-explorer\//);
 });
 
+test("electrophysiology lab exposes review controls beside the plot", async () => {
+  const page = await readFile(path.join(root, "apps/electrophysiology-lab/index.html"), "utf8");
+  assert.match(page, /id="quick-review-bar"/);
+  assert.match(page, /id="quick-review-accept"/);
+  assert.match(page, /id="quick-review-reject"/);
+});
+
 test("required GitHub Pages entry points and modules exist", async () => {
   const required = [
     "apps/electrophysiology-lab/index.html",

@@ -14,7 +14,7 @@
     <meta property="og:image" content="https://neurolab.neuropsicolocos.com/assets/simulab-social.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
     <title>Electrophysiology Lab · Simu-LAB</title>
-    <link rel="stylesheet" href="styles/main.css?v=20260801-1" />
+    <link rel="stylesheet" href="styles/main.css?v=20260801-2" />
   </head>
   <body>
     <header class="app-header">
@@ -230,6 +230,17 @@
           </section>
 
           <div class="plot-card">
+            <div class="quick-review-bar" id="quick-review-bar" hidden aria-label="Revisión rápida de la traza">
+              <div class="quick-review-state">
+                <span id="quick-review-trace">Traza —</span>
+                <strong id="quick-review-decision">Pendiente</strong>
+              </div>
+              <div class="quick-review-actions">
+                <button id="quick-review-pending" type="button" title="Guardar pendiente · tecla P">Pendiente <kbd>P</kbd></button>
+                <button id="quick-review-reject" class="reject" type="button" title="Rechazar y avanzar · tecla R">Rechazar <kbd>R</kbd></button>
+                <button id="quick-review-accept" class="accept" type="button" title="Aceptar y avanzar · tecla A">Aceptar <kbd>A</kbd></button>
+              </div>
+            </div>
             <div class="plot-legend">
               <label class="plot-view-control">Vista
                 <select id="plot-view" title="La vista de respuesta recorta la escala visual; el análisis conserva la traza completa." disabled>
@@ -299,6 +310,6 @@
       <span>Herramienta de investigación en desarrollo; los resultados requieren revisión experta.</span>
     </footer>
 
-    <script type="module" src="src/app.js?v=20260801-1"></script>
+    <script type="module" src="src/app.js?v=20260801-2"></script>
   </body>
 </html>
