@@ -16,7 +16,7 @@ Hay dos métodos disponibles:
 - **Inspección preliminar:** candidatos de artefacto mediante derivada y MAD; no asigna fisiología.
 - **Espiga poblacional · POPS experimental:** reproducción configurable de `High_Fr.ipynb` para trenes y `pops_detect.ipynb` para dos estímulos, con Savitzky–Golay 11/3 y puntos P1–P2–P3.
 
-La exportación POPS genera un archivo por cada traza mostrada. El nombre del archivo conserva libro, hoja y columna; para exportar otra señal se selecciona esa columna y se crea un archivo nuevo. Esta separación evita mezclar trazas con distinta longitud o calidad en un mismo resultado.
+La exportación POPS genera un archivo por cada traza mostrada. El nombre del archivo conserva libro, hoja y columna; para exportar otra señal se navega con las flechas de barrido y se crea un archivo nuevo. Esta separación evita mezclar trazas con distinta longitud o calidad en un mismo resultado.
 
 Para libros POPS conocidos, la unidad temporal y el protocolo se proponen automáticamente. Si una selección produce una escala inverosímil —por ejemplo, 10 MHz y menos de 1 ms para 9,900 muestras— la aplicación prueba la unidad inferida, conserva una bandera de trazabilidad y pide confirmación. La gráfica permite alternar entre **Respuesta**, que centra la escala en P1–P3, y **Traza completa**, que conserva visibles los artefactos extremos.
 
@@ -62,10 +62,24 @@ El protocolo pareado busca el cambio derivativo más grande antes de 60 ms y ant
 
 La aplicación añade línea base robusta, SNR y una puntuación de revisión. La puntuación no es una probabilidad y no sustituye la inspección de la gráfica. La especificación y sus límites están en [`docs/electrophysiology/POPS_METHOD.md`](../../docs/electrophysiology/POPS_METHOD.md).
 
+## Revisión manual por trazas
+
+Las señales compatibles de cada hoja se recorren como barridos mediante flechas **Anterior** y **Siguiente**, disponibles tanto en la asignación de columnas como junto a la gráfica. El panel de revisión permite:
+
+- guardar una traza como pendiente;
+- aceptarla o rechazarla y avanzar automáticamente a la siguiente;
+- conservar una nota breve por traza;
+- consultar el avance y los conteos de aceptación y rechazo.
+
+La revisión se conserva en `localStorage`, únicamente en el navegador y dispositivo actuales. Cada decisión queda vinculada al archivo de origen, hoja, columna y configuración analítica. Si cambian parámetros que pueden alterar la detección, la decisión se presenta como desactualizada y requiere una nueva revisión.
+
+La configuración JSON usa el esquema `simulab-ephys-0.4` e incluye el estado de revisión de la traza activa. En Excel, `Revision_manual` registra la decisión, nota, fecha, identidad de la traza y huella de parámetros; `Trazas_QC` incorpora el estado de revisión, y `Resumen` conserva la decisión activa. Los candidatos genéricos de derivada se exportan en `Candidatos_derivada`, separados de las mediciones fisiológicas de `Mediciones_POPS`.
+
 ## Arquitectura
 
 - `src/core/signal.js`: funciones puras de análisis y señal sintética.
 - `src/core/fieldPotential.js`: suavizado y medición POPS independiente de la interfaz.
+- `src/core/review.js`: identidad, persistencia y vigencia de decisiones manuales.
 - `src/io/workbook.js`: adaptación de libros de cálculo y exportación.
 - `src/ui/plot.js`: gráfica Canvas de alta densidad.
 - `src/app.js`: estado de interfaz y coordinación.
@@ -82,7 +96,7 @@ No se deben confirmar en Git datos humanos identificables ni registros crudos pr
 
 - perfiles adicionales por protocolo de polaridad, ventanas y criterios fisiológicos;
 - línea base robusta, filtros opcionales con respuesta documentada y señal original visible;
-- anotaciones manuales y correcciones auditables;
+- corrección manual de puntos y ventanas con historial auditable;
 - confianza por evento, motivos de exclusión y gráficas de control de calidad;
 - métricas de amplitud, latencia, pendiente, área, SNR y variabilidad entre ensayos;
 - farmacología con tiempo experimental, baseline normalizado y modelos que respeten medidas repetidas;

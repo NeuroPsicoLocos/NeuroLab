@@ -20,6 +20,17 @@ html { scroll-behavior: smooth; }
 body { margin: 0; color: var(--ink); background: var(--cream); }
 button, input, select { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
 
 .app-header {
   min-height: 72px;
@@ -93,6 +104,21 @@ label { display: grid; gap: 6px; color: #41504f; font-size: .75rem; font-weight:
 select, input[type="text"], input[type="number"] { width: 100%; min-height: 39px; padding: 8px 9px; color: var(--ink); background: white; border: 1px solid #cbd4cf; border-radius: 0; }
 select:focus, input:focus { outline: 2px solid rgba(18,109,103,.22); outline-offset: 1px; border-color: var(--teal); }
 select:disabled { color: #909b98; background: #f0f1ed; }
+.sweep-selector { min-height: 39px; display: grid; grid-template-columns: 39px minmax(0, 1fr) 39px; border: 1px solid #cbd4cf; background: white; }
+.sweep-selector button, .trace-navigator button {
+  min-width: 39px;
+  color: var(--teal);
+  background: #f4f7f3;
+  border: 0;
+  cursor: pointer;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+.sweep-selector button:first-child { border-right: 1px solid #d7dfda; }
+.sweep-selector button:last-child { border-left: 1px solid #d7dfda; }
+.sweep-selector button:hover:not(:disabled), .trace-navigator button:hover:not(:disabled) { color: white; background: var(--teal); }
+.sweep-selector button:disabled, .trace-navigator button:disabled { color: #aeb8b5; cursor: not-allowed; }
+.sweep-selector output { min-width: 0; padding: 9px 10px; overflow: hidden; color: var(--ink); text-align: center; text-overflow: ellipsis; white-space: nowrap; }
 .range-field { margin-bottom: 17px; }
 .range-field span { display: flex; justify-content: space-between; gap: 12px; }
 .range-field output { color: var(--teal); }
@@ -126,10 +152,34 @@ summary { color: var(--teal); font-size: .78rem; font-weight: 750; cursor: point
 
 .results-panel { min-width: 0; padding: 30px; }
 .results-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.trace-heading { min-width: 0; }
+.trace-heading h2 { overflow-wrap: anywhere; }
+.trace-navigator { width: fit-content; min-width: 260px; margin-top: 13px; display: grid; grid-template-columns: 39px minmax(150px, 1fr) 39px; border: 1px solid #cbd4cf; background: white; }
+.trace-navigator span { padding: 6px 12px; display: grid; align-content: center; text-align: center; }
+.trace-navigator strong { color: var(--ink); font-size: .72rem; }
+.trace-navigator small { margin-top: 2px; color: var(--muted); font-size: .67rem; }
+.trace-navigator button:first-child { border-right: 1px solid #d7dfda; }
+.trace-navigator button:last-child { border-left: 1px solid #d7dfda; }
 .toolbar-actions { display: flex; gap: 8px; }
 .toolbar-actions button { min-height: 39px; padding: 8px 13px; color: var(--teal); background: white; border: 1px solid #b9c9c4; cursor: pointer; font-size: .78rem; font-weight: 750; }
 .toolbar-actions button.primary { color: white; background: var(--teal); border-color: var(--teal); }
 .toolbar-actions button:disabled { color: #9aa3a1; background: #eceeea; border-color: #dde1dc; cursor: not-allowed; }
+
+.review-workflow { margin-top: 18px; padding: 18px; display: grid; grid-template-columns: minmax(210px, .8fr) minmax(260px, 1.2fr); gap: 14px 20px; border: 1px solid #cbd4cf; border-left: 4px solid #9aa5a2; background: #f6f7f3; }
+.review-workflow[data-status="accepted"] { border-left-color: var(--teal); background: #f0f7f3; }
+.review-workflow[data-status="rejected"] { border-left-color: var(--red); background: #fbf1ef; }
+.review-workflow[data-status="stale"] { border-left-color: var(--orange); background: #fff7ef; }
+.review-summary { display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
+.review-summary > p { margin: 0; color: var(--muted); font-size: .7rem; line-height: 1.4; }
+.review-note { grid-column: 2; grid-row: 1 / span 2; }
+.review-note textarea { width: 100%; min-height: 72px; padding: 9px 10px; resize: vertical; color: var(--ink); background: white; border: 1px solid #cbd4cf; font: inherit; font-weight: 400; line-height: 1.45; }
+.review-note textarea:focus { outline: 2px solid rgba(18,109,103,.22); outline-offset: 1px; border-color: var(--teal); }
+.review-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+.review-actions button { min-height: 38px; padding: 8px 12px; color: #41504f; background: white; border: 1px solid #b9c9c4; cursor: pointer; font-size: .72rem; font-weight: 800; }
+.review-actions button.reject { color: #8a3535; border-color: #d8abab; }
+.review-actions button.accept { color: white; background: var(--teal); border-color: var(--teal); }
+.review-actions button:hover { transform: translateY(-1px); }
+.review-storage-note { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: .66rem; line-height: 1.4; }
 
 .plot-card { margin-top: 24px; border: 1px solid var(--line); background: #fbfaf5; }
 .plot-legend { min-height: 42px; padding: 10px 16px; display: flex; justify-content: flex-end; gap: 22px; align-items: center; color: var(--muted); border-bottom: 1px solid var(--line); font-size: .72rem; }
@@ -192,6 +242,8 @@ footer { padding: 24px clamp(18px,4vw,64px); display: flex; justify-content: spa
   .workspace { grid-template-columns: 1fr; }
   .control-panel { border-right: 0; border-bottom: 1px solid var(--line); }
   .results-toolbar { align-items: flex-start; flex-direction: column; }
+  .review-workflow { grid-template-columns: 1fr; }
+  .review-note { grid-column: 1; grid-row: auto; }
 }
 
 @media (max-width: 560px) {
@@ -209,6 +261,9 @@ footer { padding: 24px clamp(18px,4vw,64px); display: flex; justify-content: spa
   .results-panel { padding: 18px 12px; }
   .toolbar-actions { width: 100%; }
   .toolbar-actions button { flex: 1; }
+  .trace-navigator { width: 100%; min-width: 0; }
+  .review-actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .review-actions button:first-child { grid-column: 1 / -1; }
   #signal-canvas { height: 310px; }
   .plot-legend { justify-content: flex-start; flex-wrap: wrap; gap: 8px 16px; }
   .metric-grid { grid-template-columns: 1fr 1fr; }

@@ -106,13 +106,25 @@ test("POPS export contains only the active trace and reports rejected responses"
     result,
     fieldResult,
     settings: { timeUnit: "s", signalUnit: "mV", sensitivity: 8, refractoryMs: 50, popsExportScope: "active" },
+    review: {
+      decision: "rejected",
+      note: "Respuesta no confirmada",
+      reviewedAt: "2026-07-31T18:00:00.000Z",
+      analysisMode: "population-spike",
+      automaticState: "Revisar/excluir",
+      currentForParameters: true,
+    },
   }, XLSX);
 
   assert.equal(writtenFileName, "simulab_PopSpikes_condicion-F_Columna-B.xlsx");
   const summary = Object.fromEntries(writtenWorkbook.sheets.Resumen.rows.slice(1));
-  assert.equal(summary["Estado"], "Revisar/excluir");
+  assert.equal(summary["Estado"], "Rechazado manualmente");
+  assert.equal(summary["Decisión de revisión manual"], "Rechazada");
   assert.equal(summary["Trazas POPS exportadas"], 1);
   assert.equal(summary["Eventos POPS para revisión"], 1);
   assert.equal(writtenWorkbook.sheets.Mediciones_POPS.rows.length, 2);
   assert.equal(writtenWorkbook.sheets.Trazas_QC.rows.length, 2);
+  assert.equal(writtenWorkbook.sheets.Trazas_QC.rows[1][7], "Rechazada");
+  assert.equal(writtenWorkbook.sheets.Revision_manual.rows[1][3], "Respuesta no confirmada");
+  assert.ok(writtenWorkbook.sheets.Candidatos_derivada);
 });

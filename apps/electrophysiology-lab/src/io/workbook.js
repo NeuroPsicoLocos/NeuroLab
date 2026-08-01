@@ -79,19 +79,35 @@ export function buildTraceExportBaseName(fileName, sheetName, signalHeader) {
 }
 
 export async function exportAnalysisWorkbook(
-  { fileName, sheetName, timeHeader, signalHeader, result, fieldResult, settings },
+  { fileName, sheetName, timeHeader, signalHeader, result, fieldResult, settings, review = null },
   sheetJsModule = null,
 ) {
   const XLSX = sheetJsModule ?? await loadSheetJs();
   const populationSources = fieldResult ? [{ sheetName, signalHeader, fieldResult }] : [];
   const exportedPopulationEvents = populationSources.flatMap((source) => source.fieldResult.events);
+  const automaticState = fieldResult ? (fieldResult.ok ? "Analizable" : "Revisar/excluir") : result.ok ? "Analizable" : "Excluido";
+  const reviewDecision = review?.decision ?? "pending";
+  const reviewLabels = { accepted: "Aceptada", rejected: "Rechazada", pending: "Pendiente" };
+  const reviewIsCurrent = review?.currentForParameters !== false;
+  const finalState = reviewDecision === "rejected"
+    ? "Rechazado manualmente"
+    : reviewDecision === "accepted" && reviewIsCurrent
+      ? "Aceptado manualmente"
+      : reviewDecision === "accepted"
+        ? "Revisar: parámetros cambiaron"
+        : automaticState;
   const summaryRows = [
     ["Campo", "Valor"],
     ["Archivo de origen", fileName],
     ["Hoja de origen", sheetName],
     ["Columna temporal", timeHeader],
     ["Columna de señal", signalHeader],
-    ["Estado", fieldResult ? (fieldResult.ok ? "Analizable" : "Revisar/excluir") : result.ok ? "Analizable" : "Excluido"],
+    ["Estado", finalState],
+    ["Estado automático", automaticState],
+    ["Decisión de revisión manual", reviewLabels[reviewDecision] ?? "Pendiente"],
+    ["Revisión vigente para estos parámetros", reviewIsCurrent ? "Sí" : "No"],
+    ["Nota de revisión manual", review?.note ?? ""],
+    ["Fecha de revisión manual (ISO 8601)", review?.reviewedAt ?? "No revisada"],
     ["Muestras válidas", result.stats.validRows],
     ["Muestras faltantes", result.stats.missingCount],
     ["Frecuencia de muestreo (Hz)", result.stats.sampleRateHz],
@@ -99,7 +115,7 @@ export async function exportAnalysisWorkbook(
     ["Mínimo", result.stats.minimum],
     ["Máximo", result.stats.maximum],
     ["Pico a pico", result.stats.peakToPeak],
-    ["Candidatos de artefacto", result.candidates.length],
+    ["Candidatos preliminares de derivada", result.candidates.length],
     ["Método fisiológico", fieldResult ? "Espiga poblacional · perfil POPS experimental" : "Inspección preliminar"],
     ["Trazas POPS exportadas", fieldResult ? populationSources.length : "No aplicado"],
     ["Eventos POPS válidos", fieldResult ? exportedPopulationEvents.filter((event) => event.valid).length : "No aplicado"],
@@ -118,11 +134,13 @@ export async function exportAnalysisWorkbook(
   ];
   const flagRows = [
     ["Nivel", "Código", "Descripción"],
-    ...result.flags.map((flag) => [flag.level, flag.code, flag.message]),
+    ...(result.flags.length
+      ? result.flags.map((flag) => [flag.level, flag.code, flag.message])
+      : [["pass", "sin_incidencias", "Sin incidencias automáticas de calidad para esta traza."]]),
   ];
   const parameterRows = [
     ["Parámetro", "Valor"],
-    ["Versión del esquema", "simulab-ephys-0.3"],
+    ["Versión del esquema", "simulab-ephys-0.4"],
     ["Fecha de exportación (ISO 8601)", new Date().toISOString()],
     ["Unidad temporal de entrada", settings.timeUnit],
     ["Unidad de señal", settings.signalUnit],
@@ -194,7 +212,7 @@ export async function exportAnalysisWorkbook(
     : null;
   const populationTraceQcRows = fieldResult
     ? [
-      ["Hoja", "Traza", "Estado", "Artefactos", "Eventos válidos", "Eventos para revisión", "Banderas"],
+      ["Hoja", "Traza", "Estado automático", "Artefactos", "Eventos válidos", "Eventos para revisión", "Banderas", "Decisión manual", "Nota manual", "Fecha de revisión", "Parámetros vigentes"],
       ...populationSources.map((source) => [
         source.sheetName,
         source.signalHeader,
@@ -203,15 +221,33 @@ export async function exportAnalysisWorkbook(
         source.fieldResult.events.filter((event) => event.valid).length,
         source.fieldResult.events.filter((event) => !event.valid || event.reviewRequired).length,
         source.fieldResult.flags.join("; "),
+        reviewLabels[reviewDecision] ?? "Pendiente",
+        review?.note ?? "",
+        review?.reviewedAt ?? "",
+        reviewIsCurrent ? "Sí" : "No",
       ]),
     ]
     : null;
+  const manualReviewRows = [
+    ["Hoja", "Traza", "Decisión", "Nota", "Fecha (ISO 8601)", "Modo de análisis", "Estado automático al revisar", "Vigente para parámetros exportados"],
+    [
+      sheetName,
+      signalHeader,
+      reviewLabels[reviewDecision] ?? "Pendiente",
+      review?.note ?? "",
+      review?.reviewedAt ?? "",
+      review?.analysisMode ?? "",
+      review?.automaticState ?? automaticState,
+      reviewIsCurrent ? "Sí" : "No",
+    ],
+  ];
 
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(summaryRows), "Resumen");
-  XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(eventRows), "Eventos");
+  XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(eventRows), "Candidatos_derivada");
   XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(flagRows), "Control_calidad");
   XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(parameterRows), "Parametros");
+  XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(manualReviewRows), "Revision_manual");
   if (populationSpikeRows) {
     XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(populationSpikeRows), "Mediciones_POPS");
     XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(populationTraceQcRows), "Trazas_QC");

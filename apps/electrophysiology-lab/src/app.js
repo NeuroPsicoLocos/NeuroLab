@@ -16,6 +16,14 @@ import {
   exportAnalysisWorkbook,
   parseWorkbook,
 } from "./io/workbook.js?v=20260731-7";
+import {
+  buildReviewSessionKey,
+  buildTraceReviewKey,
+  emptyReviewState,
+  isReviewCurrent,
+  loadReviewState,
+  storeReviewRecord,
+} from "./core/review.js?v=20260731-1";
 import { SignalPlot } from "./ui/plot.js?v=20260731-8";
 
 const elements = {
@@ -26,6 +34,9 @@ const elements = {
   sheetSelect: document.querySelector("#sheet-select"),
   timeSelect: document.querySelector("#time-select"),
   signalSelect: document.querySelector("#signal-select"),
+  signalLabel: document.querySelector("#signal-label"),
+  signalPrevious: document.querySelector("#signal-previous"),
+  signalNext: document.querySelector("#signal-next"),
   timeUnit: document.querySelector("#time-unit"),
   signalUnit: document.querySelector("#signal-unit"),
   signalScopeHint: document.querySelector("#signal-scope-hint"),
@@ -50,6 +61,19 @@ const elements = {
   p3Start: document.querySelector("#p3-start"),
   p3End: document.querySelector("#p3-end"),
   traceTitle: document.querySelector("#trace-title"),
+  traceNavigator: document.querySelector("#trace-navigator"),
+  tracePrevious: document.querySelector("#trace-previous"),
+  traceNext: document.querySelector("#trace-next"),
+  tracePosition: document.querySelector("#trace-position"),
+  traceSignalName: document.querySelector("#trace-signal-name"),
+  reviewWorkflow: document.querySelector("#review-workflow"),
+  reviewTitle: document.querySelector("#review-title"),
+  reviewProgress: document.querySelector("#review-progress"),
+  reviewNote: document.querySelector("#review-note"),
+  reviewPending: document.querySelector("#review-pending"),
+  reviewReject: document.querySelector("#review-reject"),
+  reviewAccept: document.querySelector("#review-accept"),
+  reviewStorageNote: document.querySelector("#review-storage-note"),
   configButton: document.querySelector("#config-button"),
   excelButton: document.querySelector("#excel-button"),
   qualityTitle: document.querySelector("#quality-title"),
@@ -76,6 +100,9 @@ const state = {
   source: null,
   inferredTimeUnit: "ms",
   analysisSuggestion: "",
+  reviewSessionKey: "",
+  reviews: emptyReviewState(),
+  activeReviewTraceKey: "",
 };
 
 function numericOrUndefined(value) {
@@ -116,6 +143,159 @@ function currentFieldSettings() {
   };
 }
 
+function reviewStorage() {
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+}
+
+function startReviewSession({ fileName, fileSize = 0, lastModified = 0 }) {
+  state.reviewSessionKey = buildReviewSessionKey({ fileName, fileSize, lastModified });
+  state.reviews = loadReviewState(reviewStorage(), state.reviewSessionKey);
+  state.activeReviewTraceKey = "";
+}
+
+function analysisFingerprint() {
+  return JSON.stringify({
+    analysisMode: elements.analysisMode.value,
+    settings: currentSettings(),
+    fieldPotentialSettings: elements.analysisMode.value === "population-spike" ? currentFieldSettings() : null,
+  });
+}
+
+function currentTraceIdentity() {
+  if (!state.source) return null;
+  if (state.source.type === "demo") {
+    return { sheetName: "Demostración", signalHeader: "Potencial (mV)" };
+  }
+  const sheet = state.workbook?.sheets[Number(elements.sheetSelect.value)];
+  const signalHeader = elements.signalSelect.selectedOptions[0]?.textContent;
+  return sheet && signalHeader ? { sheetName: sheet.name, signalHeader } : null;
+}
+
+function currentTraceReview() {
+  const identity = currentTraceIdentity();
+  if (!identity) return null;
+  return state.reviews.traces[buildTraceReviewKey(identity.sheetName, identity.signalHeader)] ?? null;
+}
+
+function activeSignalChoices() {
+  if (!state.source) return [];
+  if (state.source.type === "demo") return [{ index: 0, header: "Potencial (mV)" }];
+  const sheet = state.workbook?.sheets[Number(elements.sheetSelect.value)];
+  return sheet ? numericSignalColumns(sheet, Number(elements.timeSelect.value)) : [];
+}
+
+function updateSignalNavigator() {
+  const choices = activeSignalChoices();
+  const activeIndex = Number(elements.signalSelect.value);
+  const position = Math.max(0, choices.findIndex((choice) => choice.index === activeIndex));
+  const activeChoice = choices[position];
+  const hasChoices = choices.length > 0;
+  const workbookNavigation = state.source?.type === "workbook" && hasChoices;
+
+  elements.signalLabel.value = activeChoice?.header ?? "—";
+  elements.traceSignalName.textContent = activeChoice?.header ?? "—";
+  elements.tracePosition.textContent = hasChoices ? `Traza ${position + 1} de ${choices.length}` : "Traza —";
+  elements.traceNavigator.hidden = !state.source;
+  elements.signalPrevious.disabled = !workbookNavigation || position <= 0;
+  elements.tracePrevious.disabled = !workbookNavigation || position <= 0;
+  elements.signalNext.disabled = !workbookNavigation || position >= choices.length - 1;
+  elements.traceNext.disabled = !workbookNavigation || position >= choices.length - 1;
+}
+
+function decisionLabel(decision) {
+  if (decision === "accepted") return "Aceptada";
+  if (decision === "rejected") return "Rechazada";
+  return "Pendiente guardada";
+}
+
+function updateReviewUi() {
+  if (!state.source) {
+    elements.reviewWorkflow.hidden = true;
+    return;
+  }
+  elements.reviewWorkflow.hidden = false;
+  const choices = activeSignalChoices();
+  const sheetName = currentTraceIdentity()?.sheetName ?? "";
+  const records = choices.map((choice) => state.reviews.traces[buildTraceReviewKey(sheetName, choice.header)]);
+  const accepted = records.filter((record) => record?.decision === "accepted").length;
+  const rejected = records.filter((record) => record?.decision === "rejected").length;
+  elements.reviewProgress.textContent = `${accepted + rejected} de ${choices.length} revisadas · ${accepted} aceptadas · ${rejected} rechazadas`;
+
+  const record = currentTraceReview();
+  const identity = currentTraceIdentity();
+  const activeTraceKey = identity ? buildTraceReviewKey(identity.sheetName, identity.signalHeader) : "";
+  const current = isReviewCurrent(record, analysisFingerprint());
+  if (record && !current && record.decision !== "pending") {
+    elements.reviewTitle.textContent = `${decisionLabel(record.decision)} · parámetros cambiaron`;
+    elements.reviewWorkflow.dataset.status = "stale";
+  } else {
+    elements.reviewTitle.textContent = record ? decisionLabel(record.decision) : "Pendiente de decisión";
+    elements.reviewWorkflow.dataset.status = record?.decision ?? "pending";
+  }
+  if (document.activeElement !== elements.reviewNote) elements.reviewNote.value = record?.note ?? "";
+  state.activeReviewTraceKey = activeTraceKey;
+  const atLastTrace = choices.findIndex((choice) => choice.index === Number(elements.signalSelect.value)) >= choices.length - 1;
+  elements.reviewAccept.textContent = atLastTrace ? "Aceptar" : "Aceptar y siguiente";
+  elements.reviewReject.textContent = atLastTrace ? "Rechazar" : "Rechazar y siguiente";
+}
+
+function storeCurrentReview(decision, { advance = false } = {}) {
+  const identity = currentTraceIdentity();
+  if (!identity || !state.reviewSessionKey) return;
+  const traceKey = buildTraceReviewKey(identity.sheetName, identity.signalHeader);
+  const record = {
+    decision,
+    note: elements.reviewNote.value.trim(),
+    reviewedAt: new Date().toISOString(),
+    analysisFingerprint: analysisFingerprint(),
+    analysisMode: elements.analysisMode.value,
+    automaticState: state.fieldResult ? (state.fieldResult.ok ? "Analizable" : "Revisar/excluir") : state.result?.ok ? "Analizable" : "Excluido",
+  };
+  const saved = storeReviewRecord(reviewStorage(), state.reviewSessionKey, traceKey, record, state.reviews);
+  state.reviews = saved.state;
+  elements.reviewStorageNote.textContent = saved.ok
+    ? "Decisión guardada en este navegador; se incluirá al exportar Excel."
+    : "No fue posible usar el almacenamiento del navegador; exporta Excel antes de cerrar esta página.";
+  updateReviewUi();
+  if (advance) navigateSignal(1);
+}
+
+function persistDraftNote() {
+  if (!state.activeReviewTraceKey || !state.reviewSessionKey) return;
+  const traceKey = state.activeReviewTraceKey;
+  const existing = state.reviews.traces[traceKey];
+  const note = elements.reviewNote.value.trim();
+  if (note === (existing?.note ?? "")) return;
+  const record = {
+    ...(existing ?? {}),
+    decision: existing?.decision ?? "pending",
+    note,
+    reviewedAt: new Date().toISOString(),
+    analysisFingerprint: existing?.analysisFingerprint ?? analysisFingerprint(),
+    analysisMode: existing?.analysisMode ?? elements.analysisMode.value,
+    automaticState: existing?.automaticState ?? (state.result?.ok ? "Analizable" : "Excluido"),
+  };
+  const saved = storeReviewRecord(reviewStorage(), state.reviewSessionKey, traceKey, record, state.reviews);
+  state.reviews = saved.state;
+}
+
+function navigateSignal(offset) {
+  if (state.source?.type !== "workbook") return;
+  const choices = activeSignalChoices();
+  const currentPosition = choices.findIndex((choice) => choice.index === Number(elements.signalSelect.value));
+  const nextPosition = Math.min(choices.length - 1, Math.max(0, currentPosition + offset));
+  if (nextPosition === currentPosition || nextPosition < 0) return;
+  persistDraftNote();
+  elements.signalSelect.value = String(choices[nextPosition].index);
+  updateSignalScopeHint();
+  analyzeCurrentSelection();
+  elements.traceNavigator.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+
 function applyPopsProfile() {
   const paired = elements.popsProfile.value === "paired";
   const profile = paired ? PAIRED_POPS_PROFILE : LEGACY_POPS_PROFILE;
@@ -154,6 +334,7 @@ function configureForWorkbook(workbook) {
 }
 
 function updateSignalScopeHint() {
+  updateSignalNavigator();
   if (state.source?.type === "demo") {
     elements.signalScopeHint.textContent = "Demostración con una señal sintética.";
     return;
@@ -314,6 +495,8 @@ function renderResult(result, fieldResult = null) {
   elements.excelButton.disabled = false;
   updateQuality(result, fieldResult);
   renderEventTable(fieldResult, settings.signalUnit);
+  updateSignalNavigator();
+  updateReviewUi();
 }
 
 function analyzeCurrentSelection() {
@@ -428,6 +611,7 @@ async function openFile(file) {
   elements.fileStatus.textContent = `Abriendo ${file.name}…`;
   elements.fileStatus.className = "file-status loading";
   try {
+    startReviewSession({ fileName: file.name, fileSize: file.size, lastModified: file.lastModified });
     state.workbook = await parseWorkbook(file);
     if (!state.workbook.sheets.some((sheet) => sheet.headers.length >= 2)) {
       throw new Error("No se encontró una hoja con al menos dos columnas.");
@@ -448,6 +632,7 @@ async function openFile(file) {
 
 function loadDemo() {
   const trace = createDemoTrace();
+  startReviewSession({ fileName: "demo_potencial_campo", fileSize: 0, lastModified: 0 });
   state.workbook = null;
   state.source = { type: "demo", trace };
   fillSelect(elements.sheetSelect, ["Demostración"]);
@@ -467,8 +652,9 @@ function loadDemo() {
 }
 
 function exportConfiguration() {
+  const review = currentTraceReview();
   const configuration = {
-    schema: "simulab-ephys-0.3",
+    schema: "simulab-ephys-0.4",
     exportedAt: new Date().toISOString(),
     source: state.source?.type === "demo" ? "synthetic_demo" : state.workbook?.fileName,
     sheet: state.source?.type === "demo" ? "Demostración" : state.workbook?.sheets[Number(elements.sheetSelect.value)]?.name,
@@ -478,6 +664,10 @@ function exportConfiguration() {
     settings: currentSettings(),
     fieldPotentialSettings: elements.analysisMode.value === "population-spike" ? currentFieldSettings() : null,
     exportScope: "active",
+    manualReview: review ? {
+      ...review,
+      currentForParameters: isReviewCurrent(review, analysisFingerprint()),
+    } : { decision: "pending", note: "", currentForParameters: true },
     methodologicalNote: elements.analysisMode.value === "population-spike"
       ? "Perfil POPS experimental para espiga poblacional extracelular; puntos y confianza requieren validación experta."
       : "Los eventos exportados son candidatos de artefacto y requieren validación experta.",
@@ -508,6 +698,10 @@ async function exportExcel() {
       result: state.result,
       fieldResult: state.fieldResult,
       settings: { ...currentSettings(), popsExportScope: "active" },
+      review: currentTraceReview() ? {
+        ...currentTraceReview(),
+        currentForParameters: isReviewCurrent(currentTraceReview(), analysisFingerprint()),
+      } : { decision: "pending", note: "", reviewedAt: null, currentForParameters: true },
     });
   } catch (error) {
     console.error(error);
@@ -520,7 +714,10 @@ async function exportExcel() {
 
 elements.fileInput.addEventListener("change", () => openFile(elements.fileInput.files[0]));
 elements.demoButton.addEventListener("click", loadDemo);
-elements.sheetSelect.addEventListener("change", () => activateSheet(Number(elements.sheetSelect.value)));
+elements.sheetSelect.addEventListener("change", () => {
+  persistDraftNote();
+  activateSheet(Number(elements.sheetSelect.value));
+});
 elements.timeSelect.addEventListener("change", () => {
   if (state.source?.type === "workbook") {
     const sheet = state.workbook.sheets[Number(elements.sheetSelect.value)];
@@ -535,6 +732,7 @@ elements.timeSelect.addEventListener("change", () => {
   analyzeCurrentSelection();
 });
 elements.signalSelect.addEventListener("change", () => {
+  persistDraftNote();
   updateSignalScopeHint();
   analyzeCurrentSelection();
 });
@@ -576,6 +774,13 @@ for (const control of [
 }
 elements.configButton.addEventListener("click", exportConfiguration);
 elements.excelButton.addEventListener("click", exportExcel);
+elements.signalPrevious.addEventListener("click", () => navigateSignal(-1));
+elements.signalNext.addEventListener("click", () => navigateSignal(1));
+elements.tracePrevious.addEventListener("click", () => navigateSignal(-1));
+elements.traceNext.addEventListener("click", () => navigateSignal(1));
+elements.reviewPending.addEventListener("click", () => storeCurrentReview("pending"));
+elements.reviewReject.addEventListener("click", () => storeCurrentReview("rejected", { advance: true }));
+elements.reviewAccept.addEventListener("click", () => storeCurrentReview("accepted", { advance: true }));
 
 for (const eventName of ["dragenter", "dragover"]) {
   elements.dropZone.addEventListener(eventName, (event) => {

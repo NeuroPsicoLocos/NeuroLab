@@ -14,7 +14,7 @@
     <meta property="og:image" content="https://neurolab.neuropsicolocos.com/assets/simulab-social.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
     <title>Electrophysiology Lab · Simu-LAB</title>
-    <link rel="stylesheet" href="styles/main.css?v=20260731-8" />
+    <link rel="stylesheet" href="styles/main.css?v=20260731-9" />
   </head>
   <body>
     <header class="app-header">
@@ -78,7 +78,14 @@
               <div class="field-grid">
                 <label>Hoja<select id="sheet-select" disabled></select></label>
                 <label>Tiempo<select id="time-select" disabled></select></label>
-                <label>Señal mostrada<select id="signal-select" disabled></select></label>
+                <label class="signal-sweep-field">Señal mostrada
+                  <span class="sweep-selector">
+                    <button id="signal-previous" type="button" aria-label="Mostrar traza anterior" title="Traza anterior">←</button>
+                    <output id="signal-label" aria-live="polite">—</output>
+                    <button id="signal-next" type="button" aria-label="Mostrar traza siguiente" title="Traza siguiente">→</button>
+                  </span>
+                  <select id="signal-select" class="visually-hidden" aria-label="Señal mostrada" disabled></select>
+                </label>
                 <label>Unidad temporal
                   <select id="time-unit">
                     <option value="auto" selected>automática</option>
@@ -164,15 +171,39 @@
 
         <section class="results-panel" aria-label="Resultados preliminares">
           <div class="results-toolbar">
-            <div>
+            <div class="trace-heading">
               <p class="eyebrow">Traza activa</p>
               <h2 id="trace-title">Sin datos</h2>
+              <div class="trace-navigator" id="trace-navigator" hidden>
+                <button id="trace-previous" type="button" aria-label="Ir a la traza anterior" title="Traza anterior">←</button>
+                <span><strong id="trace-position">Traza —</strong><small id="trace-signal-name">—</small></span>
+                <button id="trace-next" type="button" aria-label="Ir a la traza siguiente" title="Traza siguiente">→</button>
+              </div>
             </div>
             <div class="toolbar-actions">
               <button id="config-button" type="button" disabled>Exportar configuración</button>
               <button id="excel-button" class="primary" type="button" disabled>Exportar Excel</button>
             </div>
           </div>
+
+          <section class="review-workflow" id="review-workflow" hidden aria-labelledby="review-title">
+            <div class="review-summary">
+              <div>
+                <p class="eyebrow">Revisión manual</p>
+                <h2 id="review-title">Pendiente de decisión</h2>
+              </div>
+              <p id="review-progress">0 de 0 trazas revisadas</p>
+            </div>
+            <label class="review-note">Nota de revisión
+              <textarea id="review-note" rows="2" placeholder="Observación opcional sobre esta traza"></textarea>
+            </label>
+            <div class="review-actions">
+              <button id="review-pending" type="button">Guardar pendiente</button>
+              <button id="review-reject" class="reject" type="button">Rechazar y siguiente</button>
+              <button id="review-accept" class="accept" type="button">Aceptar y siguiente</button>
+            </div>
+            <p class="review-storage-note" id="review-storage-note">Las decisiones se guardan en este navegador y se incluyen al exportar Excel.</p>
+          </section>
 
           <div class="plot-card">
             <div class="plot-legend">
@@ -232,7 +263,7 @@
             <h2>Alcance de esta fase</h2>
             <div>
               <p><strong>Incluye:</strong> importación, señal cruda, control de calidad y reproducción configurable del perfil POPS para espigas poblacionales.</p>
-              <p><strong>Siguiente fase:</strong> corrección manual auditable, otros perfiles de potencial de campo y series temporales de farmacología.</p>
+              <p><strong>Siguiente fase:</strong> corrección manual auditable de puntos y ventanas, otros perfiles de potencial de campo y series temporales de farmacología.</p>
             </div>
           </section>
         </section>
@@ -244,6 +275,6 @@
       <span>Herramienta de investigación en desarrollo; los resultados requieren revisión experta.</span>
     </footer>
 
-    <script type="module" src="src/app.js?v=20260731-8"></script>
+    <script type="module" src="src/app.js?v=20260731-9"></script>
   </body>
 </html>
