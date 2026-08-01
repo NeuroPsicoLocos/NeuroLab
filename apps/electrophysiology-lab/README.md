@@ -91,6 +91,12 @@ La configuración JSON usa el esquema `simulab-ephys-0.5` e incluye el estado de
 
 La separación evita acoplar la fisiología a Excel o al DOM, y permite probar cada detector con señales sintéticas.
 
+La interfaz carga `src/app.bundle.js`, una copia clásica generada a partir de esos módulos para que la demostración y la selección de archivos también funcionen al abrir `index.html` directamente con `file://`. Después de modificar cualquier módulo, se regenera con:
+
+```bash
+node scripts/build-ephys-bundle.mjs
+```
+
 ## Privacidad
 
 La aplicación no envía archivos a un servidor. SheetJS se descarga desde su CDN oficial al abrir o exportar un libro; el contenido del archivo permanece en memoria local del navegador.
@@ -112,5 +118,6 @@ No se deben confirmar en Git datos humanos identificables ni registros crudos pr
 Desde la raíz:
 
 ```bash
+node scripts/build-ephys-bundle.mjs --check
 node --test tests/*.test.mjs
 ```

@@ -23,6 +23,7 @@ test("required GitHub Pages entry points and modules exist", async () => {
   const required = [
     "apps/electrophysiology-lab/index.html",
     "apps/electrophysiology-lab/src/app.js",
+    "apps/electrophysiology-lab/src/app.bundle.js",
     "apps/electrophysiology-lab/src/core/signal.js",
     "apps/electrophysiology-lab/src/core/fieldPotential.js",
     "apps/electrophysiology-lab/src/core/corrections.js",
@@ -33,6 +34,12 @@ test("required GitHub Pages entry points and modules exist", async () => {
     "CNAME",
   ];
   await Promise.all(required.map((file) => access(path.join(root, file))));
+});
+
+test("electrophysiology entry point uses a classic bundle for file URLs", async () => {
+  const page = await readFile(path.join(root, "apps/electrophysiology-lab/index.html"), "utf8");
+  assert.match(page, /<script defer src="src\/app\.bundle\.js\?v=/);
+  assert.doesNotMatch(page, /<script type="module" src="src\/app\.js/);
 });
 
 test("new HTML entry points have no broken local assets", async () => {

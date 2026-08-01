@@ -1,6 +1,6 @@
 # Simu-LAB / NeuroLab
 
-Plataforma web abierta de NeuroPsicoLocos para simulación, análisis y docencia en neurociencias. El repositorio usa HTML, CSS y JavaScript modular sin proceso de compilación, por lo que puede publicarse directamente con GitHub Pages.
+Plataforma web abierta de NeuroPsicoLocos para simulación, análisis y docencia en neurociencias. El repositorio usa HTML, CSS y JavaScript modular y puede publicarse directamente con GitHub Pages. Electrophysiology Lab incluye además una copia clásica generada del código para permitir su apertura local directa.
 
 Sitio de producción: <https://neurolab.neuropsicolocos.com/>
 
@@ -52,13 +52,14 @@ http://127.0.0.1:8005/apps/electrophysiology-lab/
 http://127.0.0.1:8005/apps/neurocell-explorer/
 ```
 
-No conviene abrir los HTML con `file://`: los módulos ES y los recursos externos necesitan un servidor HTTP.
+Electrophysiology Lab también puede abrirse directamente con `file://`; necesita conexión a internet para descargar SheetJS al leer o exportar libros de cálculo. Para revisar el portal completo y los demás laboratorios sigue siendo preferible usar el servidor local.
 
 ## Pruebas
 
 Requieren Node.js 20 o superior y no instalan dependencias:
 
 ```bash
+node scripts/build-ephys-bundle.mjs --check
 node --test tests/*.test.mjs
 ```
 

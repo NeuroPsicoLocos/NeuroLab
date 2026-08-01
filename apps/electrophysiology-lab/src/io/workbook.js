@@ -3,6 +3,7 @@ const SHEETJS_MODULE_URL = "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs
 let sheetJsPromise;
 
 export function loadSheetJs() {
+  if (globalThis.XLSX) return Promise.resolve(globalThis.XLSX);
   if (!sheetJsPromise) sheetJsPromise = import(SHEETJS_MODULE_URL);
   return sheetJsPromise;
 }
