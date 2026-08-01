@@ -29,8 +29,11 @@ export class SignalPlot {
     this.canvas = canvas;
     this.result = null;
     this.units = { time: "ms", signal: "mV" };
+    this.layout = null;
+    this.pointSelectionHandler = null;
     this.resizeObserver = new ResizeObserver(() => this.draw());
     this.resizeObserver.observe(canvas);
+    this.canvas.addEventListener("pointerdown", (event) => this.handlePointSelection(event));
   }
 
   setData(result, units = this.units) {
@@ -41,7 +44,34 @@ export class SignalPlot {
 
   clear() {
     this.result = null;
+    this.layout = null;
     this.draw();
+  }
+
+  setPointSelectionHandler(handler) {
+    this.pointSelectionHandler = typeof handler === "function" ? handler : null;
+    this.canvas.classList.toggle("editing-points", Boolean(this.pointSelectionHandler));
+  }
+
+  handlePointSelection(event) {
+    if (!this.pointSelectionHandler || !this.layout || !this.result?.timeMs?.length) return;
+    const bounds = this.canvas.getBoundingClientRect();
+    const x = event.clientX - bounds.left;
+    const y = event.clientY - bounds.top;
+    const { margins, plotWidth, plotHeight, timeRange } = this.layout;
+    if (x < margins.left || x > margins.left + plotWidth || y < margins.top || y > margins.top + plotHeight) return;
+    const targetTime = timeRange.minimum + ((x - margins.left) / plotWidth) * (timeRange.maximum - timeRange.minimum);
+    const timeMs = this.result.timeMs;
+    let low = 0;
+    let high = timeMs.length - 1;
+    while (low < high) {
+      const middle = Math.floor((low + high) / 2);
+      if (timeMs[middle] < targetTime) low = middle + 1;
+      else high = middle;
+    }
+    const previous = Math.max(0, low - 1);
+    const sampleIndex = Math.abs(timeMs[previous] - targetTime) <= Math.abs(timeMs[low] - targetTime) ? previous : low;
+    this.pointSelectionHandler({ sampleIndex, timeMs: timeMs[sampleIndex], targetTime });
   }
 
   draw() {
@@ -75,18 +105,19 @@ export class SignalPlot {
       responseEvents = [],
       viewMode = "full",
       includeFullSignalRange = false,
+      responseEndPaddingMs = 12,
     } = this.result;
     const margins = { top: 20, right: 20, bottom: 42, left: 62 };
     const plotWidth = width - margins.left - margins.right;
     const plotHeight = height - margins.top - margins.bottom;
     const fullTimeRange = range(timeMs);
     const validEvents = responseEvents.filter((event) => event.valid);
-    const responsePoints = validEvents.flatMap((event) => [event.p1, event.p2, event.p3]);
+    const responsePoints = responseEvents.flatMap((event) => [event.p1, event.p2, event.p3]).filter(Boolean);
     const responseArtifacts = candidates.length ? candidates : validEvents.map((event) => event.artifact);
     const useResponseView = viewMode === "response" && responseArtifacts.length > 0;
     const responseStart = Math.min(...responseArtifacts.map((artifact) => artifact.timeMs)) - 8;
     const responseEnd = responsePoints.length
-      ? Math.max(...responsePoints.map((point) => point.timeMs)) + 12
+      ? Math.max(...responsePoints.map((point) => point.timeMs)) + responseEndPaddingMs
       : Math.max(...responseArtifacts.map((artifact) => artifact.timeMs)) + 50;
     const timeRange = useResponseView
       ? {
@@ -119,6 +150,7 @@ export class SignalPlot {
     const xScale = (value) =>
       margins.left + ((value - timeRange.minimum) / (timeRange.maximum - timeRange.minimum || 1)) * plotWidth;
     const yScale = (value) => margins.top + ((yMaximum - value) / (yMaximum - yMinimum || 1)) * plotHeight;
+    this.layout = { margins, plotWidth, plotHeight, timeRange };
 
     context.strokeStyle = "#dfe5df";
     context.lineWidth = 1;
@@ -189,9 +221,9 @@ export class SignalPlot {
       p3: { color: "#b64b4b", label: "3" },
     };
     for (const event of responseEvents) {
-      if (!event.valid) continue;
       for (const pointName of ["p1", "p2", "p3"]) {
         const point = event[pointName];
+        if (!point || !Number.isFinite(point.timeMs) || !Number.isFinite(point.value)) continue;
         const style = pointStyles[pointName];
         const x = xScale(point.timeMs);
         const y = yScale(point.value);
@@ -202,11 +234,19 @@ export class SignalPlot {
         context.arc(x, y, 4.3, 0, Math.PI * 2);
         context.fill();
         context.stroke();
+        if (this.result.selectedPoint?.eventNumber === event.eventNumber && this.result.selectedPoint?.pointName === pointName) {
+          context.strokeStyle = "#10282a";
+          context.lineWidth = 1.4;
+          context.beginPath();
+          context.arc(x, y, 7, 0, Math.PI * 2);
+          context.stroke();
+        }
         context.fillStyle = style.color;
         context.font = "800 9px system-ui";
         context.textAlign = "center";
         const provisionalP3 = pointName === "p3" && event.flags?.includes("p3_prominence_fallback");
-        context.fillText(provisionalP3 ? "3*" : style.label, x, y - 7);
+        const manualLabel = point.manual ? `${style.label}†` : null;
+        context.fillText(manualLabel ?? (provisionalP3 ? "3*" : style.label), x, y - 7);
       }
     }
     context.restore();

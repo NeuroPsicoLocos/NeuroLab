@@ -15,7 +15,7 @@ import {
   columnValues,
   exportAnalysisWorkbook,
   parseWorkbook,
-} from "./io/workbook.js?v=20260731-7";
+} from "./io/workbook.js?v=20260801-1";
 import {
   buildReviewSessionKey,
   buildTraceReviewKey,
@@ -24,7 +24,13 @@ import {
   loadReviewState,
   storeReviewRecord,
 } from "./core/review.js?v=20260731-1";
-import { SignalPlot } from "./ui/plot.js?v=20260731-8";
+import {
+  appendCorrectionAudit,
+  applyPointCorrections,
+  removePointCorrection,
+  setPointCorrection,
+} from "./core/corrections.js?v=20260801-1";
+import { SignalPlot } from "./ui/plot.js?v=20260801-1";
 
 const elements = {
   fileInput: document.querySelector("#file-input"),
@@ -74,6 +80,13 @@ const elements = {
   reviewReject: document.querySelector("#review-reject"),
   reviewAccept: document.querySelector("#review-accept"),
   reviewStorageNote: document.querySelector("#review-storage-note"),
+  pointEditor: document.querySelector("#point-editor"),
+  correctionEvent: document.querySelector("#correction-event"),
+  pointButtons: [...document.querySelectorAll("[data-point]")],
+  armCorrection: document.querySelector("#arm-correction"),
+  restorePoint: document.querySelector("#restore-point"),
+  restoreAllPoints: document.querySelector("#restore-all-points"),
+  pointEditorStatus: document.querySelector("#point-editor-status"),
   configButton: document.querySelector("#config-button"),
   excelButton: document.querySelector("#excel-button"),
   qualityTitle: document.querySelector("#quality-title"),
@@ -96,6 +109,7 @@ const plot = new SignalPlot(document.querySelector("#signal-canvas"));
 const state = {
   workbook: null,
   result: null,
+  automaticFieldResult: null,
   fieldResult: null,
   source: null,
   inferredTimeUnit: "ms",
@@ -103,6 +117,9 @@ const state = {
   reviewSessionKey: "",
   reviews: emptyReviewState(),
   activeReviewTraceKey: "",
+  correctionEventNumber: 1,
+  correctionPointName: "p1",
+  correctionArmed: false,
 };
 
 function numericOrUndefined(value) {
@@ -181,6 +198,150 @@ function currentTraceReview() {
   return state.reviews.traces[buildTraceReviewKey(identity.sheetName, identity.signalHeader)] ?? null;
 }
 
+function currentPointCorrections() {
+  const review = currentTraceReview();
+  return review && isReviewCurrent(review, analysisFingerprint()) ? review.pointCorrections ?? {} : {};
+}
+
+function correctedFieldResult() {
+  return state.automaticFieldResult
+    ? applyPointCorrections(state.automaticFieldResult, state.result?.timeMs ?? [], currentPointCorrections())
+    : null;
+}
+
+function setPointEditorStatus(message, isError = false) {
+  elements.pointEditorStatus.textContent = message;
+  elements.pointEditorStatus.classList.toggle("error", isError);
+}
+
+function setCorrectionArmed(armed) {
+  state.correctionArmed = Boolean(armed && state.fieldResult);
+  elements.pointEditor.dataset.armed = String(state.correctionArmed);
+  elements.armCorrection.textContent = state.correctionArmed ? "Cancelar edición" : "Seleccionar en la gráfica";
+  plot.setPointSelectionHandler(state.correctionArmed ? handlePointSelection : null);
+  if (state.correctionArmed) {
+    setPointEditorStatus(`Haz clic en la gráfica para colocar ${state.correctionPointName.toUpperCase()} en la muestra más cercana.`);
+  }
+}
+
+function updatePointEditorUi(fieldResult) {
+  const visible = elements.analysisMode.value === "population-spike" && fieldResult?.events?.length;
+  elements.pointEditor.hidden = !visible;
+  if (!visible) {
+    setCorrectionArmed(false);
+    return;
+  }
+  const eventNumbers = fieldResult.events.map((event) => event.eventNumber);
+  if (!eventNumbers.includes(state.correctionEventNumber)) state.correctionEventNumber = eventNumbers[0];
+  elements.correctionEvent.replaceChildren(...eventNumbers.map((eventNumber) => new Option(`Evento ${eventNumber}`, String(eventNumber))));
+  elements.correctionEvent.value = String(state.correctionEventNumber);
+  const eventCorrection = currentPointCorrections()[String(state.correctionEventNumber)];
+  for (const button of elements.pointButtons) {
+    const selected = button.dataset.point === state.correctionPointName;
+    button.classList.toggle("selected", selected);
+    button.classList.toggle("corrected", Boolean(eventCorrection?.points?.[button.dataset.point]));
+    button.setAttribute("aria-pressed", String(selected));
+  }
+  const selectedCorrected = Boolean(eventCorrection?.points?.[state.correctionPointName]);
+  elements.restorePoint.disabled = !selectedCorrected;
+  elements.restoreAllPoints.disabled = !Object.keys(currentPointCorrections()).length;
+  if (!state.correctionArmed) {
+    const correctedNames = Object.keys(eventCorrection?.points ?? {}).map((name) => name.toUpperCase());
+    setPointEditorStatus(correctedNames.length
+      ? `Evento ${state.correctionEventNumber}: puntos corregidos ${correctedNames.join(", ")}. La traza debe volver a aceptarse.`
+      : "Selecciona un evento y un punto. El clic se ajustará a la muestra real más cercana.");
+  }
+}
+
+function savePointCorrections(pointCorrections, auditEntry = null) {
+  const identity = currentTraceIdentity();
+  if (!identity || !state.reviewSessionKey) return false;
+  const traceKey = buildTraceReviewKey(identity.sheetName, identity.signalHeader);
+  const existing = currentTraceReview();
+  const timestamp = new Date().toISOString();
+  const record = {
+    ...(existing ?? {}),
+    decision: "pending",
+    note: elements.reviewNote.value.trim(),
+    reviewedAt: timestamp,
+    analysisFingerprint: analysisFingerprint(),
+    analysisMode: elements.analysisMode.value,
+    automaticState: state.automaticFieldResult?.ok ? "Analizable" : "Revisar/excluir",
+    pointCorrections,
+    correctionsUpdatedAt: timestamp,
+    correctionHistory: appendCorrectionAudit(existing?.correctionHistory, auditEntry ? { ...auditEntry, at: timestamp } : null),
+  };
+  const saved = storeReviewRecord(reviewStorage(), state.reviewSessionKey, traceKey, record, state.reviews);
+  state.reviews = saved.state;
+  elements.reviewStorageNote.textContent = saved.ok
+    ? "Correcciones guardadas en este navegador; acepta o rechaza nuevamente la traza."
+    : "No fue posible guardar localmente; exporta Excel antes de cerrar esta página.";
+  return saved.ok;
+}
+
+function refreshCorrectedResult() {
+  if (!state.result) return;
+  renderResult(state.result, correctedFieldResult());
+}
+
+function handlePointSelection({ sampleIndex }) {
+  const automaticEvent = state.automaticFieldResult?.events.find((event) => event.eventNumber === state.correctionEventNumber);
+  if (!automaticEvent) return;
+  const corrections = currentPointCorrections();
+  const stored = setPointCorrection({
+    event: automaticEvent,
+    eventCorrection: corrections[String(state.correctionEventNumber)],
+    pointName: state.correctionPointName,
+    sampleIndex,
+    timeMs: state.result.timeMs,
+    signal: state.automaticFieldResult.processedSignal,
+  });
+  if (!stored.ok) {
+    setPointEditorStatus(stored.message, true);
+    return;
+  }
+  const previous = corrections[String(state.correctionEventNumber)]?.points?.[state.correctionPointName];
+  savePointCorrections(
+    { ...corrections, [String(state.correctionEventNumber)]: stored.correction },
+    {
+      action: "set_point",
+      eventNumber: state.correctionEventNumber,
+      pointName: state.correctionPointName,
+      automaticIndex: stored.correction.points[state.correctionPointName].automaticIndex,
+      previousCorrectedIndex: previous?.correctedIndex ?? null,
+      correctedIndex: sampleIndex,
+    },
+  );
+  setCorrectionArmed(false);
+  refreshCorrectedResult();
+}
+
+function restoreSelectedPoint() {
+  const corrections = currentPointCorrections();
+  const eventKey = String(state.correctionEventNumber);
+  const previous = corrections[eventKey]?.points?.[state.correctionPointName];
+  const restoredEvent = removePointCorrection(corrections[eventKey], state.correctionPointName);
+  const restored = { ...corrections };
+  if (restoredEvent) restored[eventKey] = restoredEvent;
+  else delete restored[eventKey];
+  savePointCorrections(restored, {
+    action: "restore_point",
+    eventNumber: state.correctionEventNumber,
+    pointName: state.correctionPointName,
+    previousCorrectedIndex: previous?.correctedIndex ?? null,
+  });
+  setCorrectionArmed(false);
+  refreshCorrectedResult();
+}
+
+function restoreAllPoints() {
+  const restoredPointCount = Object.values(currentPointCorrections())
+    .reduce((count, correction) => count + Object.keys(correction?.points ?? {}).length, 0);
+  savePointCorrections({}, { action: "restore_all", restoredPointCount });
+  setCorrectionArmed(false);
+  refreshCorrectedResult();
+}
+
 function activeSignalChoices() {
   if (!state.source) return [];
   if (state.source.type === "demo") return [{ index: 0, header: "Potencial (mV)" }];
@@ -229,11 +390,15 @@ function updateReviewUi() {
   const identity = currentTraceIdentity();
   const activeTraceKey = identity ? buildTraceReviewKey(identity.sheetName, identity.signalHeader) : "";
   const current = isReviewCurrent(record, analysisFingerprint());
-  if (record && !current && record.decision !== "pending") {
-    elements.reviewTitle.textContent = `${decisionLabel(record.decision)} · parámetros cambiaron`;
+  const hasCorrections = Object.keys(record?.pointCorrections ?? {}).length > 0;
+  if (record && !current && (record.decision !== "pending" || hasCorrections)) {
+    elements.reviewTitle.textContent = hasCorrections
+      ? "Correcciones desactualizadas · parámetros cambiaron"
+      : `${decisionLabel(record.decision)} · parámetros cambiaron`;
     elements.reviewWorkflow.dataset.status = "stale";
   } else {
-    elements.reviewTitle.textContent = record ? decisionLabel(record.decision) : "Pendiente de decisión";
+    const correctionSuffix = Object.keys(record?.pointCorrections ?? {}).length ? " · puntos corregidos" : "";
+    elements.reviewTitle.textContent = record ? `${decisionLabel(record.decision)}${correctionSuffix}` : "Pendiente de decisión";
     elements.reviewWorkflow.dataset.status = record?.decision ?? "pending";
   }
   if (document.activeElement !== elements.reviewNote) elements.reviewNote.value = record?.note ?? "";
@@ -247,13 +412,19 @@ function storeCurrentReview(decision, { advance = false } = {}) {
   const identity = currentTraceIdentity();
   if (!identity || !state.reviewSessionKey) return;
   const traceKey = buildTraceReviewKey(identity.sheetName, identity.signalHeader);
+  const existing = currentTraceReview();
+  const preserveCorrections = existing && isReviewCurrent(existing, analysisFingerprint());
   const record = {
+    ...(existing ?? {}),
     decision,
     note: elements.reviewNote.value.trim(),
     reviewedAt: new Date().toISOString(),
     analysisFingerprint: analysisFingerprint(),
     analysisMode: elements.analysisMode.value,
-    automaticState: state.fieldResult ? (state.fieldResult.ok ? "Analizable" : "Revisar/excluir") : state.result?.ok ? "Analizable" : "Excluido",
+    automaticState: state.automaticFieldResult
+      ? (state.automaticFieldResult.ok ? "Analizable" : "Revisar/excluir")
+      : state.result?.ok ? "Analizable" : "Excluido",
+    pointCorrections: preserveCorrections ? existing.pointCorrections ?? {} : {},
   };
   const saved = storeReviewRecord(reviewStorage(), state.reviewSessionKey, traceKey, record, state.reviews);
   state.reviews = saved.state;
@@ -385,6 +556,10 @@ function updateQuality(result, fieldResult = null) {
   if (fieldResult) {
     const validEvents = fieldResult.events.filter((event) => event.valid);
     const reviewEvents = validEvents.filter((event) => event.reviewRequired);
+    const correctedEvents = fieldResult.events.filter((event) => event.manualCorrection);
+    if (correctedEvents.length) {
+      appendQualityItem("review", `${correctedEvents.length} evento(s) contienen puntos corregidos manualmente; confirma la traza antes de aceptarla.`);
+    }
     if (fieldResult.flags.includes("invalid_parameters")) {
       appendQualityItem("exclude", "La configuración POPS contiene un umbral inválido o una ventana cuyo fin no es posterior al inicio.");
     }
@@ -431,20 +606,18 @@ function renderEventTable(fieldResult, signalUnit) {
   for (const event of fieldResult.events) {
     const row = document.createElement("tr");
     if (!event.valid || event.reviewRequired) row.className = "review";
-    const values = event.valid
-      ? [
-        event.eventNumber,
-        formatMetric(event.artifact.timeMs),
-        formatMetric(event.p1.latencyMs),
-        formatMetric(event.p2.latencyMs),
-        formatMetric(event.p3.latencyMs),
-        formatMetric(event.amplitude, signalUnit),
-        formatMetric(event.tau12Ms),
-        formatMetric(event.tau23Ms),
-        formatMetric(event.snr),
-        `${Math.round(event.confidence)} / 100`,
-      ]
-      : [event.eventNumber, formatMetric(event.artifact.timeMs), "—", "—", "—", "—", "—", "—", "—", "0 / 100"];
+    const values = [
+      event.eventNumber,
+      formatMetric(event.artifact.timeMs),
+      formatMetric(event.p1?.latencyMs),
+      formatMetric(event.p2?.latencyMs),
+      formatMetric(event.p3?.latencyMs),
+      formatMetric(event.amplitude, signalUnit),
+      formatMetric(event.tau12Ms),
+      formatMetric(event.tau23Ms),
+      formatMetric(event.snr),
+      event.manualCorrection ? "Manual" : `${Math.round(event.confidence ?? 0)} / 100`,
+    ];
     for (const value of values) {
       const cell = document.createElement("td");
       cell.textContent = String(value);
@@ -455,14 +628,17 @@ function renderEventTable(fieldResult, signalUnit) {
     status.className = `review-pill${event.valid && !event.reviewRequired ? " accept" : ""}`;
     const p3Fallback = event.valid && event.flags.includes("p3_prominence_fallback");
     const p3Rejected = !event.valid && event.flags.includes("p3_prominence_not_met");
-    status.textContent = event.valid && !event.reviewRequired
+    status.textContent = event.manualCorrection
+      ? `Corregido ${event.correctedPointNames.map((name) => name.toUpperCase()).join("/")}`
+      : event.valid && !event.reviewRequired
       ? "Aceptable"
       : p3Rejected
         ? "Sin P3"
         : p3Fallback
           ? "Revisar P3"
           : "Revisar";
-    if (event.flags?.length) status.title = event.flags.join(", ");
+    const auditFlags = event.manualCorrection ? event.automaticFlags : event.flags;
+    if (auditFlags?.length) status.title = `Detección automática: ${auditFlags.join(", ")}`;
     statusCell.append(status);
     row.append(statusCell);
     elements.eventTableBody.append(row);
@@ -481,6 +657,11 @@ function renderResult(result, fieldResult = null) {
       responseEvents: fieldResult.events,
       viewMode: elements.plotView.value,
       includeFullSignalRange: state.source?.type === "demo",
+      responseEndPaddingMs: Math.max(12, (fieldResult.settings?.p3EndMs ?? 8) + 3),
+      selectedPoint: {
+        eventNumber: state.correctionEventNumber,
+        pointName: state.correctionPointName,
+      },
     }
     : result;
   plot.setData(plotResult, { time: "ms", signal: settings.signalUnit });
@@ -497,10 +678,12 @@ function renderResult(result, fieldResult = null) {
   renderEventTable(fieldResult, settings.signalUnit);
   updateSignalNavigator();
   updateReviewUi();
+  updatePointEditorUi(fieldResult);
 }
 
 function analyzeCurrentSelection() {
   if (!state.source) return;
+  setCorrectionArmed(false);
   const settings = currentSettings();
   let timeValues;
   let rawTimeValues;
@@ -546,7 +729,9 @@ function analyzeCurrentSelection() {
   const fieldResult = elements.analysisMode.value === "population-spike" && result.ok
     ? measurePopulationSpikes(result.timeMs, result.signal, currentFieldSettings())
     : null;
-  renderResult(result, fieldResult);
+  state.result = result;
+  state.automaticFieldResult = fieldResult;
+  renderResult(result, fieldResult ? applyPointCorrections(fieldResult, result.timeMs, currentPointCorrections()) : null);
 }
 
 function fillSelect(select, labels) {
@@ -654,7 +839,7 @@ function loadDemo() {
 function exportConfiguration() {
   const review = currentTraceReview();
   const configuration = {
-    schema: "simulab-ephys-0.4",
+    schema: "simulab-ephys-0.5",
     exportedAt: new Date().toISOString(),
     source: state.source?.type === "demo" ? "synthetic_demo" : state.workbook?.fileName,
     sheet: state.source?.type === "demo" ? "Demostración" : state.workbook?.sheets[Number(elements.sheetSelect.value)]?.name,
@@ -669,7 +854,7 @@ function exportConfiguration() {
       currentForParameters: isReviewCurrent(review, analysisFingerprint()),
     } : { decision: "pending", note: "", currentForParameters: true },
     methodologicalNote: elements.analysisMode.value === "population-spike"
-      ? "Perfil POPS experimental para espiga poblacional extracelular; puntos y confianza requieren validación experta."
+      ? "Perfil POPS experimental para espiga poblacional extracelular; las correcciones manuales conservan los puntos automáticos y requieren aceptación experta."
       : "Los eventos exportados son candidatos de artefacto y requieren validación experta.",
   };
   const blob = new Blob([JSON.stringify(configuration, null, 2)], { type: "application/json" });
@@ -781,6 +966,21 @@ elements.traceNext.addEventListener("click", () => navigateSignal(1));
 elements.reviewPending.addEventListener("click", () => storeCurrentReview("pending"));
 elements.reviewReject.addEventListener("click", () => storeCurrentReview("rejected", { advance: true }));
 elements.reviewAccept.addEventListener("click", () => storeCurrentReview("accepted", { advance: true }));
+elements.correctionEvent.addEventListener("change", () => {
+  state.correctionEventNumber = Number(elements.correctionEvent.value);
+  setCorrectionArmed(false);
+  if (state.result) renderResult(state.result, state.fieldResult);
+});
+for (const button of elements.pointButtons) {
+  button.addEventListener("click", () => {
+    state.correctionPointName = button.dataset.point;
+    setCorrectionArmed(false);
+    if (state.result) renderResult(state.result, state.fieldResult);
+  });
+}
+elements.armCorrection.addEventListener("click", () => setCorrectionArmed(!state.correctionArmed));
+elements.restorePoint.addEventListener("click", restoreSelectedPoint);
+elements.restoreAllPoints.addEventListener("click", restoreAllPoints);
 
 for (const eventName of ["dragenter", "dragover"]) {
   elements.dropZone.addEventListener(eventName, (event) => {

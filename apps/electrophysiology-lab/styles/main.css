@@ -181,6 +181,32 @@ summary { color: var(--teal); font-size: .78rem; font-weight: 750; cursor: point
 .review-actions button:hover { transform: translateY(-1px); }
 .review-storage-note { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: .66rem; line-height: 1.4; }
 
+.point-editor { margin-top: 18px; padding: 18px; border: 1px solid #cbd4cf; background: #f7f8f4; }
+.point-editor[data-armed="true"] { border-color: var(--orange); box-shadow: inset 4px 0 0 var(--orange); background: #fff8f0; }
+.point-editor-heading { display: flex; justify-content: space-between; align-items: end; gap: 20px; }
+.point-editor-heading label { width: min(190px, 42%); }
+.point-editor-controls { margin-top: 15px; display: flex; flex-wrap: wrap; gap: 8px; }
+.point-editor-controls button, .point-choice button {
+  min-height: 38px;
+  padding: 8px 12px;
+  color: #41504f;
+  background: white;
+  border: 1px solid #b9c9c4;
+  cursor: pointer;
+  font-size: .72rem;
+  font-weight: 800;
+}
+.point-choice { display: inline-flex; }
+.point-choice button + button { border-left: 0; }
+.point-choice button.selected { color: white; background: var(--ink); border-color: var(--ink); }
+.point-choice button.corrected::after { content: "†"; margin-left: 2px; color: #f4c692; }
+.point-editor-controls button.primary { color: white; background: var(--teal); border-color: var(--teal); }
+.point-editor[data-armed="true"] #arm-correction { background: var(--orange); border-color: var(--orange); }
+.point-editor-controls button:disabled { color: #a2aaa8; background: #eceeea; border-color: #d9dfda; cursor: not-allowed; }
+.point-editor-status { margin: 13px 0 0; color: var(--teal-dark); font-size: .75rem; font-weight: 700; line-height: 1.45; }
+.point-editor-status.error { color: var(--red); }
+.point-editor-note { margin: 7px 0 0; color: var(--muted); font-size: .67rem; line-height: 1.45; }
+
 .plot-card { margin-top: 24px; border: 1px solid var(--line); background: #fbfaf5; }
 .plot-legend { min-height: 42px; padding: 10px 16px; display: flex; justify-content: flex-end; gap: 22px; align-items: center; color: var(--muted); border-bottom: 1px solid var(--line); font-size: .72rem; }
 .plot-legend span::before { content: ""; width: 18px; height: 2px; margin-right: 7px; display: inline-block; vertical-align: middle; background: var(--teal); }
@@ -190,6 +216,7 @@ summary { color: var(--teal); font-size: .78rem; font-weight: 750; cursor: point
 .plot-view-control { margin-right: auto; display: flex; align-items: center; gap: 7px; color: #41504f; font-weight: 750; }
 .plot-view-control select { width: auto; min-height: 30px; padding: 4px 28px 4px 8px; font-size: .7rem; }
 #signal-canvas { width: 100%; height: clamp(300px, 38vw, 530px); display: block; }
+#signal-canvas.editing-points { cursor: crosshair; }
 
 .metric-grid { margin-top: 14px; display: grid; grid-template-columns: repeat(5, 1fr); border: 1px solid var(--line); }
 .metric-grid article { min-width: 0; padding: 15px 13px; border-right: 1px solid var(--line); }
@@ -244,6 +271,8 @@ footer { padding: 24px clamp(18px,4vw,64px); display: flex; justify-content: spa
   .results-toolbar { align-items: flex-start; flex-direction: column; }
   .review-workflow { grid-template-columns: 1fr; }
   .review-note { grid-column: 1; grid-row: auto; }
+  .point-editor-heading { align-items: stretch; flex-direction: column; }
+  .point-editor-heading label { width: 100%; }
 }
 
 @media (max-width: 560px) {
@@ -264,6 +293,8 @@ footer { padding: 24px clamp(18px,4vw,64px); display: flex; justify-content: spa
   .trace-navigator { width: 100%; min-width: 0; }
   .review-actions { display: grid; grid-template-columns: 1fr 1fr; }
   .review-actions button:first-child { grid-column: 1 / -1; }
+  .point-editor-controls { display: grid; grid-template-columns: 1fr 1fr; }
+  .point-choice { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); }
   #signal-canvas { height: 310px; }
   .plot-legend { justify-content: flex-start; flex-wrap: wrap; gap: 8px 16px; }
   .metric-grid { grid-template-columns: 1fr 1fr; }

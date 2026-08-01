@@ -14,7 +14,7 @@
     <meta property="og:image" content="https://neurolab.neuropsicolocos.com/assets/simulab-social.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
     <title>Electrophysiology Lab · Simu-LAB</title>
-    <link rel="stylesheet" href="styles/main.css?v=20260731-9" />
+    <link rel="stylesheet" href="styles/main.css?v=20260801-1" />
   </head>
   <body>
     <header class="app-header">
@@ -205,6 +205,30 @@
             <p class="review-storage-note" id="review-storage-note">Las decisiones se guardan en este navegador y se incluyen al exportar Excel.</p>
           </section>
 
+          <section class="point-editor" id="point-editor" hidden aria-labelledby="point-editor-title">
+            <div class="point-editor-heading">
+              <div>
+                <p class="eyebrow">Corrección auditable</p>
+                <h2 id="point-editor-title">Ajustar P1 · P2 · P3</h2>
+              </div>
+              <label>Evento
+                <select id="correction-event" aria-label="Evento POPS para corregir"></select>
+              </label>
+            </div>
+            <div class="point-editor-controls">
+              <div class="point-choice" role="group" aria-label="Punto POPS para corregir">
+                <button type="button" data-point="p1">P1</button>
+                <button type="button" data-point="p2">P2</button>
+                <button type="button" data-point="p3">P3</button>
+              </div>
+              <button id="arm-correction" class="primary" type="button">Seleccionar en la gráfica</button>
+              <button id="restore-point" type="button" disabled>Restaurar punto</button>
+              <button id="restore-all-points" type="button" disabled>Restaurar traza</button>
+            </div>
+            <p id="point-editor-status" class="point-editor-status" aria-live="polite">Selecciona un evento y un punto. El clic se ajustará a la muestra real más cercana.</p>
+            <p class="point-editor-note">La detección automática no se sobrescribe. Toda corrección obliga a revisar nuevamente la traza y se exporta junto con el valor original.</p>
+          </section>
+
           <div class="plot-card">
             <div class="plot-legend">
               <label class="plot-view-control">Vista
@@ -263,7 +287,7 @@
             <h2>Alcance de esta fase</h2>
             <div>
               <p><strong>Incluye:</strong> importación, señal cruda, control de calidad y reproducción configurable del perfil POPS para espigas poblacionales.</p>
-              <p><strong>Siguiente fase:</strong> corrección manual auditable de puntos y ventanas, otros perfiles de potencial de campo y series temporales de farmacología.</p>
+              <p><strong>Siguiente fase:</strong> corrección auditable del artefacto y ventanas completas, otros perfiles de potencial de campo y series temporales de farmacología.</p>
             </div>
           </section>
         </section>
@@ -275,6 +299,6 @@
       <span>Herramienta de investigación en desarrollo; los resultados requieren revisión experta.</span>
     </footer>
 
-    <script type="module" src="src/app.js?v=20260731-9"></script>
+    <script type="module" src="src/app.js?v=20260801-1"></script>
   </body>
 </html>

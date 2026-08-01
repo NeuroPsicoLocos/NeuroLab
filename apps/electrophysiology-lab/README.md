@@ -73,12 +73,15 @@ Las señales compatibles de cada hoja se recorren como barridos mediante flechas
 
 La revisión se conserva en `localStorage`, únicamente en el navegador y dispositivo actuales. Cada decisión queda vinculada al archivo de origen, hoja, columna y configuración analítica. Si cambian parámetros que pueden alterar la detección, la decisión se presenta como desactualizada y requiere una nueva revisión.
 
-La configuración JSON usa el esquema `simulab-ephys-0.4` e incluye el estado de revisión de la traza activa. En Excel, `Revision_manual` registra la decisión, nota, fecha, identidad de la traza y huella de parámetros; `Trazas_QC` incorpora el estado de revisión, y `Resumen` conserva la decisión activa. Los candidatos genéricos de derivada se exportan en `Candidatos_derivada`, separados de las mediciones fisiológicas de `Mediciones_POPS`.
+P1, P2 y P3 pueden corregirse seleccionando el evento y el punto, activando **Seleccionar en la gráfica** y haciendo clic sobre la muestra deseada. El clic se ajusta a una muestra real; no interpola ni modifica la señal. La aplicación impide órdenes temporales imposibles, recalcula amplitud, latencias, intervalos, pendiente y SNR, y obliga a revisar nuevamente la traza. Cada punto puede restaurarse por separado o restablecerse toda la traza.
+
+La configuración JSON usa el esquema `simulab-ephys-0.5` e incluye el estado de revisión, las correcciones activas y un historial acotado de acciones. En Excel, `Revision_manual` registra la decisión y el conteo de correcciones; `Correcciones_POPS` conserva valores automáticos y corregidos por punto; `Historial_POPS` registra ajustes y restauraciones; `Trazas_QC` incorpora el estado de revisión, y `Resumen` conserva la decisión activa. Los candidatos genéricos de derivada se exportan en `Candidatos_derivada`, separados de las mediciones fisiológicas de `Mediciones_POPS`.
 
 ## Arquitectura
 
 - `src/core/signal.js`: funciones puras de análisis y señal sintética.
 - `src/core/fieldPotential.js`: suavizado y medición POPS independiente de la interfaz.
+- `src/core/corrections.js`: validación, aplicación y restauración auditable de puntos manuales.
 - `src/core/review.js`: identidad, persistencia y vigencia de decisiones manuales.
 - `src/io/workbook.js`: adaptación de libros de cálculo y exportación.
 - `src/ui/plot.js`: gráfica Canvas de alta densidad.
@@ -96,7 +99,7 @@ No se deben confirmar en Git datos humanos identificables ni registros crudos pr
 
 - perfiles adicionales por protocolo de polaridad, ventanas y criterios fisiológicos;
 - línea base robusta, filtros opcionales con respuesta documentada y señal original visible;
-- corrección manual de puntos y ventanas con historial auditable;
+- corrección manual de ventanas completas y del artefacto con historial auditable;
 - confianza por evento, motivos de exclusión y gráficas de control de calidad;
 - métricas de amplitud, latencia, pendiente, área, SNR y variabilidad entre ensayos;
 - farmacología con tiempo experimental, baseline normalizado y modelos que respeten medidas repetidas;

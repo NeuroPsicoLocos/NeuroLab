@@ -85,8 +85,13 @@ export async function exportAnalysisWorkbook(
   const XLSX = sheetJsModule ?? await loadSheetJs();
   const populationSources = fieldResult ? [{ sheetName, signalHeader, fieldResult }] : [];
   const exportedPopulationEvents = populationSources.flatMap((source) => source.fieldResult.events);
-  const automaticState = fieldResult ? (fieldResult.ok ? "Analizable" : "Revisar/excluir") : result.ok ? "Analizable" : "Excluido";
+  const automaticState = review?.automaticState
+    ?? (fieldResult ? (fieldResult.ok ? "Analizable" : "Revisar/excluir") : result.ok ? "Analizable" : "Excluido");
   const reviewDecision = review?.decision ?? "pending";
+  const pointCorrections = review?.pointCorrections ?? {};
+  const correctionHistory = review?.correctionHistory ?? [];
+  const correctedPointCount = Object.values(pointCorrections)
+    .reduce((count, correction) => count + Object.keys(correction?.points ?? {}).length, 0);
   const reviewLabels = { accepted: "Aceptada", rejected: "Rechazada", pending: "Pendiente" };
   const reviewIsCurrent = review?.currentForParameters !== false;
   const finalState = reviewDecision === "rejected"
@@ -120,6 +125,8 @@ export async function exportAnalysisWorkbook(
     ["Trazas POPS exportadas", fieldResult ? populationSources.length : "No aplicado"],
     ["Eventos POPS válidos", fieldResult ? exportedPopulationEvents.filter((event) => event.valid).length : "No aplicado"],
     ["Eventos POPS para revisión", fieldResult ? exportedPopulationEvents.filter((event) => !event.valid || event.reviewRequired).length : "No aplicado"],
+    ["Puntos POPS corregidos manualmente", fieldResult ? correctedPointCount : "No aplicado"],
+    ["Acciones en historial de corrección", fieldResult ? correctionHistory.length : "No aplicado"],
   ];
   const eventRows = [
     ["Evento", "Índice", "Tiempo (ms)", "Señal", "Derivada absoluta", "Razón sobre umbral"],
@@ -140,7 +147,7 @@ export async function exportAnalysisWorkbook(
   ];
   const parameterRows = [
     ["Parámetro", "Valor"],
-    ["Versión del esquema", "simulab-ephys-0.4"],
+    ["Versión del esquema", "simulab-ephys-0.5"],
     ["Fecha de exportación (ISO 8601)", new Date().toISOString()],
     ["Unidad temporal de entrada", settings.timeUnit],
     ["Unidad de señal", settings.signalUnit],
@@ -177,46 +184,55 @@ export async function exportAnalysisWorkbook(
         "Amplitud espiga poblacional", "Tau 1–2 (ms)", "Tau 2–3 (ms)",
         "Pendiente P1–P3 (unidad/s)", "Línea base", "Sigma robusta base", "SNR",
         "Prominencia P3", "Confianza (0–100)", "Revisión", "Banderas",
+        "Origen de puntos", "P1 automático (ms)", "P1 corregido (ms)",
+        "P2 automático (ms)", "P2 corregido (ms)", "P3 automático (ms)",
+        "P3 corregido (ms)", "Corrección actualizada (ISO 8601)",
       ],
-      ...populationSources.flatMap((source) => source.fieldResult.events.map((event) => event.valid
-        ? [
-          source.sheetName,
-          source.signalHeader,
-          event.eventNumber,
-          "Sí",
-          event.artifact.timeMs,
-          event.intervalFromPreviousMs,
-          event.p1.timeMs,
-          event.p1.latencyMs,
-          event.p1.value,
-          event.p2.timeMs,
-          event.p2.latencyMs,
-          event.p2.value,
-          event.p3.timeMs,
-          event.p3.latencyMs,
-          event.p3.value,
-          event.amplitude,
-          event.tau12Ms,
-          event.tau23Ms,
-          event.slope13PerSecond,
-          event.baseline,
-          event.baselineSigma,
-          event.snr,
-          event.p3Prominence,
-          event.confidence,
-          event.reviewRequired ? "Sí" : "No",
-          event.flags.join("; "),
-        ]
-        : [source.sheetName, source.signalHeader, event.eventNumber, "No", event.artifact.timeMs, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0, "Sí", event.flags.join("; ")])),
+      ...populationSources.flatMap((source) => source.fieldResult.events.map((event) => [
+        source.sheetName,
+        source.signalHeader,
+        event.eventNumber,
+        event.valid ? "Sí" : "No",
+        event.artifact.timeMs,
+        event.intervalFromPreviousMs ?? null,
+        event.p1?.timeMs ?? null,
+        event.p1?.latencyMs ?? null,
+        event.p1?.value ?? null,
+        event.p2?.timeMs ?? null,
+        event.p2?.latencyMs ?? null,
+        event.p2?.value ?? null,
+        event.p3?.timeMs ?? null,
+        event.p3?.latencyMs ?? null,
+        event.p3?.value ?? null,
+        event.amplitude ?? null,
+        event.tau12Ms ?? null,
+        event.tau23Ms ?? null,
+        event.slope13PerSecond ?? null,
+        event.baseline ?? null,
+        event.baselineSigma ?? null,
+        event.snr ?? null,
+        event.p3Prominence ?? null,
+        event.confidence ?? null,
+        !event.valid || event.reviewRequired ? "Sí" : "No",
+        event.flags.join("; "),
+        event.manualCorrection ? "Manual corregido" : "Automático",
+        event.automaticPoints?.p1?.timeMs ?? event.p1?.timeMs ?? null,
+        event.correctedPointNames?.includes("p1") ? event.p1?.timeMs ?? null : null,
+        event.automaticPoints?.p2?.timeMs ?? event.p2?.timeMs ?? null,
+        event.correctedPointNames?.includes("p2") ? event.p2?.timeMs ?? null : null,
+        event.automaticPoints?.p3?.timeMs ?? event.p3?.timeMs ?? null,
+        event.correctedPointNames?.includes("p3") ? event.p3?.timeMs ?? null : null,
+        event.correctionUpdatedAt ?? null,
+      ])),
     ]
     : null;
   const populationTraceQcRows = fieldResult
     ? [
-      ["Hoja", "Traza", "Estado automático", "Artefactos", "Eventos válidos", "Eventos para revisión", "Banderas", "Decisión manual", "Nota manual", "Fecha de revisión", "Parámetros vigentes"],
+      ["Hoja", "Traza", "Estado automático", "Artefactos", "Eventos válidos", "Eventos para revisión", "Banderas", "Decisión manual", "Nota manual", "Fecha de revisión", "Parámetros vigentes", "Puntos corregidos"],
       ...populationSources.map((source) => [
         source.sheetName,
         source.signalHeader,
-        source.fieldResult.ok ? "Analizable" : "Revisar/excluir",
+        automaticState,
         source.fieldResult.artifacts.length,
         source.fieldResult.events.filter((event) => event.valid).length,
         source.fieldResult.events.filter((event) => !event.valid || event.reviewRequired).length,
@@ -225,11 +241,12 @@ export async function exportAnalysisWorkbook(
         review?.note ?? "",
         review?.reviewedAt ?? "",
         reviewIsCurrent ? "Sí" : "No",
+        correctedPointCount,
       ]),
     ]
     : null;
   const manualReviewRows = [
-    ["Hoja", "Traza", "Decisión", "Nota", "Fecha (ISO 8601)", "Modo de análisis", "Estado automático al revisar", "Vigente para parámetros exportados"],
+    ["Hoja", "Traza", "Decisión", "Nota", "Fecha (ISO 8601)", "Modo de análisis", "Estado automático al revisar", "Vigente para parámetros exportados", "Eventos corregidos", "Puntos corregidos"],
     [
       sheetName,
       signalHeader,
@@ -239,7 +256,49 @@ export async function exportAnalysisWorkbook(
       review?.analysisMode ?? "",
       review?.automaticState ?? automaticState,
       reviewIsCurrent ? "Sí" : "No",
+      Object.keys(pointCorrections).length,
+      correctedPointCount,
     ],
+  ];
+
+  const correctionRows = [
+    ["Hoja", "Traza", "Vigente para parámetros exportados", "Evento", "Punto", "Índice automático", "Tiempo automático (ms)", "Señal automática", "Índice corregido", "Tiempo corregido (ms)", "Señal corregida", "Fecha (ISO 8601)"],
+    ...Object.entries(pointCorrections).flatMap(([eventNumber, correction]) => {
+      const event = fieldResult?.events.find((candidate) => String(candidate.eventNumber) === String(eventNumber));
+      return Object.entries(correction?.points ?? {}).map(([pointName, point]) => {
+        const automaticPoint = event?.automaticPoints?.[pointName] ?? (event?.manualCorrection ? null : event?.[pointName]);
+        const correctedPoint = reviewIsCurrent ? event?.[pointName] : null;
+        return [
+          sheetName,
+          signalHeader,
+          reviewIsCurrent ? "Sí" : "No",
+          Number(eventNumber),
+          pointName.toUpperCase(),
+          point.automaticIndex ?? automaticPoint?.index ?? null,
+          automaticPoint?.timeMs ?? null,
+          automaticPoint?.value ?? null,
+          point.correctedIndex,
+          correctedPoint?.timeMs ?? null,
+          correctedPoint?.value ?? null,
+          point.correctedAt ?? correction.updatedAt ?? review?.correctionsUpdatedAt ?? "",
+        ];
+      });
+    }),
+  ];
+  const correctionHistoryRows = [
+    ["Hoja", "Traza", "Acción", "Evento", "Punto", "Índice automático", "Índice corregido anterior", "Índice corregido nuevo", "Puntos restaurados", "Fecha (ISO 8601)"],
+    ...correctionHistory.map((entry) => [
+      sheetName,
+      signalHeader,
+      entry.action ?? "",
+      entry.eventNumber ?? "",
+      entry.pointName?.toUpperCase() ?? "",
+      entry.automaticIndex ?? "",
+      entry.previousCorrectedIndex ?? "",
+      entry.correctedIndex ?? "",
+      entry.restoredPointCount ?? "",
+      entry.at ?? "",
+    ]),
   ];
 
   const workbook = XLSX.utils.book_new();
@@ -251,6 +310,8 @@ export async function exportAnalysisWorkbook(
   if (populationSpikeRows) {
     XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(populationSpikeRows), "Mediciones_POPS");
     XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(populationTraceQcRows), "Trazas_QC");
+    XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(correctionRows), "Correcciones_POPS");
+    XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(correctionHistoryRows), "Historial_POPS");
   }
   XLSX.writeFileXLSX(workbook, `${buildTraceExportBaseName(fileName, sheetName, signalHeader)}.xlsx`);
 }

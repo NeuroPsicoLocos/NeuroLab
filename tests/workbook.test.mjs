@@ -81,7 +81,18 @@ test("POPS export contains only the active trace and reports rejected responses"
   const fieldResult = {
     ok: false,
     artifacts: [artifact],
-    events: [{ valid: false, eventNumber: 1, artifact, flags: ["p3_prominence_not_met"] }],
+    events: [{
+      valid: false,
+      eventNumber: 1,
+      artifact,
+      p3: { index: 12, timeMs: 41, latencyMs: 6, value: 0.5, manual: true },
+      manualCorrection: true,
+      automaticPoints: { p1: null, p2: null, p3: null },
+      correctedPointNames: ["p3"],
+      correctionUpdatedAt: "2026-08-01T10:00:00.000Z",
+      reviewRequired: true,
+      flags: ["manual_points_adjusted", "manual_response_incomplete"],
+    }],
     flags: ["p3_prominence_not_met"],
     settings: {
       profile: "paired", smoothing: true, artifactThreshold: 0.3, minimumArtifactDistanceMs: 15,
@@ -113,6 +124,24 @@ test("POPS export contains only the active trace and reports rejected responses"
       analysisMode: "population-spike",
       automaticState: "Revisar/excluir",
       currentForParameters: true,
+      pointCorrections: {
+        "1": {
+          eventNumber: 1,
+          updatedAt: "2026-08-01T10:00:00.000Z",
+          points: {
+            p3: { pointName: "p3", automaticIndex: null, correctedIndex: 12, correctedAt: "2026-08-01T10:00:00.000Z" },
+          },
+        },
+      },
+      correctionHistory: [{
+        action: "set_point",
+        eventNumber: 1,
+        pointName: "p3",
+        automaticIndex: null,
+        previousCorrectedIndex: null,
+        correctedIndex: 12,
+        at: "2026-08-01T10:00:00.000Z",
+      }],
     },
   }, XLSX);
 
@@ -122,9 +151,15 @@ test("POPS export contains only the active trace and reports rejected responses"
   assert.equal(summary["Decisión de revisión manual"], "Rechazada");
   assert.equal(summary["Trazas POPS exportadas"], 1);
   assert.equal(summary["Eventos POPS para revisión"], 1);
+  assert.equal(summary["Puntos POPS corregidos manualmente"], 1);
+  assert.equal(summary["Acciones en historial de corrección"], 1);
   assert.equal(writtenWorkbook.sheets.Mediciones_POPS.rows.length, 2);
   assert.equal(writtenWorkbook.sheets.Trazas_QC.rows.length, 2);
   assert.equal(writtenWorkbook.sheets.Trazas_QC.rows[1][7], "Rechazada");
   assert.equal(writtenWorkbook.sheets.Revision_manual.rows[1][3], "Respuesta no confirmada");
+  assert.equal(writtenWorkbook.sheets.Correcciones_POPS.rows.length, 2);
+  assert.equal(writtenWorkbook.sheets.Correcciones_POPS.rows[1][4], "P3");
+  assert.equal(writtenWorkbook.sheets.Correcciones_POPS.rows[1][8], 12);
+  assert.equal(writtenWorkbook.sheets.Historial_POPS.rows[1][2], "set_point");
   assert.ok(writtenWorkbook.sheets.Candidatos_derivada);
 });
