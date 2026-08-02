@@ -32,6 +32,8 @@ El siguiente módulo se encuentra en fase de diseño. La [especificación de cur
 
 La base docente futura se documenta en [PSP Lab y tutor didáctico](docs/electrophysiology/PSP_TUTOR_ARCHITECTURE.md). Su primer motor genera escenarios PSP deterministas con verdad conocida y mantiene las respuestas reservadas fuera de la vista del estudiante; todavía no está conectado a la aplicación pública.
 
+El [detector PSP inicial](docs/electrophysiology/PSP_DETECTOR_VALIDATION.md) mide respuestas evocadas sobre ese banco y reporta su rendimiento por amplitud y ruido. Sigue siendo validación sintética y no reemplaza la evaluación con registros reales.
+
 ### NeuroCell Explorer
 
 Ruta: `apps/neurocell-explorer/`

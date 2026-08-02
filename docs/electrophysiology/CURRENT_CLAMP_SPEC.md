@@ -1,6 +1,6 @@
 # Especificación científica: current clamp y potenciales postsinápticos
 
-Estado: propuesta para revisión, sin implementación.
+Estado: especificación en revisión. Existe un detector sintético inicial separado de la interfaz pública; sus parámetros aún no están validados con registros reales.
 
 Esta especificación define el contrato científico y técnico de la fase `v0.2` de Electrophysiology Lab. Su primer objetivo es medir respuestas postsinápticas evocadas y subumbrales registradas en current clamp sin confundir polaridad eléctrica con identidad fisiológica.
 
@@ -319,9 +319,13 @@ El formato largo será el principal para estadística: una fila por célula, bar
 
 ## 12. Arquitectura propuesta
 
-Sin implementación todavía:
+Implementación inicial:
 
-- `src/core/currentClamp.js`: detección y medición pura de PSP;
+- `src/core/currentClamp.js`: detección y medición pura de PSP, implementada y validada inicialmente con señales sintéticas;
+- `src/core/pspScenario.js`: generación determinista con verdad conocida separada de la vista estudiante;
+
+Separaciones previstas cuando la interfaz y los perfiles reales lo requieran:
+
 - `src/core/baseline.js`: estimación robusta compartida;
 - `src/core/metrics.js`: métricas con ventanas y unidades explícitas;
 - `src/core/qc.js`: banderas y motivos de exclusión;
@@ -331,6 +335,8 @@ Sin implementación todavía:
 - `src/app.js`: selección de modalidad y estado de interfaz.
 
 El detector no accederá al DOM ni a Excel. Recibirá arreglos y una configuración, y devolverá resultados serializables. Así podrá probarse con señales sintéticas deterministas.
+
+La validación sintética y sus resultados reproducibles se documentan en [`PSP_DETECTOR_VALIDATION.md`](PSP_DETECTOR_VALIDATION.md). No sustituyen la validación con registros reales.
 
 ## 13. Pruebas sintéticas y casos límite
 
@@ -355,9 +361,9 @@ El banco inicial debe incluir semillas fijas y valores verdaderos conocidos:
 
 Cada prueba evaluará error de amplitud, latencia, pendiente y área, además de falsos positivos/negativos y banderas QC.
 
-## 14. Criterios para comenzar implementación
+## 14. Criterios para estabilizar el perfil experimental
 
-Antes de escribir el detector deben acordarse:
+Antes de conectar el detector a la interfaz pública y adoptar valores predeterminados para registros reales deben acordarse:
 
 - tipo de preparación y células prioritarias;
 - estructura real de los archivos;
