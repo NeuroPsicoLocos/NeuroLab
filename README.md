@@ -30,6 +30,8 @@ La evaluación con personas usuarias y registros reales se organiza mediante el 
 
 El siguiente módulo se encuentra en fase de diseño. La [especificación de current clamp](docs/electrophysiology/CURRENT_CLAMP_SPEC.md) separa dirección eléctrica, evento medido e interpretación EPSP/IPSP, y define metadatos, QC, métricas y pruebas requeridas antes de implementar.
 
+La base docente futura se documenta en [PSP Lab y tutor didáctico](docs/electrophysiology/PSP_TUTOR_ARCHITECTURE.md). Su primer motor genera escenarios PSP deterministas con verdad conocida y mantiene las respuestas reservadas fuera de la vista del estudiante; todavía no está conectado a la aplicación pública.
+
 ### NeuroCell Explorer
 
 Ruta: `apps/neurocell-explorer/`
