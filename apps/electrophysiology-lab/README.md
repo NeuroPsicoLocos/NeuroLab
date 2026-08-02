@@ -107,6 +107,7 @@ No se deben confirmar en Git datos humanos identificables ni registros crudos pr
 
 ## Próximas fases
 
+- contrato científico y técnico de current clamp descrito en [`CURRENT_CLAMP_SPEC.md`](../../docs/electrophysiology/CURRENT_CLAMP_SPEC.md), pendiente de revisión antes de implementar;
 - perfiles adicionales por protocolo de polaridad, ventanas y criterios fisiológicos;
 - línea base robusta, filtros opcionales con respuesta documentada y señal original visible;
 - corrección manual de ventanas completas y del artefacto con historial auditable;
