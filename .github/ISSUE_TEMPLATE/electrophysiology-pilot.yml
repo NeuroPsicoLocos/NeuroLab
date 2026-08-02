@@ -1,0 +1,127 @@
+name: Validación piloto · Electrophysiology Lab
+description: Reporta una prueba de importación, detección, revisión o exportación.
+title: "[Ephys piloto]: "
+labels:
+  - electrophysiology
+  - pilot-validation
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por probar Electrophysiology Lab. No adjuntes registros humanos identificables, datos clínicos privados ni archivos sin autorización para compartir.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área evaluada
+      options:
+        - Apertura o señal sintética
+        - Importación y columnas
+        - Unidades o escala temporal
+        - Detección POPS
+        - Navegación y revisión manual
+        - Corrección P1/P2/P3
+        - Exportación Excel
+        - Interfaz o compatibilidad
+        - Resultado negativo esperado
+    validations:
+      required: true
+
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Clasificación
+      options:
+        - Aprobada
+        - Aprobada con observación
+        - Revisión necesaria
+        - Fallo
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridad propuesta
+      options:
+        - Crítica
+        - Alta
+        - Media
+        - Baja
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Entorno
+      description: Sistema operativo, navegador y versión, dispositivo y fecha de la prueba.
+      placeholder: "macOS 15; Safari 19; computadora portátil; 2026-08-01"
+    validations:
+      required: true
+
+  - type: textarea
+    id: input
+    attributes:
+      label: Datos de entrada no sensibles
+      description: Formato, tamaño aproximado, hojas/columnas, unidad temporal y frecuencia esperada. No adjuntes el registro privado.
+      placeholder: "XLSX; ~10 000 filas; tiempo en s; señal en mV; 10 kHz; hoja condición F; columna H"
+    validations:
+      required: true
+
+  - type: textarea
+    id: parameters
+    attributes:
+      label: Método y parámetros
+      description: Perfil, protocolo, umbrales, ventanas o límites de saturación relevantes.
+      placeholder: "POPS experimental; dos estímulos; umbral 0.3; distancia mínima 15 ms; prominencia P3 0.2"
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducir
+      placeholder: |
+        1. Abrí la aplicación.
+        2. Cargué el archivo.
+        3. Seleccioné...
+    validations:
+      required: true
+
+  - type: textarea
+    id: observed
+    attributes:
+      label: Resultado observado
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Resultado esperado o criterio experto
+      description: Indica también si la ausencia de detección era el resultado esperado.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidencia desidentificada
+      description: Captura recortada, nombre del Excel exportado o identificador local no sensible. Elimina metadatos e identificadores.
+
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacidad
+      options:
+        - label: Confirmo que este reporte no contiene datos identificables ni archivos privados sin autorización.
+          required: true
+
+  - type: checkboxes
+    id: reproducibility
+    attributes:
+      label: Comprobaciones
+      options:
+        - label: Probé nuevamente en una pestaña nueva.
+        - label: Puedo reproducir el resultado con los pasos descritos.
+        - label: Revisé el archivo Excel exportado.
+
