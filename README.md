@@ -28,6 +28,8 @@ El perfil POPS reproduce el algoritmo histórico del proyecto y hace visibles su
 
 La evaluación con personas usuarias y registros reales se organiza mediante el [protocolo de validación piloto](docs/electrophysiology/PILOT_VALIDATION.md) y el formulario estructurado de GitHub Issues. No deben adjuntarse datos identificables ni registros privados.
 
+El siguiente módulo se encuentra en fase de diseño. La [especificación de current clamp](docs/electrophysiology/CURRENT_CLAMP_SPEC.md) separa dirección eléctrica, evento medido e interpretación EPSP/IPSP, y define metadatos, QC, métricas y pruebas requeridas antes de implementar.
+
 ### NeuroCell Explorer
 
 Ruta: `apps/neurocell-explorer/`
