@@ -1,6 +1,6 @@
 # Arquitectura propuesta: PSP Lab y tutor didáctico
 
-Estado: primera base implementada sólo en el núcleo sintético; no conectada todavía a la interfaz pública.
+Estado: generador y detector PSP iniciales implementados como núcleos puros; no conectados todavía a la interfaz pública.
 
 ## Objetivo
 
@@ -190,8 +190,8 @@ La versión inicial comprueba:
 ## Próximos incrementos
 
 1. agregar contaminación por potencial de acción y muestras faltantes;
-2. construir el detector genérico PSP contra este banco;
-3. crear evaluación cuantitativa con tolerancias;
+2. ampliar el detector PSP inicial con contaminación y artefactos más realistas;
+3. revisar la evaluación cuantitativa y sus tolerancias con registros piloto;
 4. integrar una demostración separada de la beta experimental;
 5. añadir modo docente y tutor local;
 6. diseñar perfiles de conductancia y farmacología;
@@ -202,4 +202,3 @@ La versión inicial comprueba:
 - Guzman SJ, Schlögl A, Schmidt-Hieber C. *Stimfit: quantifying electrophysiological data with Python*. Front Neuroinform. 2014;8:16. <https://doi.org/10.3389/fninf.2014.00016>.
 - Pavlov I et al. *Ih-mediated depolarization enhances the temporal precision of neuronal integration*. Nat Commun. 2011;2:199. <https://pmc.ncbi.nlm.nih.gov/articles/PMC3105342/>. Utiliza el formalismo de doble exponencial para conductancias sinápticas en simulación.
 - Hodgkin AL, Huxley AF. *A quantitative description of membrane current and its application to conduction and excitation in nerve*. J Physiol. 1952;117:500–544. <https://doi.org/10.1113/jphysiol.1952.sp004764>. Base histórica para la fase futura de potenciales de acción.
-
