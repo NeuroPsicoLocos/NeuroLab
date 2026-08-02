@@ -6,9 +6,10 @@ import path from "node:path";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-test("portal links to both local laboratories", async () => {
+test("portal links to all local laboratories", async () => {
   const portal = await readFile(path.join(root, "index.html"), "utf8");
   assert.match(portal, /apps\/electrophysiology-lab\//);
+  assert.match(portal, /apps\/psp-lab\//);
   assert.match(portal, /apps\/neurocell-explorer\//);
 });
 
@@ -33,6 +34,12 @@ test("required GitHub Pages entry points and modules exist", async () => {
     "apps/electrophysiology-lab/src/core/corrections.js",
     "apps/electrophysiology-lab/src/core/inference.js",
     "apps/electrophysiology-lab/src/core/review.js",
+    "apps/psp-lab/index.html",
+    "apps/psp-lab/README.md",
+    "apps/psp-lab/styles/main.css",
+    "apps/psp-lab/src/app.js",
+    "apps/psp-lab/src/app.bundle.js",
+    "apps/psp-lab/src/plot.js",
     "apps/neurocell-explorer/index.html",
     ".nojekyll",
     "CNAME",
@@ -46,8 +53,21 @@ test("electrophysiology entry point uses a classic bundle for file URLs", async 
   assert.doesNotMatch(page, /<script type="module" src="src\/app\.js/);
 });
 
+test("PSP Lab separates student and teacher modes and uses a classic bundle", async () => {
+  const page = await readFile(path.join(root, "apps/psp-lab/index.html"), "utf8");
+  assert.match(page, /id="student-mode"/);
+  assert.match(page, /id="teacher-mode"/);
+  assert.match(page, /id="psp-canvas"/);
+  assert.match(page, /<script defer src="src\/app\.bundle\.js\?v=/);
+  assert.doesNotMatch(page, /<script type="module"/);
+
+  const source = await readFile(path.join(root, "apps/psp-lab/src/app.js"), "utf8");
+  assert.match(source, /createStudentScenarioView/);
+  assert.match(source, /PSP no clasificado/);
+});
+
 test("new HTML entry points have no broken local assets", async () => {
-  const pages = ["index.html", "apps/electrophysiology-lab/index.html"];
+  const pages = ["index.html", "apps/electrophysiology-lab/index.html", "apps/psp-lab/index.html"];
   for (const page of pages) {
     const markup = await readFile(path.join(root, page), "utf8");
     const references = [...markup.matchAll(/(?:href|src)="([^"]+)"/g)].map((match) => match[1]);

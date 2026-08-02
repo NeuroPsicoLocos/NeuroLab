@@ -313,7 +313,7 @@ h1 {
 .lab-grid {
   display: grid;
   margin-top: 50px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
 }
 
@@ -349,6 +349,7 @@ h1 {
 }
 
 .status.beta { color: #8b531f; }
+.status.experimental { color: #e6ab75; }
 .status.ready { color: #8fc6b1; }
 .status.external { color: #c4b7e2; }
 
@@ -393,6 +394,28 @@ h1 {
   content: "";
   transform: skew(-18deg) rotate(34deg);
 }
+
+.lab-icon.psp span {
+  position: absolute;
+  top: 34px;
+  left: 11px;
+  width: 50px;
+  height: 2px;
+  background: currentColor;
+}
+
+.lab-icon.psp::before,
+.lab-icon.psp::after {
+  position: absolute;
+  width: 17px;
+  height: 17px;
+  border: 3px solid currentColor;
+  border-radius: 50%;
+  content: "";
+}
+
+.lab-icon.psp::before { top: 13px; left: 12px; border-right-color: transparent; border-bottom-color: transparent; transform: rotate(38deg); }
+.lab-icon.psp::after { right: 11px; bottom: 12px; border-left-color: transparent; border-top-color: transparent; transform: rotate(38deg); }
 
 .lab-icon.cell::before,
 .lab-icon.cell::after {

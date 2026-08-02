@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="PSP Lab de Simu-LAB: retos reproducibles para medir potenciales postsinápticos evocados en current clamp." />
+    <meta name="theme-color" content="#10282a" />
+    <title>PSP Lab · Simu-LAB</title>
+    <link rel="stylesheet" href="styles/main.css?v=20260802-3" />
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="brand" href="../../" aria-label="Volver a Simu-LAB">
+        <img src="../neurocell-explorer/assets/neuropsicolocos-logo.png" alt="" />
+        <span><strong>Simu-LAB</strong><small>PSP Lab</small></span>
+      </a>
+      <div class="header-actions">
+        <span>Experimental · procesamiento local</span>
+        <a href="../electrophysiology-lab/">Potenciales de campo</a>
+        <a href="../../">Todos los laboratorios</a>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <section class="intro">
+        <div>
+          <p class="eyebrow">Current clamp · laboratorio docente</p>
+          <h1>Describe la señal antes de interpretarla.</h1>
+          <p>
+            Practica con potenciales postsinápticos sintéticos reproducibles. Identifica respuesta, dirección y pico;
+            después compara tu medición con el detector y la verdad conocida del simulador.
+          </p>
+        </div>
+        <aside>
+          <strong>Simplificación visible</strong>
+          <p>La forma de onda es fenomenológica. La polaridad por sí sola no demuestra EPSP ni IPSP.</p>
+        </aside>
+      </section>
+
+      <nav class="mode-switch" aria-label="Modo de uso">
+        <button id="student-mode" class="active" type="button" aria-pressed="true">
+          <span>Modo estudiante</span><small>Reto con respuesta oculta</small>
+        </button>
+        <button id="teacher-mode" type="button" aria-pressed="false">
+          <span>Modo docente</span><small>Parámetros y verdad conocida</small>
+        </button>
+      </nav>
+
+      <div class="workspace">
+        <aside class="control-panel" aria-label="Configuración del escenario">
+          <section class="panel-section student-controls">
+            <p class="step">01</p>
+            <div>
+              <h2>Nuevo reto</h2>
+              <p class="help">Cada reto conserva una semilla para poder repetirlo.</p>
+              <label>Dificultad
+                <select id="difficulty">
+                  <option value="intro">Inicial</option>
+                  <option value="intermediate" selected>Intermedia</option>
+                  <option value="advanced">Avanzada</option>
+                </select>
+              </label>
+              <button id="new-challenge" class="primary wide" type="button">Generar reto aleatorio</button>
+              <div class="challenge-id"><span>Identificador</span><strong id="challenge-id">—</strong></div>
+              <p id="student-progress" class="progress-note">Sin intentos guardados en este navegador.</p>
+            </div>
+          </section>
+
+          <section class="panel-section teacher-controls" hidden>
+            <p class="step">01</p>
+            <div>
+              <h2>Construir escenario</h2>
+              <p class="help">Los valores son eléctricos y no asignan identidad sináptica.</p>
+              <div class="field-grid">
+                <label class="full">Semilla<input id="teacher-seed" type="text" value="psp-docente-01" /></label>
+                <label>Respuesta
+                  <select id="teacher-kind">
+                    <option value="monophasic">Monofásica</option>
+                    <option value="biphasic">Bifásica</option>
+                    <option value="none">Sin respuesta</option>
+                  </select>
+                </label>
+                <label>Dirección
+                  <select id="teacher-direction">
+                    <option value="positive">Positiva</option>
+                    <option value="negative">Negativa</option>
+                  </select>
+                </label>
+                <label>Amplitud (mV)<input id="teacher-amplitude" type="number" min="0.1" max="20" step="0.1" value="3" /></label>
+                <label>Ruido SD (mV)<input id="teacher-noise" type="number" min="0" max="2" step="0.01" value="0.10" /></label>
+                <label>Deriva (mV/s)<input id="teacher-drift" type="number" min="-50" max="50" step="1" value="0" /></label>
+                <label>Barridos<input id="teacher-sweeps" type="number" min="1" max="20" step="1" value="6" /></label>
+              </div>
+              <label class="check-row"><input id="teacher-paired" type="checkbox" /><span>Dos estímulos</span></label>
+              <label class="check-row"><input id="teacher-saturation" type="checkbox" /><span>Provocar saturación conocida</span></label>
+              <button id="apply-teacher" class="primary wide" type="button">Aplicar escenario</button>
+            </div>
+          </section>
+
+          <section class="panel-section">
+            <p class="step">02</p>
+            <div>
+              <h2>Barrido</h2>
+              <div class="sweep-nav">
+                <button id="previous-sweep" type="button" aria-label="Barrido anterior">←</button>
+                <output id="sweep-position">1 de 1</output>
+                <button id="next-sweep" type="button" aria-label="Barrido siguiente">→</button>
+              </div>
+              <p class="help">La semilla conserva la variación entre barridos.</p>
+            </div>
+          </section>
+
+          <section class="panel-section worksheet student-controls">
+            <p class="step">03</p>
+            <div>
+              <h2>Tu análisis</h2>
+              <label>¿Hay una respuesta evaluable?
+                <select id="answer-presence">
+                  <option value="">Selecciona…</option>
+                  <option value="present">Sí, hay respuesta</option>
+                  <option value="none">No hay respuesta detectable</option>
+                  <option value="not_evaluable">No es evaluable</option>
+                </select>
+              </label>
+              <label>Dirección eléctrica
+                <select id="answer-direction">
+                  <option value="">Selecciona…</option>
+                  <option value="positive">Positiva</option>
+                  <option value="negative">Negativa</option>
+                  <option value="biphasic">Bifásica</option>
+                  <option value="indeterminate">Indeterminada</option>
+                </select>
+              </label>
+              <div class="peak-answer">
+                <span>Pico seleccionado</span>
+                <strong id="selected-peak">Haz clic en la gráfica</strong>
+              </div>
+              <div class="worksheet-actions">
+                <button id="hint-button" type="button">Pista</button>
+                <button id="evaluate-button" class="primary" type="button">Evaluar</button>
+              </div>
+              <p id="hint-text" class="hint" aria-live="polite">Las pistas aparecerán aquí.</p>
+            </div>
+          </section>
+        </aside>
+
+        <section class="results-panel" aria-label="Señal y resultados">
+          <div class="results-toolbar">
+            <div>
+              <p class="eyebrow">Escenario activo</p>
+              <h2 id="scenario-title">Preparando reto…</h2>
+              <p id="scenario-summary">Señal sintética docente.</p>
+            </div>
+            <div class="toolbar-actions">
+              <span id="analysis-status" class="status-pill">Sin evaluar</span>
+              <button id="export-session" type="button">Exportar sesión</button>
+            </div>
+          </div>
+
+          <div class="plot-card">
+            <div class="plot-legend">
+              <span class="trace-key">Voltaje</span>
+              <span class="artifact-key">Estímulo / artefacto</span>
+              <span class="analysis-key">Inicio · pico · retorno</span>
+              <span class="student-key">Tu selección</span>
+            </div>
+            <canvas id="psp-canvas" aria-label="Gráfica de potencial postsináptico; en modo estudiante puedes seleccionar el pico"></canvas>
+          </div>
+
+          <section id="feedback-card" class="feedback-card" hidden aria-live="polite">
+            <div>
+              <p class="eyebrow">Tutor local</p>
+              <h2 id="feedback-title">Resultado</h2>
+            </div>
+            <div id="feedback-content"></div>
+          </section>
+
+          <section id="truth-card" class="truth-card teacher-controls" hidden>
+            <div>
+              <p class="eyebrow">Verdad conocida</p>
+              <h2>Configuración del simulador</h2>
+            </div>
+            <dl id="truth-values"></dl>
+          </section>
+
+          <div class="metric-grid" id="metric-grid">
+            <article><span>Línea base</span><strong id="metric-baseline">Oculta</strong></article>
+            <article><span>Ruido robusto</span><strong id="metric-noise">Oculto</strong></article>
+            <article><span>Amplitud firmada</span><strong id="metric-amplitude">Oculta</strong></article>
+            <article><span>Latencia de inicio</span><strong id="metric-onset">Oculta</strong></article>
+            <article><span>Latencia de pico</span><strong id="metric-peak">Oculta</strong></article>
+            <article><span>SNR</span><strong id="metric-snr">Oculta</strong></article>
+          </div>
+
+          <section class="quality-card">
+            <div>
+              <p class="eyebrow">Control de calidad</p>
+              <h2>Qué debe revisarse</h2>
+            </div>
+            <ul id="quality-list"><li class="info">La evaluación aparecerá después del intento.</li></ul>
+          </section>
+
+          <section class="method-card">
+            <strong>Regla de interpretación</strong>
+            <p>
+              El detector informa dirección positiva, negativa o bifásica y mantiene la etiqueta
+              <code>PSP_unclassified</code>. Para nombrar EPSP o IPSP se requiere evidencia experimental adicional.
+            </p>
+          </section>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <span>Simu-LAB · PSP Lab experimental</span>
+      <span>Las señales son sintéticas y no sustituyen registros ni revisión experta.</span>
+    </footer>
+
+    <script defer src="src/app.bundle.js?v=20260802-3"></script>
+  </body>
+</html>

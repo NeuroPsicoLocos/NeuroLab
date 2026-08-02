@@ -1,6 +1,6 @@
 # Simu-LAB / NeuroLab
 
-Plataforma web abierta de NeuroPsicoLocos para simulación, análisis y docencia en neurociencias. El repositorio usa HTML, CSS y JavaScript modular y puede publicarse directamente con GitHub Pages. Electrophysiology Lab incluye además una copia clásica generada del código para permitir su apertura local directa.
+Plataforma web abierta de NeuroPsicoLocos para simulación, análisis y docencia en neurociencias. El repositorio usa HTML, CSS y JavaScript modular y puede publicarse directamente con GitHub Pages. Electrophysiology Lab y PSP Lab incluyen además una copia clásica generada del código para permitir su apertura local directa.
 
 Sitio de producción: <https://neurolab.neuropsicolocos.com/>
 
@@ -28,9 +28,18 @@ El perfil POPS reproduce el algoritmo histórico del proyecto y hace visibles su
 
 La evaluación con personas usuarias y registros reales se organiza mediante el [protocolo de validación piloto](docs/electrophysiology/PILOT_VALIDATION.md) y el formulario estructurado de GitHub Issues. No deben adjuntarse datos identificables ni registros privados.
 
-El siguiente módulo se encuentra en fase de diseño. La [especificación de current clamp](docs/electrophysiology/CURRENT_CLAMP_SPEC.md) separa dirección eléctrica, evento medido e interpretación EPSP/IPSP, y define metadatos, QC, métricas y pruebas requeridas antes de implementar.
+La [especificación de current clamp](docs/electrophysiology/CURRENT_CLAMP_SPEC.md) separa dirección eléctrica, evento medido e interpretación EPSP/IPSP, y define metadatos, QC, métricas y pruebas requeridas.
 
-La base docente futura se documenta en [PSP Lab y tutor didáctico](docs/electrophysiology/PSP_TUTOR_ARCHITECTURE.md). Su primer motor genera escenarios PSP deterministas con verdad conocida y mantiene las respuestas reservadas fuera de la vista del estudiante; todavía no está conectado a la aplicación pública.
+### PSP Lab (experimental)
+
+Ruta: `apps/psp-lab/`
+
+Laboratorio docente de current clamp construido sobre el motor PSP determinista. Incluye modos estudiante y docente,
+retos por dificultad, navegación entre barridos, selección del pico sobre Canvas, pistas locales, evaluación contra verdad
+conocida y exportación JSON de la sesión. La vista estudiante no recibe la configuración ni la verdad conocida hasta
+evaluar; la etiqueta permanece como `PSP_unclassified` porque la polaridad aislada no demuestra EPSP o IPSP.
+
+La arquitectura científica y docente se documenta en [PSP Lab y tutor didáctico](docs/electrophysiology/PSP_TUTOR_ARCHITECTURE.md).
 
 El [detector PSP inicial](docs/electrophysiology/PSP_DETECTOR_VALIDATION.md) mide respuestas evocadas sobre ese banco y reporta su rendimiento por amplitud y ruido. Sigue siendo validación sintética y no reemplaza la evaluación con registros reales.
 
@@ -57,10 +66,11 @@ Abrir:
 ```text
 http://127.0.0.1:8005/
 http://127.0.0.1:8005/apps/electrophysiology-lab/
+http://127.0.0.1:8005/apps/psp-lab/
 http://127.0.0.1:8005/apps/neurocell-explorer/
 ```
 
-Electrophysiology Lab también puede abrirse directamente con `file://`; necesita conexión a internet para descargar SheetJS al leer o exportar libros de cálculo. Para revisar el portal completo y los demás laboratorios sigue siendo preferible usar el servidor local.
+Electrophysiology Lab y PSP Lab también pueden abrirse directamente con `file://`. Electrophysiology Lab necesita conexión a internet para descargar SheetJS al leer o exportar libros de cálculo. Para revisar el portal completo sigue siendo preferible usar el servidor local.
 
 ## Pruebas
 
@@ -68,6 +78,7 @@ Requieren Node.js 20 o superior y no instalan dependencias:
 
 ```bash
 node scripts/build-ephys-bundle.mjs --check
+node scripts/build-psp-lab-bundle.mjs --check
 node --test tests/*.test.mjs
 ```
 
@@ -89,6 +100,7 @@ NeuroLab/
 │   │       ├── core/fieldPotential.js  # Perfil POPS y espiga poblacional
 │   │       ├── io/workbook.js         # Entrada/salida tabular
 │   │       └── ui/plot.js              # Visualización Canvas
+│   ├── psp-lab/                         # Retos PSP y tutor local
 │   └── neurocell-explorer/
 ├── docs/
 └── tests/
