@@ -22,6 +22,8 @@ Para libros POPS conocidos, la unidad temporal y el protocolo se proponen autom�
 
 POPS se interpreta aquí como una medición de **espiga poblacional extracelular**. No clasifica respuestas sinápticas de una neurona individual como EPSP, IPSP, EPSC o IPSC.
 
+La versión publicada puede probarse en <https://neurolab.neuropsicolocos.com/apps/electrophysiology-lab/>. Antes de ampliar los perfiles fisiológicos, las pruebas con registros reales deben seguir el [protocolo de validación piloto](../../docs/electrophysiology/PILOT_VALIDATION.md).
+
 ## Formato de entrada
 
 Se aceptan XLSX, XLS, CSV, TSV y TXT. Cada traza debe tener como mínimo:

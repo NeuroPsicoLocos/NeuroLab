@@ -26,6 +26,8 @@ Primera base para analizar potenciales de campo y, por fases, registros de curre
 
 El perfil POPS reproduce el algoritmo histórico del proyecto y hace visibles sus ventanas, suavizado y umbrales. Sus puntos siguen requiriendo revisión experta. EPSP, IPSP, EPSC, IPSC y efectos farmacológicos tendrán perfiles separados; no deben inferirse a partir de la forma POPS. Véanse el [README del módulo](apps/electrophysiology-lab/README.md) y la [especificación POPS](docs/electrophysiology/POPS_METHOD.md).
 
+La evaluación con personas usuarias y registros reales se organiza mediante el [protocolo de validación piloto](docs/electrophysiology/PILOT_VALIDATION.md) y el formulario estructurado de GitHub Issues. No deben adjuntarse datos identificables ni registros privados.
+
 ### NeuroCell Explorer
 
 Ruta: `apps/neurocell-explorer/`
