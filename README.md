@@ -7,7 +7,7 @@ Sitio de producción: <https://neurolab.neuropsicolocos.com/>
 Repositorio oficial: <https://github.com/NeuroPsicoLocos/NeuroLab>
 
 El portal separa dos experiencias: **Aprender**, con simulaciones, tutoría y verdad conocida; y **Analizar**, con
-datos experimentales, revisión manual y trazabilidad. El portal y PSP Lab están disponibles en español e inglés
+datos experimentales, revisión manual y trazabilidad. El portal, PSP Lab y Electrophysiology Lab están disponibles en español e inglés
 mediante el selector `ES | EN` o el parámetro `?lang=en`. Véase la [guía de internacionalización](docs/I18N.md).
 
 ## Laboratorios

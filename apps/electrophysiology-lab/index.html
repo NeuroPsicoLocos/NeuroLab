@@ -6,11 +6,12 @@
     <meta
       name="description"
       content="Electrophysiology Lab de Simu-LAB: importación local, visualización y control de calidad de registros electrofisiológicos."
+      data-i18n-content="ephys.meta.description"
     />
     <meta name="theme-color" content="#10282a" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Electrophysiology Lab · Simu-LAB" />
-    <meta property="og:description" content="Importación local, visualización y control de calidad de registros electrofisiológicos." />
+    <meta property="og:description" content="Importación local, visualización y control de calidad de registros electrofisiológicos." data-i18n-content="ephys.meta.ogDescription" />
     <meta property="og:image" content="https://neurolab.neuropsicolocos.com/assets/simulab-social.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
     <title>Electrophysiology Lab · Simu-LAB</title>
@@ -18,150 +19,154 @@
   </head>
   <body>
     <header class="app-header">
-      <a class="brand" href="../../" aria-label="Volver a Simu-LAB">
+      <a class="brand" href="../../" aria-label="Volver a Simu-LAB" data-i18n-aria-label="ephys.brand.home">
         <img src="../neurocell-explorer/assets/neuropsicolocos-logo.png" alt="" />
         <span><strong>Simu-LAB</strong><small>Electrophysiology Lab</small></span>
       </a>
       <div class="header-actions">
-        <span class="local-badge">Procesamiento local</span>
-        <a href="../../">Todos los laboratorios</a>
+        <span class="local-badge" data-i18n="ephys.header.local">Procesamiento local</span>
+        <div class="language-switch" role="group" aria-label="Idioma" data-i18n-aria-label="common.languageLabel">
+          <button type="button" data-language="es" aria-pressed="true">ES</button>
+          <button type="button" data-language="en" aria-pressed="false">EN</button>
+        </div>
+        <a href="../../" data-i18n="common.portal">Todos los laboratorios</a>
       </div>
     </header>
 
     <main class="app-shell">
       <section class="intro">
         <div>
-          <p class="eyebrow">Beta metodológica · fase 1</p>
-          <h1>Inspecciona primero. Mide después.</h1>
-          <p>
+          <p class="eyebrow" data-i18n="ephys.intro.eyebrow">Beta metodológica · fase 1</p>
+          <h1 data-i18n="ephys.intro.title">Inspecciona primero. Mide después.</h1>
+          <p data-i18n="ephys.intro.lead">
             Carga un registro, confirma sus columnas y revisa candidatos de artefacto antes de aplicar criterios
             fisiológicos. Esta versión no asigna todavía EPSP, IPSP, EPSC o IPSC automáticamente.
           </p>
         </div>
         <aside>
-          <strong>Privacidad</strong>
-          <p>El archivo se abre en este navegador. Simu-LAB no lo carga a un servidor.</p>
+          <strong data-i18n="ephys.intro.privacyTitle">Privacidad</strong>
+          <p data-i18n="ephys.intro.privacy">El archivo se abre en este navegador. Simu-LAB no lo carga a un servidor.</p>
         </aside>
       </section>
 
-      <nav class="module-tabs" aria-label="Módulos electrofisiológicos">
+      <nav class="module-tabs" aria-label="Módulos electrofisiológicos" data-i18n-aria-label="ephys.modules.aria">
         <button class="active" type="button" aria-current="page">
-          <span>Activo</span> Potenciales de campo
+          <span data-i18n="ephys.modules.active">Activo</span> <b data-i18n="common.fieldPotentials">Potenciales de campo</b>
         </button>
-        <button type="button" disabled><span>Planificado</span> Current clamp</button>
-        <button type="button" disabled><span>Planificado</span> Voltage clamp</button>
-        <button type="button" disabled><span>Planificado</span> Farmacología temporal</button>
+        <button type="button" disabled><span data-i18n="ephys.modules.planned">Planificado</span> Current clamp</button>
+        <button type="button" disabled><span data-i18n="ephys.modules.planned">Planificado</span> Voltage clamp</button>
+        <button type="button" disabled><span data-i18n="ephys.modules.planned">Planificado</span> <b data-i18n="ephys.modules.pharmacology">Farmacología temporal</b></button>
       </nav>
 
       <div class="workspace">
-        <aside class="control-panel" aria-label="Configuración del análisis">
+        <aside class="control-panel" aria-label="Configuración del análisis" data-i18n-aria-label="ephys.controls.aria">
           <section class="panel-section">
             <div class="section-number">01</div>
             <div class="section-body">
-              <h2>Datos de entrada</h2>
-              <p class="section-help">Formatos aceptados: XLSX, XLS, CSV, TSV y TXT.</p>
+              <h2 data-i18n="ephys.input.title">Datos de entrada</h2>
+              <p class="section-help" data-i18n="ephys.input.formats">Formatos aceptados: XLSX, XLS, CSV, TSV y TXT.</p>
               <label class="drop-zone" id="drop-zone" for="file-input">
                 <input id="file-input" type="file" accept=".xlsx,.xls,.csv,.tsv,.txt" />
                 <span class="upload-mark" aria-hidden="true">＋</span>
-                <strong>Selecciona o arrastra un archivo</strong>
-                <small>El contenido permanece en tu dispositivo</small>
+                <strong data-i18n="ephys.input.choose">Selecciona o arrastra un archivo</strong>
+                <small data-i18n="ephys.input.local">El contenido permanece en tu dispositivo</small>
               </label>
-              <button class="text-button" id="demo-button" type="button">Usar señal sintética de demostración</button>
-              <p class="file-status" id="file-status" aria-live="polite">Ningún archivo seleccionado.</p>
+              <button class="text-button" id="demo-button" type="button" data-i18n="ephys.input.demo">Usar señal sintética de demostración</button>
+              <p class="file-status" id="file-status" aria-live="polite" data-i18n="ephys.input.empty">Ningún archivo seleccionado.</p>
             </div>
           </section>
 
           <section class="panel-section">
             <div class="section-number">02</div>
             <div class="section-body">
-              <h2>Asignación de columnas</h2>
+              <h2 data-i18n="ephys.columns.title">Asignación de columnas</h2>
               <div class="field-grid">
-                <label>Hoja<select id="sheet-select" disabled></select></label>
-                <label>Tiempo<select id="time-select" disabled></select></label>
-                <label class="signal-sweep-field">Señal mostrada
+                <label><span data-i18n="ephys.columns.sheet">Hoja</span><select id="sheet-select" disabled></select></label>
+                <label><span data-i18n="ephys.columns.time">Tiempo</span><select id="time-select" disabled></select></label>
+                <label class="signal-sweep-field"><span data-i18n="ephys.columns.signal">Señal mostrada</span>
                   <span class="sweep-selector">
-                    <button id="signal-previous" type="button" aria-label="Mostrar traza anterior" title="Traza anterior">←</button>
+                    <button id="signal-previous" type="button" aria-label="Mostrar traza anterior" data-i18n-aria-label="ephys.trace.previous">←</button>
                     <output id="signal-label" aria-live="polite">—</output>
-                    <button id="signal-next" type="button" aria-label="Mostrar traza siguiente" title="Traza siguiente">→</button>
+                    <button id="signal-next" type="button" aria-label="Mostrar traza siguiente" data-i18n-aria-label="ephys.trace.next">→</button>
                   </span>
-                  <select id="signal-select" class="visually-hidden" aria-label="Señal mostrada" disabled></select>
+                  <select id="signal-select" class="visually-hidden" aria-label="Señal mostrada" data-i18n-aria-label="ephys.columns.signal" disabled></select>
                 </label>
-                <label>Unidad temporal
+                <label><span data-i18n="ephys.columns.timeUnit">Unidad temporal</span>
                   <select id="time-unit">
-                    <option value="auto" selected>automática</option>
-                    <option value="ms">milisegundos (ms)</option>
-                    <option value="s">segundos (s)</option>
-                    <option value="us">microsegundos (µs)</option>
+                    <option value="auto" selected data-i18n="ephys.units.auto">automática</option>
+                    <option value="ms" data-i18n="ephys.units.ms">milisegundos (ms)</option>
+                    <option value="s" data-i18n="ephys.units.s">segundos (s)</option>
+                    <option value="us" data-i18n="ephys.units.us">microsegundos (µs)</option>
                   </select>
                 </label>
-                <label>Unidad de señal<input id="signal-unit" type="text" value="mV" maxlength="12" /></label>
+                <label><span data-i18n="ephys.columns.signalUnit">Unidad de señal</span><input id="signal-unit" type="text" value="mV" maxlength="12" /></label>
               </div>
-              <p class="field-hint" id="signal-scope-hint">La gráfica muestra una señal a la vez.</p>
+              <p class="field-hint" id="signal-scope-hint" data-i18n="ephys.columns.hint">La gráfica muestra una señal a la vez.</p>
             </div>
           </section>
 
           <section class="panel-section">
             <div class="section-number">03</div>
             <div class="section-body">
-              <h2>Análisis</h2>
-              <label class="mode-select">Método
+              <h2 data-i18n="ephys.analysis.title">Análisis</h2>
+              <label class="mode-select"><span data-i18n="ephys.analysis.method">Método</span>
                 <select id="analysis-mode">
-                  <option value="preliminary">Inspección preliminar</option>
-                  <option value="population-spike">Espiga poblacional · POPS experimental</option>
+                  <option value="preliminary" data-i18n="ephys.analysis.preliminary">Inspección preliminar</option>
+                  <option value="population-spike" data-i18n="ephys.analysis.pops">Espiga poblacional · POPS experimental</option>
                 </select>
               </label>
 
               <div id="preliminary-controls" class="parameter-block">
                 <label class="range-field">
-                  <span>Sensibilidad robusta <output id="sensitivity-output">8 MAD</output></span>
+                  <span><span data-i18n="ephys.analysis.sensitivity">Sensibilidad robusta</span> <output id="sensitivity-output">8 MAD</output></span>
                   <input id="sensitivity" type="range" min="4" max="15" value="8" step="0.5" />
                 </label>
-                <label>Periodo refractario (ms)<input id="refractory" type="number" min="0" step="1" value="50" /></label>
-                <p class="method-note">Los marcadores naranjas son candidatos eléctricos basados en derivada y MAD, no eventos fisiológicos validados.</p>
+                <label><span data-i18n="ephys.analysis.refractory">Periodo refractario (ms)</span><input id="refractory" type="number" min="0" step="1" value="50" /></label>
+                <p class="method-note" data-i18n="ephys.analysis.candidateNote">Los marcadores naranjas son candidatos eléctricos basados en derivada y MAD, no eventos fisiológicos validados.</p>
               </div>
 
               <div id="pops-controls" class="parameter-block" hidden>
-                <label class="pops-profile">Protocolo POPS
+                <label class="pops-profile"><span data-i18n="ephys.pops.protocol">Protocolo POPS</span>
                   <select id="pops-profile">
-                    <option value="train">Tren de estímulos · High_Fr</option>
-                    <option value="paired">Dos estímulos · pops_detect</option>
+                    <option value="train" data-i18n="ephys.pops.train">Tren de estímulos · High_Fr</option>
+                    <option value="paired" data-i18n="ephys.pops.paired">Dos estímulos · pops_detect</option>
                   </select>
                 </label>
                 <label class="toggle-row">
                   <input id="pops-smoothing" type="checkbox" checked />
-                  <span>Suavizado Savitzky–Golay 11/3</span>
+                  <span data-i18n="ephys.pops.smoothing">Suavizado Savitzky–Golay 11/3</span>
                 </label>
                 <div class="field-grid compact">
-                  <label>Umbral de artefacto<input id="pops-artifact-threshold" type="number" min="0" step="0.01" value="0.3" /></label>
-                  <label>Distancia mínima (ms)<input id="pops-artifact-distance" type="number" min="0" step="1" value="15" /></label>
-                  <label>Prominencia P3<input id="pops-prominence" type="number" min="0" step="0.01" value="0.2" /></label>
+                  <label><span data-i18n="ephys.pops.artifactThreshold">Umbral de artefacto</span><input id="pops-artifact-threshold" type="number" min="0" step="0.01" value="0.3" /></label>
+                  <label><span data-i18n="ephys.pops.minimumDistance">Distancia mínima (ms)</span><input id="pops-artifact-distance" type="number" min="0" step="1" value="15" /></label>
+                  <label><span data-i18n="ephys.pops.prominence">Prominencia P3</span><input id="pops-prominence" type="number" min="0" step="0.01" value="0.2" /></label>
                   <div class="export-scope fixed-scope">
-                    <span>Alcance al exportar</span>
-                    <strong>Solo la traza mostrada</strong>
-                    <small>Para exportar otra señal, selecciónala arriba y crea un nuevo archivo.</small>
+                    <span data-i18n="ephys.export.scope">Alcance al exportar</span>
+                    <strong data-i18n="ephys.export.activeOnly">Solo la traza mostrada</strong>
+                    <small data-i18n="ephys.export.activeHelp">Para exportar otra señal, selecciónala arriba y crea un nuevo archivo.</small>
                     <input id="pops-export-scope" type="hidden" value="active" />
                   </div>
                 </div>
                 <details>
-                  <summary>Ventanas fisiológicas del perfil POPS</summary>
+                  <summary data-i18n="ephys.pops.windows">Ventanas fisiológicas del perfil POPS</summary>
                   <div class="window-grid">
-                    <span>P1 tras estímulo</span><input id="p1-start" type="number" step="0.1" value="3" /><input id="p1-end" type="number" step="0.1" value="10" />
-                    <span>P2 tras P1</span><input id="p2-start" type="number" step="0.1" value="0" /><input id="p2-end" type="number" step="0.1" value="10" />
-                    <span>P3 tras P2</span><input id="p3-start" type="number" step="0.1" value="2" /><input id="p3-end" type="number" step="0.1" value="8" />
+                    <span data-i18n="ephys.pops.p1Window">P1 tras estímulo</span><input id="p1-start" type="number" step="0.1" value="3" /><input id="p1-end" type="number" step="0.1" value="10" />
+                    <span data-i18n="ephys.pops.p2Window">P2 tras P1</span><input id="p2-start" type="number" step="0.1" value="0" /><input id="p2-end" type="number" step="0.1" value="10" />
+                    <span data-i18n="ephys.pops.p3Window">P3 tras P2</span><input id="p3-start" type="number" step="0.1" value="2" /><input id="p3-end" type="number" step="0.1" value="8" />
                   </div>
-                  <small class="window-help">Cada fila indica inicio y fin en milisegundos. Los valores reproducen el notebook High_Fr.</small>
+                  <small class="window-help" data-i18n="ephys.pops.windowHelp">Cada fila indica inicio y fin en milisegundos. Los valores reproducen el notebook High_Fr.</small>
                 </details>
-                <p class="method-note">Mide una deflexión negativa entre dos puntos de flanco. Se interpreta como espiga poblacional extracelular; no como EPSP/IPSP individual.</p>
+                <p class="method-note" data-i18n="ephys.pops.methodNote">Mide una deflexión negativa entre dos puntos de flanco. Se interpreta como espiga poblacional extracelular; no como EPSP/IPSP individual.</p>
               </div>
 
               <div class="saturation-details">
-                <h3>Límites de saturación opcionales</h3>
-                <p class="saturation-help">Introduce los límites físicos conocidos del amplificador o del sistema de adquisición, en la misma unidad que la señal. Las muestras iguales o fuera de esos valores se marcan como posible saturación; no se recortan ni se corrigen. Déjalos vacíos si no conoces los límites.</p>
+                <h3 data-i18n="ephys.saturation.title">Límites de saturación opcionales</h3>
+                <p class="saturation-help" data-i18n="ephys.saturation.help">Introduce los límites físicos conocidos del amplificador o del sistema de adquisición, en la misma unidad que la señal. Las muestras iguales o fuera de esos valores se marcan como posible saturación; no se recortan ni se corrigen. Déjalos vacíos si no conoces los límites.</p>
                 <details>
-                  <summary>Configurar límites conocidos</summary>
+                  <summary data-i18n="ephys.saturation.configure">Configurar límites conocidos</summary>
                   <div class="field-grid compact saturation-fields">
-                    <label>Inferior<input id="saturation-min" type="number" step="any" placeholder="Sin límite" /></label>
-                    <label>Superior<input id="saturation-max" type="number" step="any" placeholder="Sin límite" /></label>
+                    <label><span data-i18n="ephys.saturation.lower">Inferior</span><input id="saturation-min" type="number" step="any" placeholder="Sin límite" data-i18n-placeholder="ephys.saturation.none" /></label>
+                    <label><span data-i18n="ephys.saturation.upper">Superior</span><input id="saturation-max" type="number" step="any" placeholder="Sin límite" data-i18n-placeholder="ephys.saturation.none" /></label>
                   </div>
                 </details>
               </div>
@@ -169,39 +174,39 @@
           </section>
         </aside>
 
-        <section class="results-panel" aria-label="Resultados preliminares">
+        <section class="results-panel" aria-label="Resultados preliminares" data-i18n-aria-label="ephys.results.aria">
           <div class="results-toolbar">
             <div class="trace-heading">
-              <p class="eyebrow">Traza activa</p>
-              <h2 id="trace-title">Sin datos</h2>
+              <p class="eyebrow" data-i18n="ephys.results.active">Traza activa</p>
+              <h2 id="trace-title" data-i18n="ephys.results.empty">Sin datos</h2>
             </div>
             <div class="toolbar-actions">
-              <button id="config-button" type="button" disabled>Exportar configuración</button>
-              <button id="excel-button" class="primary" type="button" disabled>Exportar Excel</button>
+              <button id="config-button" type="button" disabled data-i18n="ephys.export.config">Exportar configuración</button>
+              <button id="excel-button" class="primary" type="button" disabled data-i18n="ephys.export.excel">Exportar Excel</button>
             </div>
           </div>
 
           <section class="review-workflow" id="review-workflow" hidden aria-labelledby="review-title">
             <div class="review-summary">
               <div>
-                <p class="eyebrow">Revisión manual</p>
-                <h2 id="review-title">Pendiente de decisión</h2>
+                <p class="eyebrow" data-i18n="ephys.review.eyebrow">Revisión manual</p>
+                <h2 id="review-title" data-i18n="ephys.review.pendingTitle">Pendiente de decisión</h2>
               </div>
-              <p id="review-progress">0 de 0 trazas revisadas</p>
+              <p id="review-progress" data-i18n="ephys.review.emptyProgress">0 de 0 trazas revisadas</p>
             </div>
-            <label class="review-note">Nota de revisión
-              <textarea id="review-note" rows="2" placeholder="Observación opcional sobre esta traza"></textarea>
+            <label class="review-note"><span data-i18n="ephys.review.note">Nota de revisión</span>
+              <textarea id="review-note" rows="2" placeholder="Observación opcional sobre esta traza" data-i18n-placeholder="ephys.review.notePlaceholder"></textarea>
             </label>
-            <p class="review-storage-note" id="review-storage-note">Usa la barra junto a la gráfica para decidir. Las decisiones se guardan en este navegador y se incluyen al exportar Excel.</p>
+            <p class="review-storage-note" id="review-storage-note" data-i18n="ephys.review.storageIntro">Usa la barra junto a la gráfica para decidir. Las decisiones se guardan en este navegador y se incluyen al exportar Excel.</p>
           </section>
 
           <section class="point-editor" id="point-editor" hidden aria-labelledby="point-editor-title">
             <div class="point-editor-heading">
               <div>
-                <p class="eyebrow">Corrección auditable</p>
-                <h2 id="point-editor-title">Ajustar P1 · P2 · P3</h2>
+                <p class="eyebrow" data-i18n="ephys.correction.eyebrow">Corrección auditable</p>
+                <h2 id="point-editor-title" data-i18n="ephys.correction.title">Ajustar P1 · P2 · P3</h2>
               </div>
-              <label>Evento
+              <label><span data-i18n="ephys.event.label">Evento</span>
                 <select id="correction-event" aria-label="Evento POPS para corregir"></select>
               </label>
             </div>
@@ -211,89 +216,89 @@
                 <button type="button" data-point="p2">P2</button>
                 <button type="button" data-point="p3">P3</button>
               </div>
-              <button id="arm-correction" class="primary" type="button">Seleccionar en la gráfica</button>
-              <button id="restore-point" type="button" disabled>Restaurar punto</button>
-              <button id="restore-all-points" type="button" disabled>Restaurar traza</button>
+              <button id="arm-correction" class="primary" type="button" data-i18n="ephys.correction.select">Seleccionar en la gráfica</button>
+              <button id="restore-point" type="button" disabled data-i18n="ephys.correction.restorePoint">Restaurar punto</button>
+              <button id="restore-all-points" type="button" disabled data-i18n="ephys.correction.restoreTrace">Restaurar traza</button>
             </div>
-            <p id="point-editor-status" class="point-editor-status" aria-live="polite">Selecciona un evento y un punto. El clic se ajustará a la muestra real más cercana.</p>
-            <p class="point-editor-note">La detección automática no se sobrescribe. Toda corrección obliga a revisar nuevamente la traza y se exporta junto con el valor original.</p>
+            <p id="point-editor-status" class="point-editor-status" aria-live="polite" data-i18n="ephys.correction.help">Selecciona un evento y un punto. El clic se ajustará a la muestra real más cercana.</p>
+            <p class="point-editor-note" data-i18n="ephys.correction.note">La detección automática no se sobrescribe. Toda corrección obliga a revisar nuevamente la traza y se exporta junto con el valor original.</p>
           </section>
 
           <div class="plot-card">
-            <div class="quick-review-bar" id="quick-review-bar" hidden aria-label="Navegación y revisión de la traza">
+            <div class="quick-review-bar" id="quick-review-bar" hidden aria-label="Navegación y revisión de la traza" data-i18n-aria-label="ephys.review.quickAria">
               <div class="quick-trace-navigator" id="trace-navigator" hidden>
-                <button id="trace-previous" type="button" aria-label="Ir a la traza anterior" title="Traza anterior">←</button>
+                <button id="trace-previous" type="button" aria-label="Ir a la traza anterior" data-i18n-aria-label="ephys.trace.previous">←</button>
                 <div class="quick-review-state">
-                  <span id="trace-position">Traza —</span>
+                  <span id="trace-position" data-i18n="ephys.trace.empty">Traza —</span>
                   <small id="trace-signal-name">—</small>
-                  <strong id="quick-review-decision">Pendiente</strong>
+                  <strong id="quick-review-decision" data-i18n="ephys.review.pending">Pendiente</strong>
                 </div>
-                <button id="trace-next" type="button" aria-label="Ir a la traza siguiente" title="Traza siguiente">→</button>
+                <button id="trace-next" type="button" aria-label="Ir a la traza siguiente" data-i18n-aria-label="ephys.trace.next">→</button>
               </div>
               <div class="quick-review-actions">
-                <button id="quick-review-pending" type="button" title="Guardar pendiente · tecla P">Pendiente <kbd>P</kbd></button>
-                <button id="quick-review-reject" class="reject" type="button" title="Rechazar y avanzar · tecla R">Rechazar <kbd>R</kbd></button>
-                <button id="quick-review-accept" class="accept" type="button" title="Aceptar y avanzar · tecla A">Aceptar <kbd>A</kbd></button>
+                <button id="quick-review-pending" type="button"><span data-i18n="ephys.review.pending">Pendiente</span> <kbd>P</kbd></button>
+                <button id="quick-review-reject" class="reject" type="button"><span data-i18n="ephys.review.reject">Rechazar</span> <kbd>R</kbd></button>
+                <button id="quick-review-accept" class="accept" type="button"><span data-i18n="ephys.review.accept">Aceptar</span> <kbd>A</kbd></button>
               </div>
             </div>
             <div class="plot-legend">
-              <label class="plot-view-control">Vista
+              <label class="plot-view-control"><span data-i18n="ephys.plot.view">Vista</span>
                 <select id="plot-view" title="La vista de respuesta recorta la escala visual; el análisis conserva la traza completa." disabled>
-                  <option value="response">Respuesta</option>
-                  <option value="full" selected>Traza completa</option>
+                  <option value="response" data-i18n="ephys.plot.response">Respuesta</option>
+                  <option value="full" selected data-i18n="ephys.plot.full">Traza completa</option>
                 </select>
               </label>
-              <span class="raw-key">Señal cruda</span>
-              <span class="smooth-key" id="smooth-legend" hidden>Señal suavizada</span>
-              <span class="event-key">Artefacto</span>
+              <span class="raw-key" data-i18n="ephys.plot.raw">Señal cruda</span>
+              <span class="smooth-key" id="smooth-legend" hidden data-i18n="ephys.plot.smooth">Señal suavizada</span>
+              <span class="event-key" data-i18n="ephys.plot.artifact">Artefacto</span>
               <span class="points-key" id="points-legend" hidden>P1 · P2 · P3</span>
             </div>
-            <canvas id="signal-canvas" aria-label="Gráfica de la señal electrofisiológica"></canvas>
+            <canvas id="signal-canvas" aria-label="Gráfica de la señal electrofisiológica" data-i18n-aria-label="ephys.plot.aria"></canvas>
           </div>
 
           <div class="metric-grid" id="metric-grid">
-            <article><span>Muestras válidas</span><strong id="metric-samples">—</strong></article>
-            <article><span>Frecuencia estimada</span><strong id="metric-rate">—</strong></article>
-            <article><span>Duración</span><strong id="metric-duration">—</strong></article>
-            <article><span>Pico a pico</span><strong id="metric-range">—</strong></article>
-            <article><span>Eventos / candidatos</span><strong id="metric-events">—</strong></article>
+            <article><span data-i18n="ephys.metrics.samples">Muestras válidas</span><strong id="metric-samples">—</strong></article>
+            <article><span data-i18n="ephys.metrics.rate">Frecuencia estimada</span><strong id="metric-rate">—</strong></article>
+            <article><span data-i18n="ephys.metrics.duration">Duración</span><strong id="metric-duration">—</strong></article>
+            <article><span data-i18n="ephys.metrics.range">Pico a pico</span><strong id="metric-range">—</strong></article>
+            <article><span data-i18n="ephys.metrics.events">Eventos / candidatos</span><strong id="metric-events">—</strong></article>
           </div>
 
           <section class="quality-card">
             <div>
-              <p class="eyebrow">Control de calidad</p>
-              <h2 id="quality-title">Pendiente de datos</h2>
+              <p class="eyebrow" data-i18n="ephys.quality.eyebrow">Control de calidad</p>
+              <h2 id="quality-title" data-i18n="ephys.quality.emptyTitle">Pendiente de datos</h2>
             </div>
-            <ul id="quality-list"><li class="neutral">Carga una traza para iniciar la revisión.</li></ul>
+            <ul id="quality-list"><li class="neutral" data-i18n="ephys.quality.empty">Carga una traza para iniciar la revisión.</li></ul>
           </section>
 
           <section class="event-table-card" id="event-table-card" hidden>
             <div class="table-heading">
               <div>
-                <p class="eyebrow">Medición experimental</p>
-                <h2>Espigas poblacionales</h2>
+                <p class="eyebrow" data-i18n="ephys.table.eyebrow">Medición experimental</p>
+                <h2 data-i18n="ephys.table.title">Espigas poblacionales</h2>
               </div>
-              <span class="method-badge">Perfil POPS legado reproducido</span>
+              <span class="method-badge" data-i18n="ephys.table.badge">Perfil POPS legado reproducido</span>
             </div>
             <div class="table-scroll">
               <table>
                 <thead>
                   <tr>
-                    <th>Evento</th><th>Estímulo (ms)</th><th>P1 (ms)</th><th>P2 (ms)</th><th>P3 (ms)</th>
-                    <th>Amplitud</th><th>τ1–2 (ms)</th><th>τ2–3 (ms)</th><th>SNR</th><th>Confianza</th><th>Revisión</th>
+                    <th data-i18n="ephys.event.label">Evento</th><th data-i18n="ephys.table.stimulus">Estímulo (ms)</th><th>P1 (ms)</th><th>P2 (ms)</th><th>P3 (ms)</th>
+                    <th data-i18n="ephys.table.amplitude">Amplitud</th><th>τ1–2 (ms)</th><th>τ2–3 (ms)</th><th>SNR</th><th data-i18n="ephys.table.confidence">Confianza</th><th data-i18n="ephys.table.review">Revisión</th>
                   </tr>
                 </thead>
                 <tbody id="event-table-body"></tbody>
               </table>
             </div>
-            <p class="table-note">La confianza es una puntuación heurística transparente para priorizar revisión; no es una probabilidad fisiológica.</p>
+            <p class="table-note" data-i18n="ephys.table.note">La confianza es una puntuación heurística transparente para priorizar revisión; no es una probabilidad fisiológica.</p>
           </section>
 
           <section class="scope-card">
-            <h2>Alcance de esta fase</h2>
+            <h2 data-i18n="ephys.scope.title">Alcance de esta fase</h2>
             <div>
-              <p><strong>Incluye:</strong> importación, señal cruda, control de calidad y reproducción configurable del perfil POPS para espigas poblacionales.</p>
-              <p><strong>Siguiente fase:</strong> corrección auditable del artefacto y ventanas completas, otros perfiles de potencial de campo y series temporales de farmacología.</p>
+              <p><strong data-i18n="ephys.scope.includesLabel">Incluye:</strong> <span data-i18n="ephys.scope.includes">importación, señal cruda, control de calidad y reproducción configurable del perfil POPS para espigas poblacionales.</span></p>
+              <p><strong data-i18n="ephys.scope.nextLabel">Siguiente fase:</strong> <span data-i18n="ephys.scope.next">corrección auditable del artefacto y ventanas completas, otros perfiles de potencial de campo y series temporales de farmacología.</span></p>
             </div>
           </section>
         </section>
@@ -302,10 +307,11 @@
 
     <footer>
       <span>Simu-LAB · NeuroPsicoLocos</span>
-      <span>Herramienta de investigación en desarrollo; los resultados requieren revisión experta.</span>
+      <span data-i18n="ephys.footer.note">Herramienta de investigación en desarrollo; los resultados requieren revisión experta.</span>
     </footer>
 
     <script defer src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-    <script defer src="src/app.bundle.js?v=20260801-4"></script>
+    <script defer src="../../shared/i18n.js?v=20260802-1"></script>
+    <script defer src="src/app.bundle.js?v=20260802-1"></script>
   </body>
 </html>

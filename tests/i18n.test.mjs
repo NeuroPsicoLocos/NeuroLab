@@ -54,6 +54,9 @@ test("shared i18n honors lang query and translates static content", async () => 
     "apps/psp-lab/index.html",
     "apps/psp-lab/src/app.js",
     "apps/psp-lab/src/plot.js",
+    "apps/electrophysiology-lab/index.html",
+    "apps/electrophysiology-lab/src/app.js",
+    "apps/electrophysiology-lab/src/ui/plot.js",
   ].map((file) => readFile(path.join(root, file), "utf8")));
   const keys = new Set(surfaces.flatMap((content) => [
     ...[...content.matchAll(/data-i18n(?:-[a-z-]+)?="([^"]+)"/g)].map((match) => match[1]),

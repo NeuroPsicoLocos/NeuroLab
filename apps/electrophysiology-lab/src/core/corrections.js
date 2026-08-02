@@ -31,10 +31,10 @@ export function setPointCorrection({
   correctedAt = new Date().toISOString(),
 }) {
   if (!event?.artifact || !CORRECTION_POINT_NAMES.includes(pointName)) {
-    return { ok: false, message: "Selecciona un evento y un punto POPS válido." };
+    return { ok: false, code: "invalid_point_selection", message: "Selecciona un evento y un punto POPS válido." };
   }
   if (!Number.isInteger(sampleIndex) || sampleIndex < 0 || sampleIndex >= timeMs.length || sampleIndex >= signal.length) {
-    return { ok: false, message: "El clic no corresponde a una muestra válida." };
+    return { ok: false, code: "invalid_sample", message: "El clic no corresponde a una muestra válida." };
   }
 
   const points = { ...(eventCorrection?.points ?? {}) };
@@ -47,10 +47,10 @@ export function setPointCorrection({
   const candidate = { eventNumber: event.eventNumber, points, updatedAt: correctedAt };
   const indices = CORRECTION_POINT_NAMES.map((name) => effectiveIndex(event, candidate, name));
   if (indices[0] !== null && indices[1] !== null && indices[0] >= indices[1]) {
-    return { ok: false, message: "P1 debe quedar antes de P2." };
+    return { ok: false, code: "p1_after_p2", message: "P1 debe quedar antes de P2." };
   }
   if (indices[1] !== null && indices[2] !== null && indices[1] >= indices[2]) {
-    return { ok: false, message: "P2 debe quedar antes de P3." };
+    return { ok: false, code: "p2_after_p3", message: "P2 debe quedar antes de P3." };
   }
   return { ok: true, correction: candidate };
 }

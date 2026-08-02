@@ -29,6 +29,7 @@ export class SignalPlot {
     this.canvas = canvas;
     this.result = null;
     this.units = { time: "ms", signal: "mV" };
+    this.labels = { time: "Tiempo", signal: "Señal" };
     this.layout = null;
     this.pointSelectionHandler = null;
     this.resizeObserver = new ResizeObserver(() => this.draw());
@@ -52,7 +53,10 @@ export class SignalPlot {
     this.pointSelectionHandler = typeof handler === "function" ? handler : null;
     this.canvas.classList.toggle("editing-points", Boolean(this.pointSelectionHandler));
   }
-
+  setLabels(labels = {}) {
+    this.labels = { ...this.labels, ...labels };
+    this.draw();
+  }
   handlePointSelection(event) {
     if (!this.pointSelectionHandler || !this.layout || !this.result?.timeMs?.length) return;
     const bounds = this.canvas.getBoundingClientRect();
@@ -254,11 +258,11 @@ export class SignalPlot {
     context.fillStyle = "#344745";
     context.font = "600 12px system-ui";
     context.textAlign = "center";
-    context.fillText(`Tiempo (${this.units.time})`, margins.left + plotWidth / 2, height - 3);
+    context.fillText(`${this.labels.time} (${this.units.time})`, margins.left + plotWidth / 2, height - 3);
     context.save();
     context.translate(14, margins.top + plotHeight / 2);
     context.rotate(-Math.PI / 2);
-    context.fillText(`Señal (${this.units.signal})`, 0, 0);
+    context.fillText(`${this.labels.signal} (${this.units.signal})`, 0, 0);
     context.restore();
   }
 }

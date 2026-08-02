@@ -52,6 +52,9 @@ test("required GitHub Pages entry points and modules exist", async () => {
 
 test("electrophysiology entry point uses a classic bundle for file URLs", async () => {
   const page = await readFile(path.join(root, "apps/electrophysiology-lab/index.html"), "utf8");
+  assert.match(page, /\.\.\/\.\.\/shared\/i18n\.js\?v=/);
+  assert.match(page, /data-language="es"/);
+  assert.match(page, /data-language="en"/);
   assert.match(page, /<script defer src="src\/app\.bundle\.js\?v=/);
   assert.doesNotMatch(page, /<script type="module" src="src\/app\.js/);
 });

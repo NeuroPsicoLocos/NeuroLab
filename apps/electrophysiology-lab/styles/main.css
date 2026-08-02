@@ -52,6 +52,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .header-actions { display: flex; align-items: center; gap: 18px; }
 .header-actions a { color: #d5e2df; text-decoration: none; font-size: 0.9rem; }
 .header-actions a:hover { color: white; }
+.language-switch { display: inline-grid; grid-template-columns: 1fr 1fr; overflow: hidden; border: 1px solid #547371; border-radius: 999px; }
+.language-switch button { min-width: 34px; min-height: 27px; padding: 0 7px; color: #bdd3ce; background: transparent; border: 0; font-size: .62rem; font-weight: 850; cursor: pointer; }
+.language-switch button + button { border-left: 1px solid #547371; }
+.language-switch button.active { color: var(--ink); background: #dce9e6; }
 .local-badge {
   padding: 7px 10px;
   color: #d9f2eb;
@@ -75,6 +79,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .module-tabs button { min-height: 68px; padding: 12px 16px; display: grid; align-content: center; gap: 4px; color: #72807e; background: transparent; border: 0; border-right: 1px solid var(--line); text-align: left; }
 .module-tabs button:last-child { border-right: 0; }
 .module-tabs button span { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.11em; text-transform: uppercase; }
+.module-tabs button b { font-weight: inherit; }
 .module-tabs button.active { color: white; background: var(--teal); }
 .module-tabs button.active span { color: #bfe1d9; }
 
@@ -313,7 +318,7 @@ footer { padding: 24px clamp(18px,4vw,64px); display: flex; justify-content: spa
   .app-header { min-height: 64px; }
   .brand img { width: 34px; height: 34px; }
   .brand small { font-size: .68rem; }
-  .header-actions a { font-size: .72rem; }
+  .header-actions a { display: none; }
   .app-shell { padding-top: 34px; }
   .intro h1 { font-size: 2.45rem; }
   .intro > div > p:last-child { font-size: .94rem; }
