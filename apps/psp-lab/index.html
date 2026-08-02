@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="PSP Lab de Simu-LAB: retos reproducibles para medir potenciales postsinápticos evocados en current clamp." />
+    <meta name="description" data-i18n-content="psp.meta.description" content="PSP Lab de Simu-LAB: retos reproducibles para medir potenciales postsinápticos evocados en current clamp." />
     <meta name="theme-color" content="#10282a" />
     <title>PSP Lab · Simu-LAB</title>
-    <link rel="stylesheet" href="styles/main.css?v=20260802-3" />
+    <link rel="stylesheet" href="styles/main.css?v=20260802-i18n1" />
   </head>
   <body>
     <header class="app-header">
@@ -15,34 +15,38 @@
         <span><strong>Simu-LAB</strong><small>PSP Lab</small></span>
       </a>
       <div class="header-actions">
-        <span>Experimental · procesamiento local</span>
-        <a href="../electrophysiology-lab/">Potenciales de campo</a>
-        <a href="../../">Todos los laboratorios</a>
+        <span data-i18n="psp.header.experimental">Experimental · procesamiento local</span>
+        <a href="../electrophysiology-lab/" data-i18n="common.fieldPotentials">Potenciales de campo</a>
+        <a href="../../" data-i18n="common.portal">Todos los laboratorios</a>
+        <div class="language-switch" role="group" aria-label="Idioma" data-i18n-aria-label="common.languageLabel">
+          <button type="button" data-language="es" aria-pressed="true">ES</button>
+          <button type="button" data-language="en" aria-pressed="false">EN</button>
+        </div>
       </div>
     </header>
 
     <main class="app-shell">
       <section class="intro">
         <div>
-          <p class="eyebrow">Current clamp · laboratorio docente</p>
-          <h1>Describe la señal antes de interpretarla.</h1>
-          <p>
+          <p class="eyebrow" data-i18n="psp.intro.eyebrow">Current clamp · laboratorio docente</p>
+          <h1 data-i18n="psp.intro.title">Describe la señal antes de interpretarla.</h1>
+          <p data-i18n="psp.intro.lead">
             Practica con potenciales postsinápticos sintéticos reproducibles. Identifica respuesta, dirección y pico;
             después compara tu medición con el detector y la verdad conocida del simulador.
           </p>
         </div>
         <aside>
-          <strong>Simplificación visible</strong>
-          <p>La forma de onda es fenomenológica. La polaridad por sí sola no demuestra EPSP ni IPSP.</p>
+          <strong data-i18n="psp.intro.warningTitle">Simplificación visible</strong>
+          <p data-i18n="psp.intro.warning">La forma de onda es fenomenológica. La polaridad por sí sola no demuestra EPSP ni IPSP.</p>
         </aside>
       </section>
 
-      <nav class="mode-switch" aria-label="Modo de uso">
+      <nav class="mode-switch" aria-label="Modo de uso" data-i18n-aria-label="psp.mode.aria">
         <button id="student-mode" class="active" type="button" aria-pressed="true">
-          <span>Modo estudiante</span><small>Reto con respuesta oculta</small>
+          <span data-i18n="psp.mode.student">Modo estudiante</span><small data-i18n="psp.mode.studentNote">Reto con respuesta oculta</small>
         </button>
         <button id="teacher-mode" type="button" aria-pressed="false">
-          <span>Modo docente</span><small>Parámetros y verdad conocida</small>
+          <span data-i18n="psp.mode.teacher">Modo docente</span><small data-i18n="psp.mode.teacherNote">Parámetros y verdad conocida</small>
         </button>
       </nav>
 
@@ -51,160 +55,160 @@
           <section class="panel-section student-controls">
             <p class="step">01</p>
             <div>
-              <h2>Nuevo reto</h2>
-              <p class="help">Cada reto conserva una semilla para poder repetirlo.</p>
-              <label>Dificultad
+              <h2 data-i18n="psp.student.new">Nuevo reto</h2>
+              <p class="help" data-i18n="psp.student.help">Cada reto conserva una semilla para poder repetirlo.</p>
+              <label><span data-i18n="psp.student.difficulty">Dificultad</span>
                 <select id="difficulty">
-                  <option value="intro">Inicial</option>
-                  <option value="intermediate" selected>Intermedia</option>
-                  <option value="advanced">Avanzada</option>
+                  <option value="intro" data-i18n="psp.difficulty.intro">Inicial</option>
+                  <option value="intermediate" selected data-i18n="psp.difficulty.intermediate">Intermedia</option>
+                  <option value="advanced" data-i18n="psp.difficulty.advanced">Avanzada</option>
                 </select>
               </label>
-              <button id="new-challenge" class="primary wide" type="button">Generar reto aleatorio</button>
-              <div class="challenge-id"><span>Identificador</span><strong id="challenge-id">—</strong></div>
-              <p id="student-progress" class="progress-note">Sin intentos guardados en este navegador.</p>
+              <button id="new-challenge" class="primary wide" type="button" data-i18n="psp.student.generate">Generar reto aleatorio</button>
+              <div class="challenge-id"><span data-i18n="psp.student.identifier">Identificador</span><strong id="challenge-id">—</strong></div>
+              <p id="student-progress" class="progress-note" data-i18n="psp.progress.empty">Sin intentos guardados en este navegador.</p>
             </div>
           </section>
 
           <section class="panel-section teacher-controls" hidden>
             <p class="step">01</p>
             <div>
-              <h2>Construir escenario</h2>
-              <p class="help">Los valores son eléctricos y no asignan identidad sináptica.</p>
+              <h2 data-i18n="psp.teacher.build">Construir escenario</h2>
+              <p class="help" data-i18n="psp.teacher.help">Los valores son eléctricos y no asignan identidad sináptica.</p>
               <div class="field-grid">
-                <label class="full">Semilla<input id="teacher-seed" type="text" value="psp-docente-01" /></label>
-                <label>Respuesta
+                <label class="full"><span data-i18n="psp.teacher.seed">Semilla</span><input id="teacher-seed" type="text" value="psp-docente-01" /></label>
+                <label><span data-i18n="psp.teacher.response">Respuesta</span>
                   <select id="teacher-kind">
-                    <option value="monophasic">Monofásica</option>
-                    <option value="biphasic">Bifásica</option>
-                    <option value="none">Sin respuesta</option>
+                    <option value="monophasic" data-i18n="psp.response.monophasic">Monofásica</option>
+                    <option value="biphasic" data-i18n="psp.response.biphasic">Bifásica</option>
+                    <option value="none" data-i18n="psp.response.none">Sin respuesta</option>
                   </select>
                 </label>
-                <label>Dirección
+                <label><span data-i18n="psp.teacher.direction">Dirección</span>
                   <select id="teacher-direction">
-                    <option value="positive">Positiva</option>
-                    <option value="negative">Negativa</option>
+                    <option value="positive" data-i18n="psp.direction.positive">Positiva</option>
+                    <option value="negative" data-i18n="psp.direction.negative">Negativa</option>
                   </select>
                 </label>
-                <label>Amplitud (mV)<input id="teacher-amplitude" type="number" min="0.1" max="20" step="0.1" value="3" /></label>
-                <label>Ruido SD (mV)<input id="teacher-noise" type="number" min="0" max="2" step="0.01" value="0.10" /></label>
-                <label>Deriva (mV/s)<input id="teacher-drift" type="number" min="-50" max="50" step="1" value="0" /></label>
-                <label>Barridos<input id="teacher-sweeps" type="number" min="1" max="20" step="1" value="6" /></label>
+                <label><span data-i18n="psp.teacher.amplitude">Amplitud (mV)</span><input id="teacher-amplitude" type="number" min="0.1" max="20" step="0.1" value="3" /></label>
+                <label><span data-i18n="psp.teacher.noise">Ruido SD (mV)</span><input id="teacher-noise" type="number" min="0" max="2" step="0.01" value="0.10" /></label>
+                <label><span data-i18n="psp.teacher.drift">Deriva (mV/s)</span><input id="teacher-drift" type="number" min="-50" max="50" step="1" value="0" /></label>
+                <label><span data-i18n="psp.teacher.sweeps">Barridos</span><input id="teacher-sweeps" type="number" min="1" max="20" step="1" value="6" /></label>
               </div>
-              <label class="check-row"><input id="teacher-paired" type="checkbox" /><span>Dos estímulos</span></label>
-              <label class="check-row"><input id="teacher-saturation" type="checkbox" /><span>Provocar saturación conocida</span></label>
-              <button id="apply-teacher" class="primary wide" type="button">Aplicar escenario</button>
+              <label class="check-row"><input id="teacher-paired" type="checkbox" /><span data-i18n="psp.teacher.paired">Dos estímulos</span></label>
+              <label class="check-row"><input id="teacher-saturation" type="checkbox" /><span data-i18n="psp.teacher.saturation">Provocar saturación conocida</span></label>
+              <button id="apply-teacher" class="primary wide" type="button" data-i18n="psp.teacher.apply">Aplicar escenario</button>
             </div>
           </section>
 
           <section class="panel-section">
             <p class="step">02</p>
             <div>
-              <h2>Barrido</h2>
+              <h2 data-i18n="psp.sweep.title">Barrido</h2>
               <div class="sweep-nav">
-                <button id="previous-sweep" type="button" aria-label="Barrido anterior">←</button>
+                <button id="previous-sweep" type="button" aria-label="Barrido anterior" data-i18n-aria-label="psp.sweep.previous">←</button>
                 <output id="sweep-position">1 de 1</output>
-                <button id="next-sweep" type="button" aria-label="Barrido siguiente">→</button>
+                <button id="next-sweep" type="button" aria-label="Barrido siguiente" data-i18n-aria-label="psp.sweep.next">→</button>
               </div>
-              <p class="help">La semilla conserva la variación entre barridos.</p>
+              <p class="help" data-i18n="psp.sweep.help">La semilla conserva la variación entre barridos.</p>
             </div>
           </section>
 
           <section class="panel-section worksheet student-controls">
             <p class="step">03</p>
             <div>
-              <h2>Tu análisis</h2>
-              <label>¿Hay una respuesta evaluable?
+              <h2 data-i18n="psp.worksheet.title">Tu análisis</h2>
+              <label><span data-i18n="psp.worksheet.presence">¿Hay una respuesta evaluable?</span>
                 <select id="answer-presence">
-                  <option value="">Selecciona…</option>
-                  <option value="present">Sí, hay respuesta</option>
-                  <option value="none">No hay respuesta detectable</option>
-                  <option value="not_evaluable">No es evaluable</option>
+                  <option value="" data-i18n="psp.worksheet.select">Selecciona…</option>
+                  <option value="present" data-i18n="psp.worksheet.present">Sí, hay respuesta</option>
+                  <option value="none" data-i18n="psp.worksheet.none">No hay respuesta detectable</option>
+                  <option value="not_evaluable" data-i18n="psp.worksheet.notEvaluable">No es evaluable</option>
                 </select>
               </label>
-              <label>Dirección eléctrica
+              <label><span data-i18n="psp.worksheet.direction">Dirección eléctrica</span>
                 <select id="answer-direction">
-                  <option value="">Selecciona…</option>
-                  <option value="positive">Positiva</option>
-                  <option value="negative">Negativa</option>
-                  <option value="biphasic">Bifásica</option>
-                  <option value="indeterminate">Indeterminada</option>
+                  <option value="" data-i18n="psp.worksheet.select">Selecciona…</option>
+                  <option value="positive" data-i18n="psp.direction.positive">Positiva</option>
+                  <option value="negative" data-i18n="psp.direction.negative">Negativa</option>
+                  <option value="biphasic" data-i18n="psp.direction.biphasic">Bifásica</option>
+                  <option value="indeterminate" data-i18n="psp.direction.indeterminate">Indeterminada</option>
                 </select>
               </label>
               <div class="peak-answer">
-                <span>Pico seleccionado</span>
-                <strong id="selected-peak">Haz clic en la gráfica</strong>
+                <span data-i18n="psp.worksheet.peak">Pico seleccionado</span>
+                <strong id="selected-peak" data-i18n="psp.worksheet.click">Haz clic en la gráfica</strong>
               </div>
               <div class="worksheet-actions">
-                <button id="hint-button" type="button">Pista</button>
-                <button id="evaluate-button" class="primary" type="button">Evaluar</button>
+                <button id="hint-button" type="button" data-i18n="psp.worksheet.hint">Pista</button>
+                <button id="evaluate-button" class="primary" type="button" data-i18n="psp.worksheet.evaluate">Evaluar</button>
               </div>
-              <p id="hint-text" class="hint" aria-live="polite">Las pistas aparecerán aquí.</p>
+              <p id="hint-text" class="hint" aria-live="polite" data-i18n="psp.worksheet.hintEmpty">Las pistas aparecerán aquí.</p>
             </div>
           </section>
         </aside>
 
-        <section class="results-panel" aria-label="Señal y resultados">
+        <section class="results-panel" aria-label="Señal y resultados" data-i18n-aria-label="psp.results.aria">
           <div class="results-toolbar">
             <div>
-              <p class="eyebrow">Escenario activo</p>
-              <h2 id="scenario-title">Preparando reto…</h2>
-              <p id="scenario-summary">Señal sintética docente.</p>
+              <p class="eyebrow" data-i18n="psp.results.active">Escenario activo</p>
+              <h2 id="scenario-title" data-i18n="psp.results.preparing">Preparando reto…</h2>
+              <p id="scenario-summary" data-i18n="psp.results.initialSummary">Señal sintética docente.</p>
             </div>
             <div class="toolbar-actions">
-              <span id="analysis-status" class="status-pill">Sin evaluar</span>
-              <button id="export-session" type="button">Exportar sesión</button>
+              <span id="analysis-status" class="status-pill" data-i18n="psp.status.notEvaluated">Sin evaluar</span>
+              <button id="export-session" type="button" data-i18n="psp.results.export">Exportar sesión</button>
             </div>
           </div>
 
           <div class="plot-card">
             <div class="plot-legend">
-              <span class="trace-key">Voltaje</span>
-              <span class="artifact-key">Estímulo / artefacto</span>
-              <span class="analysis-key">Inicio · pico · retorno</span>
-              <span class="student-key">Tu selección</span>
+              <span class="trace-key" data-i18n="psp.legend.voltage">Voltaje</span>
+              <span class="artifact-key" data-i18n="psp.legend.artifact">Estímulo / artefacto</span>
+              <span class="analysis-key" data-i18n="psp.legend.analysis">Inicio · pico · retorno</span>
+              <span class="student-key" data-i18n="psp.legend.selection">Tu selección</span>
             </div>
-            <canvas id="psp-canvas" aria-label="Gráfica de potencial postsináptico; en modo estudiante puedes seleccionar el pico"></canvas>
+            <canvas id="psp-canvas" aria-label="Gráfica de potencial postsináptico; en modo estudiante puedes seleccionar el pico" data-i18n-aria-label="psp.plot.aria"></canvas>
           </div>
 
           <section id="feedback-card" class="feedback-card" hidden aria-live="polite">
             <div>
-              <p class="eyebrow">Tutor local</p>
-              <h2 id="feedback-title">Resultado</h2>
+              <p class="eyebrow" data-i18n="psp.feedback.tutor">Tutor local</p>
+              <h2 id="feedback-title" data-i18n="psp.feedback.result">Resultado</h2>
             </div>
             <div id="feedback-content"></div>
           </section>
 
           <section id="truth-card" class="truth-card teacher-controls" hidden>
             <div>
-              <p class="eyebrow">Verdad conocida</p>
-              <h2>Configuración del simulador</h2>
+              <p class="eyebrow" data-i18n="psp.truth.eyebrow">Verdad conocida</p>
+              <h2 data-i18n="psp.truth.title">Configuración del simulador</h2>
             </div>
             <dl id="truth-values"></dl>
           </section>
 
           <div class="metric-grid" id="metric-grid">
-            <article><span>Línea base</span><strong id="metric-baseline">Oculta</strong></article>
-            <article><span>Ruido robusto</span><strong id="metric-noise">Oculto</strong></article>
-            <article><span>Amplitud firmada</span><strong id="metric-amplitude">Oculta</strong></article>
-            <article><span>Latencia de inicio</span><strong id="metric-onset">Oculta</strong></article>
-            <article><span>Latencia de pico</span><strong id="metric-peak">Oculta</strong></article>
+            <article><span data-i18n="psp.metrics.baseline">Línea base</span><strong id="metric-baseline" data-i18n="psp.metrics.hiddenF">Oculta</strong></article>
+            <article><span data-i18n="psp.metrics.noise">Ruido robusto</span><strong id="metric-noise" data-i18n="psp.metrics.hiddenM">Oculto</strong></article>
+            <article><span data-i18n="psp.metrics.amplitude">Amplitud firmada</span><strong id="metric-amplitude" data-i18n="psp.metrics.hiddenF">Oculta</strong></article>
+            <article><span data-i18n="psp.metrics.onset">Latencia de inicio</span><strong id="metric-onset" data-i18n="psp.metrics.hiddenF">Oculta</strong></article>
+            <article><span data-i18n="psp.metrics.peak">Latencia de pico</span><strong id="metric-peak" data-i18n="psp.metrics.hiddenF">Oculta</strong></article>
             <article><span>SNR</span><strong id="metric-snr">Oculta</strong></article>
           </div>
 
           <section class="quality-card">
             <div>
-              <p class="eyebrow">Control de calidad</p>
-              <h2>Qué debe revisarse</h2>
+              <p class="eyebrow" data-i18n="psp.quality.eyebrow">Control de calidad</p>
+              <h2 data-i18n="psp.quality.title">Qué debe revisarse</h2>
             </div>
-            <ul id="quality-list"><li class="info">La evaluación aparecerá después del intento.</li></ul>
+            <ul id="quality-list"><li class="info" data-i18n="psp.quality.after">La evaluación aparecerá después del intento.</li></ul>
           </section>
 
           <section class="method-card">
-            <strong>Regla de interpretación</strong>
+            <strong data-i18n="psp.method.title">Regla de interpretación</strong>
             <p>
-              El detector informa dirección positiva, negativa o bifásica y mantiene la etiqueta
-              <code>PSP_unclassified</code>. Para nombrar EPSP o IPSP se requiere evidencia experimental adicional.
+              <span data-i18n="psp.method.beforeCode">El detector informa dirección positiva, negativa o bifásica y mantiene la etiqueta</span>
+              <code>PSP_unclassified</code><span data-i18n="psp.method.afterCode">. Para nombrar EPSP o IPSP se requiere evidencia experimental adicional.</span>
             </p>
           </section>
         </section>
@@ -212,10 +216,11 @@
     </main>
 
     <footer>
-      <span>Simu-LAB · PSP Lab experimental</span>
-      <span>Las señales son sintéticas y no sustituyen registros ni revisión experta.</span>
+      <span data-i18n="psp.footer.left">Simu-LAB · PSP Lab experimental</span>
+      <span data-i18n="psp.footer.right">Las señales son sintéticas y no sustituyen registros ni revisión experta.</span>
     </footer>
 
-    <script defer src="src/app.bundle.js?v=20260802-3"></script>
+    <script defer src="../../shared/i18n.js?v=20260802-1"></script>
+    <script defer src="src/app.bundle.js?v=20260802-i18n1"></script>
   </body>
 </html>

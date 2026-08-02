@@ -40,6 +40,9 @@ test("required GitHub Pages entry points and modules exist", async () => {
     "apps/psp-lab/src/app.js",
     "apps/psp-lab/src/app.bundle.js",
     "apps/psp-lab/src/plot.js",
+    "shared/i18n.js",
+    "scripts/portal.js",
+    "docs/I18N.md",
     "apps/neurocell-explorer/index.html",
     ".nojekyll",
     "CNAME",
@@ -58,12 +61,22 @@ test("PSP Lab separates student and teacher modes and uses a classic bundle", as
   assert.match(page, /id="student-mode"/);
   assert.match(page, /id="teacher-mode"/);
   assert.match(page, /id="psp-canvas"/);
+  assert.match(page, /\.\.\/\.\.\/shared\/i18n\.js\?v=/);
   assert.match(page, /<script defer src="src\/app\.bundle\.js\?v=/);
   assert.doesNotMatch(page, /<script type="module"/);
 
   const source = await readFile(path.join(root, "apps/psp-lab/src/app.js"), "utf8");
   assert.match(source, /createStudentScenarioView/);
-  assert.match(source, /PSP no clasificado/);
+  assert.match(source, /psp\.evaluation\.classification/);
+});
+
+test("portal separates learning from analysis and exposes language controls", async () => {
+  const page = await readFile(path.join(root, "index.html"), "utf8");
+  assert.match(page, /class="lab-track analyze-track"/);
+  assert.match(page, /class="lab-track learn-track"/);
+  assert.match(page, /data-language="es"/);
+  assert.match(page, /data-language="en"/);
+  assert.match(page, /shared\/i18n\.js\?v=/);
 });
 
 test("new HTML entry points have no broken local assets", async () => {

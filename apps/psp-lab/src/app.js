@@ -6,32 +6,12 @@ import {
 import { measureEvokedPsps } from "../../electrophysiology-lab/src/core/currentClamp.js";
 import { PspPlot } from "./plot.js";
 
+const i18n = window.SimuLabI18n.createI18n();
+i18n.apply();
+i18n.bindLanguageControls();
+const t = (key, parameters) => i18n.t(key, parameters);
 const PROGRESS_KEY = "simulab-psp-student-progress-0.1";
-const HINTS = [
-  "Observa primero la línea base anterior al estímulo: su dispersión define cuánto cambio puede atribuirse al ruido.",
-  "La línea naranja indica el estímulo. El intervalo inmediato puede contener artefacto y no debe confundirse con la respuesta.",
-  "Busca una desviación sostenida, no una sola muestra extrema. Compara su tamaño y duración con el ruido basal.",
-  "Describe positiva, negativa o bifásica. La polaridad por sí sola no permite llamarla EPSP o IPSP.",
-];
-const DIRECTION_LABELS = {
-  positive: "positiva",
-  negative: "negativa",
-  biphasic: "bifásica",
-  none: "ninguna",
-  indeterminate: "indeterminada",
-};
-const RESPONSE_LABELS = {
-  monophasic: "monofásica",
-  biphasic: "bifásica",
-  none: "sin respuesta",
-};
-const STATUS_LABELS = {
-  not_evaluable: "No evaluable",
-  no_response_detectable: "Sin respuesta detectable",
-  ambiguous_response: "Respuesta ambigua",
-  contaminated_response: "Respuesta contaminada",
-  response_detected: "Respuesta detectada",
-};
+const HINT_KEYS = ["baseline", "artifact", "sustained", "polarity"];
 
 const elements = Object.fromEntries([
   "student-mode", "teacher-mode", "difficulty", "new-challenge", "challenge-id", "student-progress",
@@ -53,9 +33,10 @@ const state = {
   evaluationBySweep: new Map(),
   hintIndex: 0,
   challengeCounter: 0,
+  difficulty: "intermediate",
 };
 
-const plot = new PspPlot(elements["psp-canvas"]);
+const plot = new PspPlot(elements["psp-canvas"], t);
 
 function randomBetween(random, minimum, maximum) {
   return minimum + random() * (maximum - minimum);
@@ -84,7 +65,7 @@ function difficultyConfiguration(seed, difficulty) {
 
   return {
     seed,
-    title: `Reto PSP · ${difficulty === "intro" ? "inicial" : difficulty === "advanced" ? "avanzado" : "intermedio"}`,
+    title: "PSP challenge",
     durationMs: paired ? 460 : 380,
     sampleRateHz: 10000,
     sweepCount: difficulty === "intro" ? 3 : 5,
@@ -123,7 +104,7 @@ function teacherConfiguration() {
   const saturationEnabled = elements["teacher-saturation"].checked && kind !== "none";
   return {
     seed: elements["teacher-seed"].value.trim() || "psp-docente-01",
-    title: "Escenario PSP docente",
+    title: "Teacher PSP scenario",
     durationMs: elements["teacher-paired"].checked ? 460 : 380,
     sampleRateHz: 10000,
     sweepCount: Math.max(1, Math.min(20, Math.round(Number(elements["teacher-sweeps"].value) || 6))),
@@ -175,17 +156,18 @@ function loadScenario(config) {
     clearAnswers();
     render();
   } catch (error) {
-    elements["scenario-title"].textContent = "No se pudo generar el escenario";
+    elements["scenario-title"].textContent = t("psp.results.loadError");
     elements["scenario-summary"].textContent = error.message;
-    elements["analysis-status"].textContent = "Configuración inválida";
+    elements["analysis-status"].textContent = t("psp.results.invalid");
     elements["analysis-status"].className = "status-pill exclude";
   }
 }
 
 function newStudentChallenge() {
   state.challengeCounter += 1;
+  state.difficulty = elements.difficulty.value;
   const seed = `reto-${Date.now().toString(36)}-${state.challengeCounter}`;
-  loadScenario(difficultyConfiguration(seed, elements.difficulty.value));
+  loadScenario(difficultyConfiguration(seed, state.difficulty));
 }
 
 function setMode(mode) {
@@ -204,7 +186,7 @@ function setMode(mode) {
 function clearAnswers() {
   elements["answer-presence"].value = "";
   elements["answer-direction"].value = "";
-  elements["hint-text"].textContent = "Las pistas aparecerán aquí.";
+  elements["hint-text"].textContent = t("psp.worksheet.hintEmpty");
   elements["feedback-card"].hidden = true;
 }
 
@@ -222,7 +204,9 @@ function currentSweep() {
 }
 
 function format(value, digits = 2, suffix = "") {
-  return Number.isFinite(value) ? `${value.toFixed(digits)}${suffix}` : "—";
+  if (!Number.isFinite(value)) return "—";
+  const locale = i18n.language === "en" ? "en-US" : "es-MX";
+  return `${new Intl.NumberFormat(locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(value)}${suffix}`;
 }
 
 function visibleResults() {
@@ -232,9 +216,9 @@ function visibleResults() {
 function renderMetrics(show) {
   const analysis = currentAnalysis()[0];
   const metrics = analysis?.metrics ?? {};
-  const hidden = show ? "—" : "Oculta";
+  const hidden = show ? "—" : t("psp.metrics.hiddenF");
   elements["metric-baseline"].textContent = show ? format(metrics.baselineMv, 2, " mV") : hidden;
-  elements["metric-noise"].textContent = show ? format(metrics.baselineNoiseSigmaMv, 3, " mV") : hidden;
+  elements["metric-noise"].textContent = show ? format(metrics.baselineNoiseSigmaMv, 3, " mV") : t("psp.metrics.hiddenM");
   elements["metric-amplitude"].textContent = show ? format(metrics.signedAmplitudeMv ?? metrics.candidateAmplitudeMv, 3, " mV") : hidden;
   elements["metric-onset"].textContent = show ? format(metrics.onsetLatencyMs, 2, " ms") : hidden;
   elements["metric-peak"].textContent = show ? format(metrics.peakLatencyMs, 2, " ms") : hidden;
@@ -247,7 +231,7 @@ function renderQuality(show) {
   if (!show) {
     const item = document.createElement("li");
     item.className = "info";
-    item.textContent = "La evaluación aparecerá después del intento.";
+    item.textContent = t("psp.quality.after");
     list.append(item);
     return;
   }
@@ -257,14 +241,18 @@ function renderQuality(show) {
   if (!flags.length) {
     const item = document.createElement("li");
     item.className = "pass";
-    item.textContent = "Sin banderas automáticas en este barrido.";
+    item.textContent = t("psp.quality.none");
     list.append(item);
     return;
   }
   for (const flag of flags) {
     const item = document.createElement("li");
     item.className = flag.level === "exclude" ? "exclude" : "review";
-    item.textContent = `${currentAnalysis().length > 1 ? `Estímulo ${flag.eventIndex + 1}: ` : ""}${flag.message}`;
+    const flagKey = `psp.flags.${flag.code}`;
+    const translatedFlag = t(flagKey);
+    const message = translatedFlag === flagKey ? flag.message : translatedFlag;
+    const prefix = currentAnalysis().length > 1 ? t("psp.quality.stimulus", { number: flag.eventIndex + 1 }) : "";
+    item.textContent = `${prefix}${message}`;
     list.append(item);
   }
 }
@@ -274,15 +262,15 @@ function renderTruth() {
   const config = state.scenario.configuration;
   const truth = currentTruth()?.events[0];
   const values = [
-    ["Semilla", String(config.seed)],
-    ["Respuesta", RESPONSE_LABELS[config.response.kind] ?? config.response.kind],
-    ["Dirección primaria", DIRECTION_LABELS[truth?.direction] ?? "—"],
-    ["Amplitud verdadera", format(truth?.amplitudeMv, 3, " mV")],
-    ["Inicio verdadero", format(truth?.onsetTimeMs - truth?.stimulusTimeMs, 2, " ms")],
-    ["Pico verdadero", format(truth?.peakTimeMs - truth?.stimulusTimeMs, 2, " ms")],
-    ["Ruido configurado", format(config.noiseStdMv, 3, " mV")],
-    ["Deriva", format(config.driftMvPerSecond, 2, " mV/s")],
-    ["Estímulos", String(config.stimuli.length)],
+    [t("psp.truth.seed"), String(config.seed)],
+    [t("psp.truth.response"), t(`psp.response.${config.response.kind}`)],
+    [t("psp.truth.direction"), truth?.direction ? t(`psp.direction.${truth.direction}`) : "—"],
+    [t("psp.truth.amplitude"), format(truth?.amplitudeMv, 3, " mV")],
+    [t("psp.truth.onset"), format(truth?.onsetTimeMs - truth?.stimulusTimeMs, 2, " ms")],
+    [t("psp.truth.peak"), format(truth?.peakTimeMs - truth?.stimulusTimeMs, 2, " ms")],
+    [t("psp.truth.noise"), format(config.noiseStdMv, 3, " mV")],
+    [t("psp.truth.drift"), format(config.driftMvPerSecond, 2, " mV/s")],
+    [t("psp.truth.stimuli"), String(config.stimuli.length)],
   ];
   elements["truth-values"].replaceChildren();
   for (const [term, value] of values) {
@@ -303,8 +291,16 @@ function renderEvaluation(evaluation) {
   }
   elements["feedback-card"].hidden = false;
   elements["feedback-card"].dataset.score = evaluation.score === evaluation.total ? "high" : "low";
-  elements["feedback-title"].textContent = `${evaluation.score} de ${evaluation.total} criterios`;
-  elements["feedback-content"].innerHTML = evaluation.messages.map((message) => `<p>${message}</p>`).join("");
+  elements["feedback-title"].textContent = t("psp.feedback.score", evaluation);
+  elements["feedback-content"].replaceChildren();
+  for (const message of evaluation.messages) {
+    const paragraph = document.createElement("p");
+    const parameters = { ...message.parameters };
+    if (parameters.valueKey) parameters.value = t(parameters.valueKey);
+    if (Number.isFinite(parameters.errorValue)) parameters.error = format(parameters.errorValue, 2);
+    paragraph.textContent = t(message.key, parameters);
+    elements["feedback-content"].append(paragraph);
+  }
 }
 
 function render() {
@@ -315,20 +311,22 @@ function render() {
   const stimuli = sweep.stimulusTimesMs;
   const selected = state.selectedBySweep.get(state.sweepIndex) ?? null;
   elements["challenge-id"].textContent = state.scenario.id;
-  elements["scenario-title"].textContent = state.scenario.title;
-  elements["scenario-summary"].textContent = `${state.scenario.sweeps.length} barrido(s) · ${stimuli.length} estímulo(s) · señal sintética en mV`;
-  elements["sweep-position"].textContent = `${state.sweepIndex + 1} de ${state.scenario.sweeps.length}`;
+  elements["scenario-title"].textContent = state.mode === "teacher"
+    ? t("psp.results.teacherTitle")
+    : t("psp.results.challengeTitle", { difficulty: t(`psp.difficulty.${state.difficulty}`) });
+  elements["scenario-summary"].textContent = t("psp.results.summary", { sweeps: state.scenario.sweeps.length, stimuli: stimuli.length });
+  elements["sweep-position"].textContent = t("psp.sweep.position", { current: state.sweepIndex + 1, total: state.scenario.sweeps.length });
   elements["previous-sweep"].disabled = state.sweepIndex === 0;
   elements["next-sweep"].disabled = state.sweepIndex === state.scenario.sweeps.length - 1;
-  elements["selected-peak"].textContent = selected ? `${selected.timeMs.toFixed(2)} ms · ${selected.voltageMv.toFixed(2)} mV` : "Haz clic en la gráfica";
+  elements["selected-peak"].textContent = selected ? `${format(selected.timeMs, 2, " ms")} · ${format(selected.voltageMv, 2, " mV")}` : t("psp.worksheet.click");
   elements["answer-presence"].disabled = Boolean(evaluation);
   elements["answer-direction"].disabled = Boolean(evaluation);
   elements["evaluate-button"].disabled = Boolean(evaluation);
-  elements["evaluate-button"].textContent = evaluation ? "Evaluado" : "Evaluar";
+  elements["evaluate-button"].textContent = evaluation ? t("psp.worksheet.evaluated") : t("psp.worksheet.evaluate");
 
   const firstAnalysis = currentAnalysis()[0];
-  const status = show ? firstAnalysis?.status ?? "not_evaluable" : "Sin evaluar";
-  elements["analysis-status"].textContent = STATUS_LABELS[status] ?? status;
+  const status = show ? firstAnalysis?.status ?? "not_evaluable" : "notEvaluated";
+  elements["analysis-status"].textContent = t(`psp.status.${status}`);
   elements["analysis-status"].className = `status-pill ${show ? firstAnalysis?.ok ? firstAnalysis.reviewRequired ? "review" : "pass" : "exclude" : ""}`;
   plot.setData({
     timeMs: state.studentView.timeMs,
@@ -368,26 +366,28 @@ function evaluateStudent() {
 
   if (presenceAnswer === expected.presence) {
     score += 1;
-    messages.push("✓ Identificaste correctamente si la respuesta era evaluable.");
+    messages.push({ key: "psp.evaluation.presenceCorrect" });
   } else {
-    messages.push(`• La categoría esperada era: ${expected.presence === "present" ? "respuesta presente" : expected.presence === "none" ? "sin respuesta detectable" : "no evaluable"}.`);
+    messages.push({ key: "psp.evaluation.expectedPresence", parameters: { valueKey: `psp.evaluation.presence.${expected.presence}` } });
   }
   if (directionAnswer === expected.direction) {
     score += 1;
-    messages.push("✓ La dirección eléctrica es correcta.");
+    messages.push({ key: "psp.evaluation.directionCorrect" });
   } else {
-    messages.push(`• La dirección esperada era ${DIRECTION_LABELS[expected.direction] ?? expected.direction}.`);
+    messages.push({ key: "psp.evaluation.expectedDirection", parameters: { valueKey: `psp.direction.${expected.direction}` } });
   }
   if (expected.presence === "present") {
     const peakError = selected ? Math.abs(selected.timeMs - expected.peakTimeMs) : Number.POSITIVE_INFINITY;
     if (peakError <= 3) {
       score += 1;
-      messages.push(`✓ Seleccionaste el pico con un error de ${peakError.toFixed(2)} ms.`);
+      messages.push({ key: "psp.evaluation.peakCorrect", parameters: { errorValue: peakError } });
     } else {
-      messages.push(selected ? `• El pico quedó a ${peakError.toFixed(2)} ms de la verdad conocida; intenta seguir el extremo sostenido.` : "• Faltó seleccionar el pico en la gráfica.");
+      messages.push(selected
+        ? { key: "psp.evaluation.peakError", parameters: { errorValue: peakError } }
+        : { key: "psp.evaluation.peakMissing" });
     }
   }
-  messages.push("La clasificación permanece como PSP no clasificado: se requiere evidencia adicional para nombrar EPSP o IPSP.");
+  messages.push({ key: "psp.evaluation.classification" });
   const evaluation = { score, total, messages, answers: { presence: presenceAnswer, direction: directionAnswer, selected } };
   state.evaluationBySweep.set(state.sweepIndex, evaluation);
   saveProgress(score === total);
@@ -412,8 +412,8 @@ function saveProgress(correct) {
 function updateProgressLabel() {
   const progress = progressState();
   elements["student-progress"].textContent = progress.attempted
-    ? `${progress.attempted} intento(s) · ${progress.correct} completamente correctos en este navegador.`
-    : "Sin intentos guardados en este navegador.";
+    ? t("psp.progress.summary", progress)
+    : t("psp.progress.empty");
 }
 
 function changeSweep(offset) {
@@ -426,8 +426,9 @@ function changeSweep(offset) {
 }
 
 function showHint() {
-  elements["hint-text"].textContent = HINTS[Math.min(state.hintIndex, HINTS.length - 1)];
-  state.hintIndex = Math.min(HINTS.length - 1, state.hintIndex + 1);
+  const hintKey = HINT_KEYS[Math.min(state.hintIndex, HINT_KEYS.length - 1)];
+  elements["hint-text"].textContent = t(`psp.hint.${hintKey}`);
+  state.hintIndex = Math.min(HINT_KEYS.length - 1, state.hintIndex + 1);
 }
 
 function downloadJson(filename, payload) {
@@ -444,6 +445,7 @@ function exportSession() {
   const payload = state.mode === "teacher"
     ? {
       schema: "simulab-psp-teacher-session-0.1",
+      locale: i18n.language,
       scenario: state.scenario,
       analyses: state.analyses,
     }
@@ -451,7 +453,8 @@ function exportSession() {
       schema: "simulab-psp-student-session-0.1",
       scenario: state.studentView,
       evaluations: [...state.evaluationBySweep.entries()].map(([sweepIndex, evaluation]) => ({ sweepIndex, ...evaluation })),
-      note: "La configuración y la verdad conocida se omiten de la exportación estudiante.",
+      locale: i18n.language,
+      note: t("psp.export.studentNote"),
     };
   downloadJson(`${state.scenario.id}-${state.mode}.json`, payload);
 }
@@ -471,5 +474,12 @@ elements["next-sweep"].addEventListener("click", () => changeSweep(1));
 elements["hint-button"].addEventListener("click", showHint);
 elements["evaluate-button"].addEventListener("click", evaluateStudent);
 elements["export-session"].addEventListener("click", exportSession);
+window.addEventListener("simulab:languagechange", () => {
+  if (state.hintIndex > 0) {
+    elements["hint-text"].textContent = t(`psp.hint.${HINT_KEYS[state.hintIndex - 1]}`);
+  }
+  plot.draw();
+  render();
+});
 
 setMode("student");

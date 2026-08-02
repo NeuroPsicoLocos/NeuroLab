@@ -28,8 +28,9 @@ function nearestIndex(values, target) {
 }
 
 export class PspPlot {
-  constructor(canvas) {
+  constructor(canvas, translate = (key) => key) {
     this.canvas = canvas;
+    this.translate = translate;
     this.data = null;
     this.layout = null;
     this.selectionHandler = null;
@@ -80,7 +81,7 @@ export class PspPlot {
       context.fillStyle = "#657572";
       context.font = "500 15px system-ui";
       context.textAlign = "center";
-      context.fillText("Genera un escenario para comenzar", width / 2, height / 2);
+      context.fillText(this.translate("psp.plot.empty"), width / 2, height / 2);
       return;
     }
 
@@ -149,9 +150,9 @@ export class PspPlot {
 
     if (showAnalysis) {
       const pointStyles = {
-        onset: { color: "#2b8a64", label: "I" },
-        peak: { color: "#b64b4b", label: "P" },
-        return: { color: "#7b6aa5", label: "R" },
+        onset: { color: "#2b8a64", label: this.translate("psp.plot.onset") },
+        peak: { color: "#b64b4b", label: this.translate("psp.plot.peak") },
+        return: { color: "#7b6aa5", label: this.translate("psp.plot.return") },
       };
       for (const analysis of analyses) {
         for (const pointName of ["onset", "peak", "return"]) {
@@ -191,11 +192,11 @@ export class PspPlot {
     context.fillStyle = "#344745";
     context.font = "600 12px system-ui";
     context.textAlign = "center";
-    context.fillText("Tiempo (ms)", margins.left + plotWidth / 2, height - 3);
+    context.fillText(this.translate("psp.plot.time"), margins.left + plotWidth / 2, height - 3);
     context.save();
     context.translate(15, margins.top + plotHeight / 2);
     context.rotate(-Math.PI / 2);
-    context.fillText("Voltaje (mV)", 0, 0);
+    context.fillText(this.translate("psp.plot.voltage"), 0, 0);
     context.restore();
   }
 }

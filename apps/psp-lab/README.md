@@ -22,6 +22,10 @@ farmacología. Las señales del laboratorio son sintéticas y no sustituyen regi
 
 La aplicación guarda solo un contador de progreso en `localStorage`. No envía datos a un servidor.
 
+La interfaz está disponible en español e inglés. El idioma puede cambiarse con `ES | EN`, se conserva localmente
+y también puede seleccionarse con `?lang=en`. Los enums y esquemas exportados no se traducen para preservar la
+reproducibilidad; únicamente se localizan los textos visibles y las notas explicativas.
+
 ## Ejecución
 
 Puede abrirse directamente mediante `index.html` o desde un servidor estático:
