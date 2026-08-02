@@ -85,6 +85,7 @@ La configuración JSON usa el esquema `simulab-ephys-0.5` e incluye el estado de
 
 - `src/core/signal.js`: funciones puras de análisis y señal sintética.
 - `src/core/fieldPotential.js`: suavizado y medición POPS independiente de la interfaz.
+- `src/core/pspScenario.js`: escenarios PSP docentes deterministas, con verdad conocida separada de la vista estudiante.
 - `src/core/corrections.js`: validación, aplicación y restauración auditable de puntos manuales.
 - `src/core/review.js`: identidad, persistencia y vigencia de decisiones manuales.
 - `src/io/workbook.js`: adaptación de libros de cálculo y exportación.
@@ -107,6 +108,7 @@ No se deben confirmar en Git datos humanos identificables ni registros crudos pr
 
 ## Próximas fases
 
+- motor sintético PSP determinista y arquitectura del tutor descritos en [`PSP_TUTOR_ARCHITECTURE.md`](../../docs/electrophysiology/PSP_TUTOR_ARCHITECTURE.md); permanecen separados de la interfaz pública durante validación;
 - contrato científico y técnico de current clamp descrito en [`CURRENT_CLAMP_SPEC.md`](../../docs/electrophysiology/CURRENT_CLAMP_SPEC.md), pendiente de revisión antes de implementar;
 - perfiles adicionales por protocolo de polaridad, ventanas y criterios fisiológicos;
 - línea base robusta, filtros opcionales con respuesta documentada y señal original visible;
