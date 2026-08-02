@@ -33,6 +33,10 @@ import {
 } from "./core/corrections.js?v=20260801-1";
 import { SignalPlot } from "./ui/plot.js?v=20260801-1";
 
+const i18n = window.SimuLabI18n.createI18n();
+const t = (key, parameters) => i18n.t(key, parameters);
+i18n.apply();
+i18n.bindLanguageControls();
 const elements = {
   fileInput: document.querySelector("#file-input"),
   dropZone: document.querySelector("#drop-zone"),
@@ -109,6 +113,7 @@ const elements = {
 };
 
 const plot = new SignalPlot(document.querySelector("#signal-canvas"));
+plot.setLabels({ time: t("ephys.plot.time"), signal: t("ephys.plot.signal") });
 const state = {
   workbook: null,
   result: null,
@@ -220,10 +225,10 @@ function setPointEditorStatus(message, isError = false) {
 function setCorrectionArmed(armed) {
   state.correctionArmed = Boolean(armed && state.fieldResult);
   elements.pointEditor.dataset.armed = String(state.correctionArmed);
-  elements.armCorrection.textContent = state.correctionArmed ? "Cancelar edición" : "Seleccionar en la gráfica";
+  elements.armCorrection.textContent = state.correctionArmed ? t("ephys.correction.cancel") : t("ephys.correction.select");
   plot.setPointSelectionHandler(state.correctionArmed ? handlePointSelection : null);
   if (state.correctionArmed) {
-    setPointEditorStatus(`Haz clic en la gráfica para colocar ${state.correctionPointName.toUpperCase()} en la muestra más cercana.`);
+    setPointEditorStatus(t("ephys.correction.click", { point: state.correctionPointName.toUpperCase() }));
   }
 }
 
@@ -236,7 +241,7 @@ function updatePointEditorUi(fieldResult) {
   }
   const eventNumbers = fieldResult.events.map((event) => event.eventNumber);
   if (!eventNumbers.includes(state.correctionEventNumber)) state.correctionEventNumber = eventNumbers[0];
-  elements.correctionEvent.replaceChildren(...eventNumbers.map((eventNumber) => new Option(`Evento ${eventNumber}`, String(eventNumber))));
+  elements.correctionEvent.replaceChildren(...eventNumbers.map((eventNumber) => new Option(t("ephys.event.number", { number: eventNumber }), String(eventNumber))));
   elements.correctionEvent.value = String(state.correctionEventNumber);
   const eventCorrection = currentPointCorrections()[String(state.correctionEventNumber)];
   for (const button of elements.pointButtons) {
@@ -251,8 +256,8 @@ function updatePointEditorUi(fieldResult) {
   if (!state.correctionArmed) {
     const correctedNames = Object.keys(eventCorrection?.points ?? {}).map((name) => name.toUpperCase());
     setPointEditorStatus(correctedNames.length
-      ? `Evento ${state.correctionEventNumber}: puntos corregidos ${correctedNames.join(", ")}. La traza debe volver a aceptarse.`
-      : "Selecciona un evento y un punto. El clic se ajustará a la muestra real más cercana.");
+      ? t("ephys.correction.corrected", { event: state.correctionEventNumber, points: correctedNames.join(", ") })
+      : t("ephys.correction.help"));
   }
 }
 
@@ -277,8 +282,8 @@ function savePointCorrections(pointCorrections, auditEntry = null) {
   const saved = storeReviewRecord(reviewStorage(), state.reviewSessionKey, traceKey, record, state.reviews);
   state.reviews = saved.state;
   elements.reviewStorageNote.textContent = saved.ok
-    ? "Correcciones guardadas en este navegador; acepta o rechaza nuevamente la traza."
-    : "No fue posible guardar localmente; exporta Excel antes de cerrar esta página.";
+    ? t("ephys.review.correctionsSaved")
+    : t("ephys.review.storageError");
   return saved.ok;
 }
 
@@ -300,7 +305,9 @@ function handlePointSelection({ sampleIndex }) {
     signal: state.automaticFieldResult.processedSignal,
   });
   if (!stored.ok) {
-    setPointEditorStatus(stored.message, true);
+    const key = `ephys.correction.errors.${stored.code}`;
+    const message = t(key);
+    setPointEditorStatus(message === key ? stored.message : message, true);
     return;
   }
   const previous = corrections[String(state.correctionEventNumber)]?.points?.[state.correctionPointName];
@@ -362,7 +369,9 @@ function updateSignalNavigator() {
 
   elements.signalLabel.value = activeChoice?.header ?? "—";
   elements.traceSignalName.textContent = activeChoice?.header ?? "—";
-  elements.tracePosition.textContent = hasChoices ? `Traza ${position + 1} de ${choices.length}` : "Traza —";
+  elements.tracePosition.textContent = hasChoices
+    ? t("ephys.trace.position", { current: position + 1, total: choices.length })
+    : t("ephys.trace.empty");
   elements.traceNavigator.hidden = !state.source;
   elements.signalPrevious.disabled = !workbookNavigation || position <= 0;
   elements.tracePrevious.disabled = !workbookNavigation || position <= 0;
@@ -371,9 +380,9 @@ function updateSignalNavigator() {
 }
 
 function decisionLabel(decision) {
-  if (decision === "accepted") return "Aceptada";
-  if (decision === "rejected") return "Rechazada";
-  return "Pendiente guardada";
+  if (decision === "accepted") return t("ephys.review.accepted");
+  if (decision === "rejected") return t("ephys.review.rejected");
+  return t("ephys.review.pendingSaved");
 }
 
 function updateReviewUi() {
@@ -389,7 +398,12 @@ function updateReviewUi() {
   const records = choices.map((choice) => state.reviews.traces[buildTraceReviewKey(sheetName, choice.header)]);
   const accepted = records.filter((record) => record?.decision === "accepted").length;
   const rejected = records.filter((record) => record?.decision === "rejected").length;
-  elements.reviewProgress.textContent = `${accepted + rejected} de ${choices.length} revisadas · ${accepted} aceptadas · ${rejected} rechazadas`;
+  elements.reviewProgress.textContent = t("ephys.review.progress", {
+    reviewed: accepted + rejected,
+    total: choices.length,
+    accepted,
+    rejected,
+  });
 
   const record = currentTraceReview();
   const identity = currentTraceIdentity();
@@ -398,12 +412,12 @@ function updateReviewUi() {
   const hasCorrections = Object.keys(record?.pointCorrections ?? {}).length > 0;
   if (record && !current && (record.decision !== "pending" || hasCorrections)) {
     elements.reviewTitle.textContent = hasCorrections
-      ? "Correcciones desactualizadas · parámetros cambiaron"
-      : `${decisionLabel(record.decision)} · parámetros cambiaron`;
+      ? t("ephys.review.staleCorrections")
+      : t("ephys.review.stale", { decision: decisionLabel(record.decision) });
     elements.reviewWorkflow.dataset.status = "stale";
   } else {
-    const correctionSuffix = Object.keys(record?.pointCorrections ?? {}).length ? " · puntos corregidos" : "";
-    elements.reviewTitle.textContent = record ? `${decisionLabel(record.decision)}${correctionSuffix}` : "Pendiente de decisión";
+    const correctionSuffix = Object.keys(record?.pointCorrections ?? {}).length ? t("ephys.review.correctedSuffix") : "";
+    elements.reviewTitle.textContent = record ? `${decisionLabel(record.decision)}${correctionSuffix}` : t("ephys.review.pendingTitle");
     elements.reviewWorkflow.dataset.status = record?.decision ?? "pending";
   }
   elements.quickReviewDecision.textContent = elements.reviewTitle.textContent;
@@ -433,8 +447,8 @@ function storeCurrentReview(decision, { advance = false } = {}) {
   const saved = storeReviewRecord(reviewStorage(), state.reviewSessionKey, traceKey, record, state.reviews);
   state.reviews = saved.state;
   elements.reviewStorageNote.textContent = saved.ok
-    ? "Decisión guardada en este navegador; se incluirá al exportar Excel."
-    : "No fue posible usar el almacenamiento del navegador; exporta Excel antes de cerrar esta página.";
+    ? t("ephys.review.storageSaved")
+    : t("ephys.review.storageError");
   updateReviewUi();
   if (advance) navigateSignal(1);
 }
@@ -503,7 +517,9 @@ function configureForWorkbook(workbook) {
   elements.analysisMode.value = suggestion.mode;
   elements.popsProfile.value = suggestion.profile;
   elements.popsExportScope.value = suggestion.exportScope;
-  state.analysisSuggestion = suggestion.message;
+  state.analysisSuggestion = suggestion.mode === "preliminary"
+    ? "ephys.suggestion.preliminary"
+    : suggestion.profile === "paired" ? "ephys.suggestion.paired" : "ephys.suggestion.train";
   if (suggestion.mode === "population-spike") applyPopsProfile();
   setAnalysisModeUi();
 }
@@ -511,11 +527,11 @@ function configureForWorkbook(workbook) {
 function updateSignalScopeHint() {
   updateSignalNavigator();
   if (state.source?.type === "demo") {
-    elements.signalScopeHint.textContent = "Demostración con una señal sintética.";
+    elements.signalScopeHint.textContent = t("ephys.columns.demo");
     return;
   }
   if (!state.workbook || elements.sheetSelect.value === "") {
-    elements.signalScopeHint.textContent = "La gráfica muestra una señal a la vez.";
+    elements.signalScopeHint.textContent = t("ephys.columns.hint");
     return;
   }
   const sheet = state.workbook.sheets[Number(elements.sheetSelect.value)];
@@ -523,10 +539,10 @@ function updateSignalScopeHint() {
   const signals = numericSignalColumns(sheet, timeIndex);
   const activeIndex = Number(elements.signalSelect.value);
   const activePosition = Math.max(0, signals.findIndex((column) => column.index === activeIndex)) + 1;
-  const exportMessage = elements.analysisMode.value === "population-spike"
-    ? " Al exportar se incluirá únicamente esta traza."
-    : " Selecciona el método POPS para medir P1, P2 y P3.";
-  elements.signalScopeHint.textContent = `Mostrando señal ${activePosition} de ${signals.length || 1} en esta hoja.${exportMessage}`;
+  const key = elements.analysisMode.value === "population-spike"
+    ? "ephys.columns.scope"
+    : "ephys.columns.scopePreliminary";
+  elements.signalScopeHint.textContent = t(key, { current: activePosition, total: signals.length || 1 });
 }
 
 function convertTimeToMilliseconds(values, unit) {
@@ -542,7 +558,7 @@ function formatMetric(value, unit = "") {
   if (!Number.isFinite(value)) return "—";
   const formatted = Math.abs(value) >= 10000
     ? value.toExponential(2)
-    : new Intl.NumberFormat("es-MX", { maximumFractionDigits: 3 }).format(value);
+    : new Intl.NumberFormat(i18n.language === "en" ? "en-US" : "es-MX", { maximumFractionDigits: 3 }).format(value);
   return unit ? `${formatted} ${unit}` : formatted;
 }
 
@@ -553,53 +569,58 @@ function appendQualityItem(className, message) {
   elements.qualityList.append(item);
 }
 
+function localizedFlagMessage(flag) {
+  const key = `ephys.flags.${flag.code}`;
+  const translated = t(key);
+  return translated === key ? flag.message : translated;
+}
 function updateQuality(result, fieldResult = null) {
   elements.qualityList.replaceChildren();
-  for (const flag of result.flags) appendQualityItem(flag.level, flag.message);
+  for (const flag of result.flags) appendQualityItem(flag.level, localizedFlagMessage(flag));
 
   if (fieldResult) {
     const validEvents = fieldResult.events.filter((event) => event.valid);
     const reviewEvents = validEvents.filter((event) => event.reviewRequired);
     const correctedEvents = fieldResult.events.filter((event) => event.manualCorrection);
     if (correctedEvents.length) {
-      appendQualityItem("review", `${correctedEvents.length} evento(s) contienen puntos corregidos manualmente; confirma la traza antes de aceptarla.`);
+      appendQualityItem("review", t("ephys.quality.corrected", { count: correctedEvents.length }));
     }
     if (fieldResult.flags.includes("invalid_parameters")) {
-      appendQualityItem("exclude", "La configuración POPS contiene un umbral inválido o una ventana cuyo fin no es posterior al inicio.");
+      appendQualityItem("exclude", t("ephys.quality.invalidPops"));
     }
     if (fieldResult.flags.includes("duplicate_artifact_windows")) {
-      appendQualityItem("review", "Las dos ventanas del protocolo pareado seleccionaron el mismo artefacto; revisar la traza o el protocolo.");
+      appendQualityItem("review", t("ephys.quality.duplicateWindows"));
     }
-    if (!fieldResult.artifacts.length) appendQualityItem("review", "El perfil POPS no encontró artefactos con el umbral actual.");
+    if (!fieldResult.artifacts.length) appendQualityItem("review", t("ephys.quality.noArtifacts"));
     if (fieldResult.flags.includes("incomplete_response_window")) {
-      appendQualityItem("review", "Al menos un estímulo no tiene una ventana completa para P1, P2 y P3.");
+      appendQualityItem("review", t("ephys.quality.incompleteWindow"));
     }
     const rejectedP3Events = fieldResult.events.filter((event) => event.flags.includes("p3_prominence_not_met"));
     if (rejectedP3Events.length) {
       appendQualityItem(
         "review",
-        `${rejectedP3Events.length} estímulo(s) sin respuesta POPS: no se encontró un P3 con la prominencia mínima. Se conservan los artefactos para revisión manual, pero no se reporta amplitud.`,
+        t("ephys.quality.noP3", { count: rejectedP3Events.length }),
       );
     }
     if (reviewEvents.length) {
-      appendQualityItem("review", `${reviewEvents.length} de ${validEvents.length} evento(s) requieren revisión de puntos o prominencia.`);
+      appendQualityItem("review", t("ephys.quality.reviewEvents", { count: reviewEvents.length, total: validEvents.length }));
     }
     const fallbackEvents = validEvents.filter((event) => event.flags.includes("p3_prominence_fallback"));
     if (fallbackEvents.length) {
       appendQualityItem(
         "review",
-        `${fallbackEvents.length} evento(s): P3 no alcanzó la prominencia mínima; el punto mostrado es el máximo local provisional y requiere confirmación manual.`,
+        t("ephys.quality.p3Fallback", { count: fallbackEvents.length }),
       );
     }
     if (validEvents.length) {
-      appendQualityItem("info", `${validEvents.length} espiga(s) poblacional(es) medidas con el perfil POPS reproducido.`);
+      appendQualityItem("info", t("ephys.quality.eventsMeasured", { count: validEvents.length }));
     }
   }
 
-  if (!elements.qualityList.children.length) appendQualityItem("pass", "Sin banderas automáticas en la revisión preliminar.");
-  if (!result.ok || (fieldResult && !fieldResult.ok)) elements.qualityTitle.textContent = "Revisión necesaria antes de medir";
-  else if (fieldResult) elements.qualityTitle.textContent = "Medición POPS disponible con revisión";
-  else elements.qualityTitle.textContent = "Traza analizable con revisión";
+  if (!elements.qualityList.children.length) appendQualityItem("pass", t("ephys.quality.none"));
+  if (!result.ok || (fieldResult && !fieldResult.ok)) elements.qualityTitle.textContent = t("ephys.quality.needsReview");
+  else if (fieldResult) elements.qualityTitle.textContent = t("ephys.quality.popsAvailable");
+  else elements.qualityTitle.textContent = t("ephys.quality.traceAvailable");
 }
 
 function renderEventTable(fieldResult, signalUnit) {
@@ -620,7 +641,7 @@ function renderEventTable(fieldResult, signalUnit) {
       formatMetric(event.tau12Ms),
       formatMetric(event.tau23Ms),
       formatMetric(event.snr),
-      event.manualCorrection ? "Manual" : `${Math.round(event.confidence ?? 0)} / 100`,
+      event.manualCorrection ? t("ephys.table.manual") : `${Math.round(event.confidence ?? 0)} / 100`,
     ];
     for (const value of values) {
       const cell = document.createElement("td");
@@ -633,16 +654,16 @@ function renderEventTable(fieldResult, signalUnit) {
     const p3Fallback = event.valid && event.flags.includes("p3_prominence_fallback");
     const p3Rejected = !event.valid && event.flags.includes("p3_prominence_not_met");
     status.textContent = event.manualCorrection
-      ? `Corregido ${event.correctedPointNames.map((name) => name.toUpperCase()).join("/")}`
+      ? t("ephys.table.corrected", { points: event.correctedPointNames.map((name) => name.toUpperCase()).join("/") })
       : event.valid && !event.reviewRequired
-      ? "Aceptable"
+      ? t("ephys.table.acceptable")
       : p3Rejected
-        ? "Sin P3"
+        ? t("ephys.table.noP3")
         : p3Fallback
-          ? "Revisar P3"
-          : "Revisar";
+          ? t("ephys.table.reviewP3")
+          : t("ephys.table.reviewStatus");
     const auditFlags = event.manualCorrection ? event.automaticFlags : event.flags;
-    if (auditFlags?.length) status.title = `Detección automática: ${auditFlags.join(", ")}`;
+    if (auditFlags?.length) status.title = t("ephys.table.autoFlags", { flags: auditFlags.join(", ") });
     statusCell.append(status);
     row.append(statusCell);
     elements.eventTableBody.append(row);
@@ -719,7 +740,7 @@ function analyzeCurrentSelection() {
       result.flags.push({
         level: "info",
         code: "time_scale_auto_corrected",
-        message: `Escala temporal corregida automáticamente a ${state.inferredTimeUnit === "s" ? "segundos" : "microsegundos"}; confirma la unidad del equipo.`,
+        message: t("ephys.time.corrected", { unit: t(state.inferredTimeUnit === "s" ? "ephys.units.s" : "ephys.units.us") }),
       });
     }
   }
@@ -727,7 +748,7 @@ function analyzeCurrentSelection() {
     result.flags.push({
       level: "review",
       code: "implausible_time_scale",
-      message: "La escala temporal produce una frecuencia mayor de 1 MHz o una duración demasiado corta. Revisa la unidad temporal.",
+      message: t("ephys.time.implausible"),
     });
   }
   const fieldResult = elements.analysisMode.value === "population-spike" && result.ok
@@ -772,12 +793,17 @@ function activateSheet(sheetIndex = 0) {
   const inferredTimeUnit = guessTimeUnit(columnValues(sheet, guess.timeIndex), sheet.headers[guess.timeIndex]);
   state.inferredTimeUnit = inferredTimeUnit;
   const automaticOption = elements.timeUnit.querySelector('option[value="auto"]');
-  const unitLabels = { s: "segundos (s)", ms: "milisegundos (ms)", us: "microsegundos (µs)" };
-  automaticOption.textContent = `automática · ${unitLabels[inferredTimeUnit]}`;
+  const unitLabels = { s: t("ephys.units.s"), ms: t("ephys.units.ms"), us: t("ephys.units.us") };
+  automaticOption.textContent = t("ephys.units.autoValue", { unit: unitLabels[inferredTimeUnit] });
   elements.timeUnit.value = "auto";
   state.source = { type: "workbook" };
   elements.traceTitle.textContent = `${state.workbook.fileName} · ${sheet.name}`;
-  elements.fileStatus.textContent = `${state.workbook.fileName} · ${(state.workbook.fileSize / 1024).toFixed(1)} kB · ${state.analysisSuggestion} · tiempo: ${unitLabels[inferredTimeUnit]}`;
+  elements.fileStatus.textContent = t("ephys.results.workbookStatus", {
+    file: state.workbook.fileName,
+    size: (state.workbook.fileSize / 1024).toFixed(1),
+    suggestion: t(state.analysisSuggestion),
+    unit: unitLabels[inferredTimeUnit],
+  });
   updateSignalScopeHint();
   analyzeCurrentSelection();
 }
@@ -797,24 +823,28 @@ function numericSignalColumns(sheet, timeIndex) {
 
 async function openFile(file) {
   if (!file) return;
-  elements.fileStatus.textContent = `Abriendo ${file.name}…`;
+  elements.fileStatus.textContent = t("ephys.input.opening", { file: file.name });
   elements.fileStatus.className = "file-status loading";
   try {
     startReviewSession({ fileName: file.name, fileSize: file.size, lastModified: file.lastModified });
     state.workbook = await parseWorkbook(file);
     if (!state.workbook.sheets.some((sheet) => sheet.headers.length >= 2)) {
-      throw new Error("No se encontró una hoja con al menos dos columnas.");
+      throw new Error(t("ephys.input.noSheet"));
     }
     fillSelect(elements.sheetSelect, state.workbook.sheets.map((sheet) => sheet.name));
     const firstUsableSheet = state.workbook.sheets.findIndex((sheet) => sheet.headers.length >= 2);
     elements.sheetSelect.value = String(firstUsableSheet);
     configureForWorkbook(state.workbook);
-    elements.fileStatus.textContent = `${file.name} · ${(file.size / 1024).toFixed(1)} kB · ${state.workbook.sheets.length} hoja(s)`;
+    elements.fileStatus.textContent = t("ephys.input.opened", {
+      file: file.name,
+      size: (file.size / 1024).toFixed(1),
+      sheets: state.workbook.sheets.length,
+    });
     elements.fileStatus.className = "file-status success";
     activateSheet(firstUsableSheet);
   } catch (error) {
     console.error(error);
-    elements.fileStatus.textContent = `No se pudo abrir el archivo: ${error.message}`;
+    elements.fileStatus.textContent = t("ephys.input.error", { message: error.message });
     elements.fileStatus.className = "file-status error";
   }
 }
@@ -831,11 +861,11 @@ function loadDemo() {
   elements.timeSelect.disabled = true;
   elements.signalSelect.disabled = true;
   state.inferredTimeUnit = "ms";
-  elements.timeUnit.querySelector('option[value="auto"]').textContent = "automática · milisegundos (ms)";
+  elements.timeUnit.querySelector('option[value="auto"]').textContent = t("ephys.units.autoValue", { unit: t("ephys.units.ms") });
   elements.timeUnit.value = "auto";
   elements.signalUnit.value = "mV";
-  elements.traceTitle.textContent = "Señal sintética · potencial de campo";
-  elements.fileStatus.textContent = "Demostración determinística: 10 estímulos, 10 kHz, 1.1 s.";
+  elements.traceTitle.textContent = t("ephys.results.syntheticTitle");
+  elements.fileStatus.textContent = t("ephys.input.demoStatus");
   elements.fileStatus.className = "file-status success";
   analyzeCurrentSelection();
 }
@@ -875,7 +905,7 @@ function exportConfiguration() {
 async function exportExcel() {
   if (!state.result) return;
   elements.excelButton.disabled = true;
-  elements.excelButton.textContent = "Preparando…";
+  elements.excelButton.textContent = t("ephys.export.preparing");
   try {
     const demo = state.source.type === "demo";
     const sheet = demo ? null : state.workbook.sheets[Number(elements.sheetSelect.value)];
@@ -894,10 +924,10 @@ async function exportExcel() {
     });
   } catch (error) {
     console.error(error);
-    window.alert(`No fue posible exportar el libro: ${error.message}`);
+    window.alert(t("ephys.export.error", { message: error.message }));
   } finally {
     elements.excelButton.disabled = false;
-    elements.excelButton.textContent = "Exportar Excel";
+    elements.excelButton.textContent = t("ephys.export.excel");
   }
 }
 
@@ -914,8 +944,8 @@ elements.timeSelect.addEventListener("change", () => {
     const previousSignalIndex = Number(elements.signalSelect.value);
     fillSignalSelect(sheet, timeIndex, previousSignalIndex);
     state.inferredTimeUnit = guessTimeUnit(columnValues(sheet, timeIndex), sheet.headers[timeIndex]);
-    const labels = { s: "segundos (s)", ms: "milisegundos (ms)", us: "microsegundos (µs)" };
-    elements.timeUnit.querySelector('option[value="auto"]').textContent = `automática · ${labels[state.inferredTimeUnit]}`;
+    const labels = { s: t("ephys.units.s"), ms: t("ephys.units.ms"), us: t("ephys.units.us") };
+    elements.timeUnit.querySelector('option[value="auto"]').textContent = t("ephys.units.autoValue", { unit: labels[state.inferredTimeUnit] });
   }
   updateSignalScopeHint();
   analyzeCurrentSelection();
@@ -1010,4 +1040,30 @@ for (const eventName of ["dragleave", "drop"]) {
   });
 }
 elements.dropZone.addEventListener("drop", (event) => openFile(event.dataTransfer.files[0]));
+window.addEventListener("simulab:languagechange", () => {
+  plot.setLabels({ time: t("ephys.plot.time"), signal: t("ephys.plot.signal") });
+  if (!state.source) {
+    setAnalysisModeUi();
+    return;
+  }
+  const unitLabels = { s: t("ephys.units.s"), ms: t("ephys.units.ms"), us: t("ephys.units.us") };
+  elements.timeUnit.querySelector('option[value="auto"]').textContent = t("ephys.units.autoValue", {
+    unit: unitLabels[state.inferredTimeUnit],
+  });
+  if (state.source.type === "demo") {
+    elements.traceTitle.textContent = t("ephys.results.syntheticTitle");
+    elements.fileStatus.textContent = t("ephys.input.demoStatus");
+  } else {
+    const sheet = state.workbook.sheets[Number(elements.sheetSelect.value)];
+    elements.traceTitle.textContent = `${state.workbook.fileName} · ${sheet.name}`;
+    elements.fileStatus.textContent = t("ephys.results.workbookStatus", {
+      file: state.workbook.fileName,
+      size: (state.workbook.fileSize / 1024).toFixed(1),
+      suggestion: t(state.analysisSuggestion),
+      unit: unitLabels[state.inferredTimeUnit],
+    });
+  }
+  updateSignalScopeHint();
+  if (state.result) renderResult(state.result, state.fieldResult);
+});
 setAnalysisModeUi();

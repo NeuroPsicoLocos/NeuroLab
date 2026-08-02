@@ -2,6 +2,9 @@
 
 Módulo de Simu-LAB para inspección y análisis reproducible de registros electrofisiológicos en el navegador.
 
+La interfaz está disponible en español e inglés mediante `ES | EN` o `?lang=en`. El cambio de idioma no modifica
+las claves científicas, las decisiones de revisión, los códigos de calidad ni los nombres exportados a Excel.
+
 ## Estado actual
 
 La aplicación dispone de una base segura de importación, inspección y trazabilidad. Funciona con potenciales de campo tabulados y prepara una arquitectura común para:

@@ -5,23 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
+      data-i18n-content="portal.meta.description"
       content="Simu-LAB: laboratorios interactivos de neurociencias, electrofisiología, visualización científica y topología."
     />
     <meta name="theme-color" content="#10282a" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Simu-LAB · NeuroPsicoLocos" />
-    <meta property="og:description" content="Laboratorios abiertos de neurociencias, análisis y docencia." />
+    <meta property="og:description" data-i18n-content="portal.meta.ogDescription" content="Laboratorios abiertos de neurociencias, análisis y docencia." />
     <meta property="og:url" content="https://neurolab.neuropsicolocos.com/" />
     <meta property="og:image" content="https://neurolab.neuropsicolocos.com/assets/simulab-social.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <title>Simu-LAB · NeuroPsicoLocos</title>
-    <link rel="stylesheet" href="styles/portal.css?v=20260731-simulab" />
+    <link rel="stylesheet" href="styles/portal.css?v=20260802-i18n1" />
   </head>
   <body>
     <header class="site-header">
-      <a class="brand" href="./" aria-label="Simu-LAB, inicio">
+      <a class="brand" href="./" aria-label="Simu-LAB, inicio" data-i18n-aria-label="portal.brand.home">
         <img src="apps/neurocell-explorer/assets/neuropsicolocos-logo.png" alt="" />
         <span>
           <strong>Simu-LAB</strong>
@@ -29,30 +30,34 @@
         </span>
       </a>
       <nav aria-label="Navegación principal">
-        <a href="#laboratorios">Laboratorios</a>
-        <a href="#principios">Principios</a>
+        <a href="#laboratorios" data-i18n="portal.nav.labs">Laboratorios</a>
+        <a href="#principios" data-i18n="portal.nav.principles">Principios</a>
         <a href="https://github.com/NeuroPsicoLocos/NeuroLab">GitHub</a>
       </nav>
+      <div class="language-switch" role="group" aria-label="Idioma" data-i18n-aria-label="common.languageLabel">
+        <button type="button" data-language="es" aria-pressed="true">ES</button>
+        <button type="button" data-language="en" aria-pressed="false">EN</button>
+      </div>
     </header>
 
     <main>
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-copy">
-          <p class="eyebrow">Simulación · análisis · docencia</p>
-          <h1 id="hero-title">Un laboratorio digital para explorar sistemas complejos.</h1>
-          <p class="hero-lead">
+          <p class="eyebrow" data-i18n="portal.hero.eyebrow">Simulación · análisis · docencia</p>
+          <h1 id="hero-title" data-i18n="portal.hero.title">Un laboratorio digital para explorar sistemas complejos.</h1>
+          <p class="hero-lead" data-i18n="portal.hero.lead">
             Simu-LAB reúne herramientas interactivas de neurociencias, electrofisiología y topología en una plataforma
             abierta. Cada módulo distingue los datos reales, el análisis cuantitativo y las simplificaciones docentes.
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="apps/electrophysiology-lab/">Abrir Electrophysiology Lab</a>
-            <a class="button secondary" href="apps/neurocell-explorer/">Explorar células 3D</a>
+            <a class="button primary" href="apps/electrophysiology-lab/" data-i18n="portal.hero.analyze">Analizar datos electrofisiológicos</a>
+            <a class="button secondary" href="apps/psp-lab/" data-i18n="portal.hero.learn">Aprender con PSP Lab</a>
           </div>
         </div>
 
-        <div class="signal-card" aria-label="Representación esquemática de una señal electrofisiológica">
+        <div class="signal-card" aria-label="Representación esquemática de una señal electrofisiológica" data-i18n-aria-label="portal.signal.aria">
           <div class="signal-header">
-            <span>Registro local</span>
+            <span data-i18n="portal.signal.local">Registro local</span>
             <strong>10 kHz</strong>
           </div>
           <div class="signal-grid" aria-hidden="true">
@@ -63,8 +68,8 @@
             <i class="stimulus three"></i>
           </div>
           <div class="signal-footer">
-            <span><i class="dot accepted"></i> Datos crudos preservados</span>
-            <span><i class="dot local"></i> Procesamiento local</span>
+            <span><i class="dot accepted"></i><b data-i18n="portal.signal.raw">Datos crudos preservados</b></span>
+            <span><i class="dot local"></i><b data-i18n="portal.signal.processing">Procesamiento local</b></span>
           </div>
         </div>
       </section>
@@ -72,97 +77,86 @@
       <section id="laboratorios" class="labs-section" aria-labelledby="labs-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">Biblioteca modular</p>
-            <h2 id="labs-title">Laboratorios</h2>
+            <p class="eyebrow" data-i18n="portal.labs.eyebrow">Una plataforma · dos propósitos</p>
+            <h2 id="labs-title" data-i18n="portal.labs.title">Laboratorios</h2>
           </div>
-          <p>Cada aplicación mantiene su propio método científico y comparte una identidad visual común.</p>
+          <p data-i18n="portal.labs.lead">Aprender y analizar comparten motores científicos, pero mantienen flujos, advertencias y resultados claramente separados.</p>
         </div>
 
-        <div class="lab-grid">
-          <article class="lab-card featured">
-            <div class="card-topline">
-              <span class="status beta">Beta inicial</span>
-              <span class="card-index">01</span>
-            </div>
-            <div class="lab-icon electrophysiology" aria-hidden="true"><span></span></div>
-            <p class="lab-domain">Electrofisiología</p>
-            <h3>Electrophysiology Lab</h3>
-            <p>
-              Importación local, visualización, validación de señales y base modular para potenciales de campo,
-              current clamp, voltage clamp y farmacología temporal.
-            </p>
-            <ul>
-              <li>XLSX, XLS y CSV en el navegador</li>
-              <li>Control de calidad reproducible</li>
-              <li>Exportación de resultados y configuración</li>
-            </ul>
-            <a class="card-link" href="apps/electrophysiology-lab/">Abrir laboratorio <span>→</span></a>
-          </article>
+        <div class="lab-track analyze-track">
+          <div class="track-heading">
+            <div><p class="eyebrow" data-i18n="portal.analyze.eyebrow">Datos experimentales</p><h3 data-i18n="portal.analyze.title">Analizar</h3></div>
+            <p data-i18n="portal.analyze.description">Importa registros reales, revisa cada decisión y conserva una salida reproducible.</p>
+          </div>
+          <div class="lab-grid analysis-grid">
+            <article class="lab-card featured">
+              <div class="card-topline"><span class="status beta" data-i18n="portal.status.beta">Beta inicial</span><span class="card-index">01</span></div>
+              <div class="lab-icon electrophysiology" aria-hidden="true"><span></span></div>
+              <p class="lab-domain" data-i18n="portal.ephys.domain">Electrofisiología · análisis</p>
+              <h3>Electrophysiology Lab</h3>
+              <p data-i18n="portal.ephys.description">Importación local, visualización y validación de potenciales de campo con revisión manual, control de calidad y exportación trazable.</p>
+              <ul><li data-i18n="portal.ephys.item1">XLSX, XLS y CSV en el navegador</li><li data-i18n="portal.ephys.item2">Control de calidad reproducible</li><li data-i18n="portal.ephys.item3">Exportación de resultados y configuración</li></ul>
+              <a class="card-link" href="apps/electrophysiology-lab/"><span data-i18n="portal.ephys.open">Abrir análisis</span><span>→</span></a>
+            </article>
+          </div>
+        </div>
 
-          <article class="lab-card">
-            <div class="card-topline">
-              <span class="status ready">Disponible</span>
-              <span class="card-index">02</span>
-            </div>
-            <div class="lab-icon cell" aria-hidden="true"><span></span></div>
-            <p class="lab-domain">Neuroanatomía</p>
-            <h3>NeuroCell Explorer</h3>
-            <p>
-              Atlas 3D de células del sistema nervioso con reconstrucciones SWC, procedencia científica y modos
-              estudiante y docente.
-            </p>
-            <ul>
-              <li>Morfologías de NeuroMorpho.Org</li>
-              <li>Anatomía, conectividad, función y clínica</li>
-              <li>Exploración tridimensional</li>
-            </ul>
-            <a class="card-link" href="apps/neurocell-explorer/">Abrir explorador <span>→</span></a>
-          </article>
+        <div class="lab-track learn-track">
+          <div class="track-heading">
+            <div><p class="eyebrow" data-i18n="portal.learn.eyebrow">Simulación y docencia</p><h3 data-i18n="portal.learn.title">Aprender</h3></div>
+            <p data-i18n="portal.learn.description">Practica con escenarios sintéticos, tutoría local y objetivos de aprendizaje explícitos.</p>
+          </div>
+          <div class="lab-grid learning-grid">
+            <article class="lab-card">
+              <div class="card-topline"><span class="status experimental" data-i18n="portal.status.experimental">Experimental</span><span class="card-index">02</span></div>
+              <div class="lab-icon psp" aria-hidden="true"><span></span></div>
+              <p class="lab-domain" data-i18n="portal.psp.domain">Current clamp · docencia</p><h3>PSP Lab</h3>
+              <p data-i18n="portal.psp.description">Retos sintéticos reproducibles para reconocer respuestas evocadas, medir su dirección y pico, y separar la descripción eléctrica de la interpretación fisiológica.</p>
+              <ul><li data-i18n="portal.psp.item1">Modos estudiante y docente</li><li data-i18n="portal.psp.item2">Tutor local con pistas graduadas</li><li data-i18n="portal.psp.item3">Verdad conocida y control de calidad</li></ul>
+              <a class="card-link" href="apps/psp-lab/"><span data-i18n="portal.psp.open">Abrir PSP Lab</span><span>→</span></a>
+            </article>
 
-          <article class="lab-card">
-            <div class="card-topline">
-              <span class="status external">Proyecto asociado</span>
-              <span class="card-index">03</span>
-            </div>
-            <div class="lab-icon topology" aria-hidden="true"><span></span></div>
-            <p class="lab-domain">Topología y psicoanálisis</p>
-            <h3>Topological Lab</h3>
-            <p>
-              Exploración interactiva del nudo borromeo, los registros RSI y otros objetos topológicos utilizados en
-              la enseñanza del pensamiento lacaniano.
-            </p>
-            <ul>
-              <li>Nudo Borromeo interactivo</li>
-              <li>Recorrido conceptual guiado</li>
-              <li>Integración completa planificada</li>
-            </ul>
-            <a class="card-link" href="https://github.com/tf6vwzpyyv-arch/nudo-borromeo">
-              Ver proyecto <span>↗</span>
-            </a>
-          </article>
+            <article class="lab-card">
+              <div class="card-topline"><span class="status ready" data-i18n="portal.status.ready">Disponible</span><span class="card-index">03</span></div>
+              <div class="lab-icon cell" aria-hidden="true"><span></span></div>
+              <p class="lab-domain" data-i18n="portal.cell.domain">Neuroanatomía</p><h3>NeuroCell Explorer</h3>
+              <p data-i18n="portal.cell.description">Atlas 3D de células del sistema nervioso con reconstrucciones SWC, procedencia científica y modos estudiante y docente.</p>
+              <ul><li data-i18n="portal.cell.item1">Morfologías de NeuroMorpho.Org</li><li data-i18n="portal.cell.item2">Anatomía, conectividad, función y clínica</li><li data-i18n="portal.cell.item3">Exploración tridimensional</li></ul>
+              <a class="card-link" href="apps/neurocell-explorer/"><span data-i18n="portal.cell.open">Abrir explorador</span><span>→</span></a>
+            </article>
+
+            <article class="lab-card">
+              <div class="card-topline"><span class="status external" data-i18n="portal.status.external">Proyecto asociado</span><span class="card-index">04</span></div>
+              <div class="lab-icon topology" aria-hidden="true"><span></span></div>
+              <p class="lab-domain" data-i18n="portal.topology.domain">Topología y psicoanálisis</p><h3>Topological Lab</h3>
+              <p data-i18n="portal.topology.description">Exploración interactiva del nudo borromeo, los registros RSI y otros objetos topológicos usados en la enseñanza del pensamiento lacaniano.</p>
+              <ul><li data-i18n="portal.topology.item1">Nudo Borromeo interactivo</li><li data-i18n="portal.topology.item2">Recorrido conceptual guiado</li><li data-i18n="portal.topology.item3">Integración completa planificada</li></ul>
+              <a class="card-link" href="https://github.com/tf6vwzpyyv-arch/nudo-borromeo"><span data-i18n="portal.topology.open">Ver proyecto</span><span>↗</span></a>
+            </article>
+          </div>
         </div>
       </section>
 
       <section id="principios" class="principles" aria-labelledby="principles-title">
         <div>
-          <p class="eyebrow">Criterios de la plataforma</p>
-          <h2 id="principles-title">Ciencia visible, decisiones trazables.</h2>
+          <p class="eyebrow" data-i18n="portal.principles.eyebrow">Criterios de la plataforma</p>
+          <h2 id="principles-title" data-i18n="portal.principles.title">Ciencia visible, decisiones trazables.</h2>
         </div>
         <div class="principle-grid">
           <article>
             <span>01</span>
-            <h3>Privacidad local</h3>
-            <p>Los archivos seleccionados se procesan en el dispositivo y no se envían a un servidor de Simu-LAB.</p>
+            <h3 data-i18n="portal.principles.local.title">Privacidad local</h3>
+            <p data-i18n="portal.principles.local.text">Los archivos seleccionados se procesan en el dispositivo y no se envían a un servidor de Simu-LAB.</p>
           </article>
           <article>
             <span>02</span>
-            <h3>Procedencia</h3>
-            <p>Las fuentes, parámetros, simplificaciones y transformaciones deben permanecer disponibles para revisión.</p>
+            <h3 data-i18n="portal.principles.provenance.title">Procedencia</h3>
+            <p data-i18n="portal.principles.provenance.text">Las fuentes, parámetros, simplificaciones y transformaciones deben permanecer disponibles para revisión.</p>
           </article>
           <article>
             <span>03</span>
-            <h3>Reproducibilidad</h3>
-            <p>La configuración puede exportarse junto con métricas, banderas de calidad y motivos de exclusión.</p>
+            <h3 data-i18n="portal.principles.repro.title">Reproducibilidad</h3>
+            <p data-i18n="portal.principles.repro.text">La configuración puede exportarse junto con métricas, banderas de calidad y motivos de exclusión.</p>
           </article>
         </div>
       </section>
@@ -171,12 +165,14 @@
     <footer>
       <div>
         <strong>Simu-LAB</strong>
-        <p>Plataforma abierta de NeuroPsicoLocos para docencia, investigación y visualización científica.</p>
+        <p data-i18n="portal.footer.text">Plataforma abierta de NeuroPsicoLocos para docencia, investigación y visualización científica.</p>
       </div>
       <div class="footer-links">
-        <a href="mailto:admin@neuropsicolocos.com">Contacto</a>
-        <a href="https://github.com/NeuroPsicoLocos/NeuroLab">Código fuente</a>
+        <a href="mailto:admin@neuropsicolocos.com" data-i18n="portal.footer.contact">Contacto</a>
+        <a href="https://github.com/NeuroPsicoLocos/NeuroLab" data-i18n="portal.footer.source">Código fuente</a>
       </div>
     </footer>
+    <script defer src="shared/i18n.js?v=20260802-1"></script>
+    <script defer src="scripts/portal.js?v=20260802-1"></script>
   </body>
 </html>
