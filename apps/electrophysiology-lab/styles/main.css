@@ -140,9 +140,7 @@ summary { color: var(--teal); font-size: .78rem; font-weight: 750; cursor: point
 .toggle-row { margin-bottom: 14px; display: flex; grid-template-columns: auto 1fr; align-items: center; gap: 9px; }
 .toggle-row input { width: 17px; height: 17px; margin: 0; accent-color: var(--teal); }
 .window-grid { margin-top: 12px; display: grid; grid-template-columns: minmax(105px, 1fr) 74px 74px; gap: 7px; align-items: center; }
-.window-grid::before { content: "Ventana"; }
-.window-grid::after { content: "Inicio    Fin"; grid-column: 2 / 4; white-space: pre; }
-.window-grid::before, .window-grid::after { color: var(--muted); font-size: .64rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.window-grid .window-grid-header { color: var(--muted); font-size: .64rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
 .window-grid span { color: #41504f; font-size: .7rem; font-weight: 700; }
 .window-grid input { min-width: 0; min-height: 35px; }
 .window-help { margin-top: 8px; display: block; color: var(--muted); font-size: .68rem; line-height: 1.4; }
