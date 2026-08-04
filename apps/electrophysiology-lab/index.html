@@ -150,6 +150,9 @@
                 <details>
                   <summary data-i18n="ephys.pops.windows">Ventanas fisiológicas del perfil POPS</summary>
                   <div class="window-grid">
+                    <span class="window-grid-header" data-i18n="ephys.pops.windowColumn">Ventana</span>
+                    <span class="window-grid-header" data-i18n="ephys.pops.startColumn">Inicio</span>
+                    <span class="window-grid-header" data-i18n="ephys.pops.endColumn">Fin</span>
                     <span data-i18n="ephys.pops.p1Window">P1 tras estímulo</span><input id="p1-start" type="number" step="0.1" value="3" /><input id="p1-end" type="number" step="0.1" value="10" />
                     <span data-i18n="ephys.pops.p2Window">P2 tras P1</span><input id="p2-start" type="number" step="0.1" value="0" /><input id="p2-end" type="number" step="0.1" value="10" />
                     <span data-i18n="ephys.pops.p3Window">P3 tras P2</span><input id="p3-start" type="number" step="0.1" value="2" /><input id="p3-end" type="number" step="0.1" value="8" />
@@ -207,11 +210,11 @@
                 <h2 id="point-editor-title" data-i18n="ephys.correction.title">Ajustar P1 · P2 · P3</h2>
               </div>
               <label><span data-i18n="ephys.event.label">Evento</span>
-                <select id="correction-event" aria-label="Evento POPS para corregir"></select>
+                <select id="correction-event" aria-label="Evento POPS para corregir" data-i18n-aria-label="ephys.correction.eventAria"></select>
               </label>
             </div>
             <div class="point-editor-controls">
-              <div class="point-choice" role="group" aria-label="Punto POPS para corregir">
+              <div class="point-choice" role="group" aria-label="Punto POPS para corregir" data-i18n-aria-label="ephys.correction.pointAria">
                 <button type="button" data-point="p1">P1</button>
                 <button type="button" data-point="p2">P2</button>
                 <button type="button" data-point="p3">P3</button>

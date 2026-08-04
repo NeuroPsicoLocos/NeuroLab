@@ -32,6 +32,8 @@ El perfil POPS reproduce el algoritmo histórico del proyecto y hace visibles su
 
 La evaluación con personas usuarias y registros reales se organiza mediante el [protocolo de validación piloto](docs/electrophysiology/PILOT_VALIDATION.md) y el formulario estructurado de GitHub Issues. No deben adjuntarse datos identificables ni registros privados.
 
+Para compartir la beta con nuevos revisores puede utilizarse la [guía rápida bilingüe](docs/electrophysiology/REVIEWER_QUICKSTART.md), que resume una prueba sintética de 10–15 minutos y enlaza el formulario de reporte.
+
 La [especificación de current clamp](docs/electrophysiology/CURRENT_CLAMP_SPEC.md) separa dirección eléctrica, evento medido e interpretación EPSP/IPSP, y define metadatos, QC, métricas y pruebas requeridas.
 
 ### PSP Lab (experimental)
