@@ -1,5 +1,17 @@
 # Revisión de integración de Médula
 
+## Lesiones educativas, versión 11.0
+
+- Cinco zonas de selección y cuatro patrones T3: hemimédula derecha/izquierda, columnas posteriores, anterior y comisura blanca anterior. Los casos son ficticios. El área coral no es una segmentación de lesión ni un territorio vascular medido.
+- Datos y reglas explícitas de lateralidad en `lesion-content.js`; SVG en `lesion-geometry.js`, controles en `lesion-page.js` y estilos en `lesions.css`. Los tractos reutilizan los territorios T3 del atlas, recortados a blanca. Se revisó su correspondencia visual cualitativa con la lámina y el canal.
+- Las dos hemimédulas conservan la regla de déficit motor y de columnas posteriores ipsilateral, con termoalgésico contralateral y comienzo típico uno o dos segmentos más abajo. El patrón comisural es bilateral segmentario y se diferencia del síndrome central traumático.
+- Los cinco casos se contestaron correctamente. Una respuesta incorrecta mostró la explicación y marcó la correcta. Cambiar de caso, reiniciar y salir de docente sin respuesta previa ocultan las vías y la ficha. En docente se muestran y ocultan sin contestar.
+- Enter y Espacio seleccionan puntos del SVG; la comisura se acerca a 4×. Cambiar de caso restablece el encuadre. Las zonas resaltadas mantienen el lado anatómico del sujeto.
+- Lesiones se revisó a 336, 390, 900 y 1440 px sin desbordamiento horizontal, incluyendo una respuesta visible y su tabla. Los botones móviles de ida al caso y vuelta al corte trasladan el foco y el encuadre inmediatamente.
+- Las selecciones previas de tractos, el corte S3 y la lámina de meninges siguen funcionando. No se registraron errores ni advertencias de consola durante el recorrido funcional.
+- Pasaron 81 pruebas (seis nuevas sobre lateralidad, vías y estado), 26 módulos del atlas, 68 archivos JS/mjs y los dos bundles deterministas.
+- Fuentes universitarias y artículos clínicos verificados y enlazados en las fichas. Los casos ilustran patrones establecidos; no son una herramienta diagnóstica ni una estimación de gravedad, pronóstico, etiología o déficits autonómicos. No se ha realizado validación clínica independiente.
+
 Fecha: 3 de octubre de 2026. Módulo: `apps/medula-atlas/`.
 
 ## Cortes con tejido realista, versión 10.0

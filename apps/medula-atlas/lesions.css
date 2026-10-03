@@ -1,0 +1,67 @@
+/* Patrones, caso y explicación separados para discusión sin adelantar respuestas. */
+.lesion-heading { margin: 36px 0 26px; max-width: 920px; }
+.lesion-heading h1 { font-family: Georgia,serif; font-size: clamp(32px,4vw,49px); margin: 10px 0; letter-spacing: -.04em; }
+.lesion-heading p { color: var(--muted); line-height: 1.7; }
+.lesion-layout { display: grid; grid-template-columns: minmax(0,1.05fr) minmax(0,1fr); gap: 22px; align-items: start; }
+.lesion-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; min-width: 0; }
+.lesion-card h2 { font-size: 22px; margin: 12px 0 18px; }
+.lesion-zones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.lesion-zones button { display: flex; gap: 9px; text-align: left; align-items: center; background: transparent; border: 1px solid var(--line); border-radius: 9px; padding: 11px; font-size: 13px; line-height: 1.4; }
+.lesion-zones button span { font-weight: 700; color: var(--teal); }
+.lesion-zones button[aria-pressed=true] { background: var(--teal-pale); border-color: var(--teal); }
+#lesion-svg { display: block; width: 100%; height: auto; margin-top: 14px; border-radius: 12px; background: white; }
+#lesion-cut-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+#lesion-cut-tools output { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.lesion-side-label { text-anchor: middle; font-size: 10px; fill: var(--muted); letter-spacing: .7px; }
+.lesion-territory { fill: var(--coral); fill-opacity: .28; stroke: var(--coral); stroke-width: 1.5; }
+.lesion-affected { fill: #b76348; fill-opacity: .62; stroke: #935039; stroke-width: 4; }
+.lesion-spared { fill: #2e8a7c; fill-opacity: .35; stroke: #2b6d62; stroke-width: 4; }
+.lesion-commissure ellipse { fill: #b76348; fill-opacity: .65; stroke: #935039; }
+.lesion-commissure path { fill: none; stroke: #fffefa; stroke-width: 1.5; }
+.lesion-pin { cursor: pointer; }
+.lesion-pin-hit { fill: transparent; r: calc(27px / var(--cut-zoom,1)); }
+.lesion-pin-circle { fill: white; stroke: var(--teal); stroke-width: 2; vector-effect: non-scaling-stroke; r: calc(15px / var(--cut-zoom,1)); }
+.lesion-pin text { fill: var(--teal); text-anchor: middle; dominant-baseline: central; font-size: calc(12px / var(--cut-zoom,1)); font-weight: 700; pointer-events: none; }
+.lesion-pin[aria-pressed=true] .lesion-pin-circle { fill: var(--teal); }
+.lesion-pin[aria-pressed=true] text { fill: white; }
+.lesion-pin:hover .lesion-pin-circle,.lesion-pin:focus .lesion-pin-circle { stroke: var(--amber); stroke-width: 3; }
+.lesion-caption,.lesion-limit,.lesion-pending { font-size: 13px; color: var(--muted); line-height: 1.65; }
+.lesion-key { display: flex; flex-wrap: wrap; gap: 15px; font-size: 12px; margin-top: 14px; }
+.lesion-key span::before { content: ''; display: inline-block; width: 10px; height: 10px; margin-right: 6px; background: #b76348; border-radius: 50%; }
+.lesion-key span:last-child::before { background: #2e8a7c; }
+#lesion-case { line-height: 1.7; }
+#lesion-question { font-size: 19px; line-height: 1.5; }
+.lesion-options { display: grid; gap: 12px; }
+.lesion-options .quiz-option { display: flex; gap: 12px; line-height: 1.55; align-items: start; }
+.lesion-option-letter { color: var(--teal); font-weight: 700; }
+.lesion-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.lesion-feedback { margin-top: 20px; background: var(--teal-pale); padding: 15px; border-radius: 10px; line-height: 1.7; }
+.lesion-teacher-guide { margin-top: 20px; padding: 16px; border-left: 3px solid var(--amber); background: #faf3e8; line-height: 1.7; }
+.lesion-teacher-guide h3 { margin: 0; font-size: 15px; }
+.lesion-teacher-guide p { margin-bottom: 0; }
+.lesion-explanation { grid-column: 1 / -1; }
+.lesion-answer-heading p { line-height: 1.7; max-width: 940px; }
+.lesion-table-wrap { overflow-x: auto; margin-bottom: 20px; }
+.lesion-table-wrap table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.lesion-table-wrap caption { text-align: left; font-weight: 700; padding: 10px 0; }
+.lesion-table-wrap th,.lesion-table-wrap td { padding: 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; line-height: 1.6; }
+.lesion-table-wrap thead { background: var(--teal-pale); }
+.lesion-notes { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+.lesion-pathway-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; border-top: 1px solid var(--line); padding-top: 20px; font-size: 14px; line-height: 1.65; }
+.lesion-pathway-list h3 { grid-column: 1 / -1; margin: 0; }
+.lesion-limit { margin-top: 22px; max-width: 1000px; }
+.lesion-mobile { display: none; }
+@media(max-width: 900px) { .lesion-layout { grid-template-columns: 1fr; } .lesion-mobile { display: inline-block; margin-top: 12px; } }
+@media(max-width: 520px) {
+  .lesion-card { padding: 17px; }
+  .lesion-heading { margin-top: 24px; }
+  .lesion-notes,.lesion-pathway-list { grid-template-columns: 1fr; }
+  .lesion-zones { grid-template-columns: 1fr; }
+  .lesion-table-wrap th,.lesion-table-wrap td { padding: 8px; font-size: 12px; overflow-wrap: anywhere; }
+}
+@media print {
+  .lesion-zones,.lesion-actions,#lesion-cut-tools,.lesion-teacher-guide { display: none!important; }
+  .lesion-layout,.lesion-notes { display: block; }
+  .lesion-card { break-inside: avoid; margin-bottom: 16px; }
+  #lesion-svg { max-height: 400px; }
+}
