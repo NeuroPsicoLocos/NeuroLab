@@ -2,6 +2,17 @@
 
 Fecha: 3 de octubre de 2026. Módulo: `apps/medula-atlas/`.
 
+## Láminas anatómicas, versión 7.0
+
+- Pasaron las 67 pruebas del repositorio, la sintaxis de los 17 módulos del atlas y del resto del repositorio, y la verificación de los dos bundles deterministas.
+- Dos PNG con volumen y textura: vista longitudinal de médula y corte de meninges/raíces. El manifiesto conserva prompts, corrección del saco dural, revisión visual, dimensiones y hashes. No contienen marcas de agua.
+- Se seleccionaron los cinco puntos regionales y las ocho estructuras de la lámina transversal. Cada punto mostró la ficha correspondiente; la lista y el mapa conservaron la misma selección.
+- Se alternaron ambas representaciones de cada panel. Enter en el mapa regional y espacio en el mapa de cubiertas actualizaron las fichas, y al volver a la lámina permanecieron seleccionados Lumbar y Ganglio de la raíz dorsal.
+- Las dos imágenes cargaron completas y no hubo desbordamiento horizontal a 336, 390, 900 y 1440 px. Se inspeccionaron las láminas en escritorio y móvil. Los puntos de dura y aracnoides se separaron para su lectura móvil.
+- No se registraron errores ni advertencias de consola durante este recorrido. La lógica de error de carga ofrece el mapa de estudio como alternativa.
+
+Las salidas nerviosas de la lámina longitudinal son representativas; los 31 pares se estudian en el mapa SVG. Los puntos no delimitan segmentos exactos. El corte amplía separaciones y espesores, usa textura artística y no identifica un nivel medular específico. Son ilustraciones generadas con IA, identificadas como tales; la revisión no constituye validación anatómica independiente.
+
 ## Ampliación anatómica, versión 6.0
 
 - Pasaron las 67 pruebas del repositorio, la sintaxis de JavaScript y los dos bundles deterministas. Las cuatro pruebas nuevas verifican los recuentos regionales y sus 31 pares, el descenso de raíces inferiores, las fuentes de las fichas y las claves de las doce preguntas.

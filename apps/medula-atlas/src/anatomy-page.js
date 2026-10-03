@@ -1,4 +1,5 @@
 import { regions, coverings, anatomySources, buildSpinalSegments } from './anatomy-content.js?v=6';
+import { anatomyIllustrations } from './anatomy-illustrations.js?v=7';
 
 const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const ns = 'http://www.w3.org/2000/svg';
@@ -9,6 +10,30 @@ export function setupAnatomyPage() {
   const layerMap=document.querySelector('#covering-map');
   const diagramButton=(id,label,content,attribute)=>`<g ${attribute}="${id}" role="button" tabindex="0" aria-label="${escape(label)}" aria-pressed="false">${content}</g>`;
   const segments=buildSpinalSegments();
+  // Una lámina con volumen y un mapa con recuentos comparten la misma selección.
+  for (const [key,items,attribute] of [['regions',regions,'data-region'],['coverings',coverings,'data-covering']]) {
+    const plate=anatomyIllustrations[key];
+    const frame=document.querySelector(`#${key}-illustration`);
+    const leaders=[...plate.points.filter(p=>p.labelX),...(plate.landmarks||[])];
+    frame.innerHTML=`<img src="${plate.image}" width="${plate.width}" height="${plate.height}" alt="${escape(plate.alt)}" decoding="async">
+      <svg class="anatomy-leaders" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${leaders.map(p=>`<path d="M${p.x} ${p.y}L${p.labelX} ${p.labelY}"/><circle cx="${p.x}" cy="${p.y}" r=".7"/>`).join('')}</svg>
+      ${plate.points.map((p,index)=>{const item=items.find(i=>i.id===p.id);return `<button class="anatomy-pin ${key==='regions'?'region-pin':'covering-pin'}" ${attribute}="${p.id}" aria-label="${escape(item.name)} en la lámina" aria-pressed="false" title="${escape(item.name)}" style="--pin-x:${p.labelX||p.x}%;--pin-y:${p.labelY||p.y}%;--pin-color:${item.color}">${key==='regions'?escape(item.name):`<span aria-hidden="true">${index+1}</span>`}</button>`;}).join('')}
+      ${(plate.landmarks||[]).map(p=>`<span class="anatomy-landmark" style="left:${p.labelX}%;top:${p.labelY}%">${p.name}</span>`).join('')}`;
+    document.querySelector(`#${key}-plate-caption`).textContent=plate.caption;
+    document.querySelector(`#${key}-plate-fullsize`).href=plate.image;
+    frame.querySelector('img').addEventListener('error',()=>{
+      const card=frame.closest('.anatomy-card');
+      card.querySelector('[data-anatomy-view="plate"]').disabled=true;
+      card.querySelector('[data-anatomy-view="map"]').click();
+    });
+  }
+  document.querySelectorAll('[data-anatomy-view]').forEach(button=>button.addEventListener('click',()=>{
+    const card=button.closest('.anatomy-card');
+    card.querySelectorAll('[data-anatomy-view]').forEach(control=>{
+      const active=control===button;control.classList.toggle('active',active);control.setAttribute('aria-pressed',active);
+    });
+    card.querySelectorAll('[data-anatomy-panel]').forEach(panel=>panel.hidden=panel.dataset.anatomyPanel!==button.dataset.anatomyView);
+  }));
   let vertebrae='';
   for(const [prefix,count,start,step] of [['C',7,64,18],['T',12,194,20],['L',5,440,31]]) {
     for(let i=0;i<count;i++) {
@@ -44,7 +69,7 @@ export function setupAnatomyPage() {
     ${diagramButton('spinalnerve','Nervio espinal y sus ramos',`<path d="M434 245H470M470 245Q487 234 501 206M470 245Q491 259 523 274" class="root-stroke mixed"/>`,'data-covering')}
     <text x="337" y="141" class="diagram-note">Raíz dorsal</text><text x="373" y="158" class="diagram-note">Ganglio</text><text x="332" y="343" class="diagram-note">Raíz ventral</text><text x="448" y="298" class="diagram-note">Nervio mixto</text>
     <text x="483" y="193" class="diagram-note">Ramo</text><text x="483" y="205" class="diagram-note">posterior</text><text x="483" y="324" class="diagram-note">Ramo anterior</text>`;
-  document.querySelector('#covering-options').innerHTML=coverings.map(c=>`<button data-covering="${c.id}" aria-pressed="false"><span class="anatomy-swatch" style="background:${c.color}"></span>${c.name}</button>`).join('');
+  document.querySelector('#covering-options').innerHTML=coverings.map((c,index)=>`<button data-covering="${c.id}" aria-pressed="false"><span class="anatomy-key" style="--pin-color:${c.color}" aria-hidden="true">${index+1}</span>${c.name}</button>`).join('');
 
   function detail(host,item) {
     host.style.borderTopColor=item.color;
@@ -57,6 +82,8 @@ export function setupAnatomyPage() {
       button.classList.toggle('selected',active);button.setAttribute('aria-pressed',active);
     });
     if(attribute==='data-region') document.querySelectorAll('[data-region-visual]').forEach(group=>group.classList.toggle('region-muted',group.dataset.regionVisual!==id));
+    const status=document.querySelector(attribute==='data-region'?'#regions-plate-selection':'#coverings-plate-selection');
+    status.textContent=`${item.name}${item.range?` · ${item.range}`:''}`;
     detail(host,item);
   }
   for(const [attribute,items,host] of [['data-region',regions,document.querySelector('#region-detail')],['data-covering',coverings,document.querySelector('#covering-detail')]]) {
