@@ -1,4 +1,4 @@
-# Médula · Atlas interactivo (versión 7.0)
+# Médula · Atlas interactivo (versión 8.0)
 
 Explorador educativo de la médula espinal, su protección vertebral y sus principales vías. Hecho con HTML, CSS y JavaScript, sin framework ni servidor de aplicación. Three.js se utiliza únicamente para el modelo 3D y está incluido localmente.
 
@@ -35,6 +35,8 @@ Si abres `index.html` directamente con `file://`, aparece una guía de apertura.
 - Corte transversal con diez vías bilaterales y selección por clic, toque o teclado.
 - Cuatro láminas regeneradas a partir de las referencias aportadas: vías, continuidad longitudinal, sustancia gris y raíces, y relaciones entre vértebras, meninges y médula.
 - Sección «Sustancia gris» con un esquema regional, histología comparativa de las láminas I–V y enlaces a microscopía virtual. Cada recurso indica su técnica, especie y fuente cuando esos datos están disponibles.
+- Comparador de cortes C6, T3, L4 y S3, con morfología diferente, astas y núcleos seleccionables y un modo para estudiar las diez láminas de Rexed.
+- Zoom de la selección hasta 4×, con orientación anatómica, retorno a la vista completa y fichas de cinco apartados. Las estructuras disponibles cambian por segmento.
 - Sección «Quiénes somos» con la identidad común de NeuroPsicoLocos / Simu-LAB, contacto, criterios editoriales y accesos a otros módulos. Incluye una descarga de los modelos docentes del encéfalo desmontable procedentes de «3D printer».
 - Fichas con anatomía, conectividad, función, correlación clínica y bibliografía.
 - Filtros de vías sensitivas y motoras y rótulos ocultables para practicar identificación.
@@ -46,7 +48,9 @@ Las vías incluidas son los fascículos grácil y cuneiforme, los tractos cortic
 
 ## Alcance anatómico
 
-El corte representa un segmento medular torácico alto (T3). No es un selector de todos los niveles de la médula. El fascículo cuneiforme está presente en este corte, pero no debería copiarse sin cambios a cortes torácicos bajos o lumbares.
+El mapa de las diez vías en «Explorar» representa un segmento medular torácico alto (T3). El selector de «Sustancia gris» compara cuatro cortes de referencia (C6, T3, L4 y S3) y no modifica ese mapa de tractos. El fascículo cuneiforme está presente en T3, pero no debería copiarse sin cambios a cortes torácicos bajos o lumbares.
+
+Los cuatro cortes de sustancia gris son SVG docentes con forma y proporciones cualitativas diferentes. No representan medidas de área, reconstrucciones histológicas ni un atlas de todos los segmentos. Sus límites coloreados son orientativos. Clarke y el asta lateral simpática se muestran solo en T3 entre estos cortes, y el núcleo parasimpático sacro solo en S3. La lámina IX se dibuja en grupos discontinuos y la X rodea el conducto central, que es una cavidad. Las regiones homólogas conservan la selección al cambiar de nivel; una estructura no disponible se desactiva y se informa el cambio de selección.
 
 T3 se refiere al segmento de médula, no a la vértebra T3. El modelo óseo utiliza T2, T3 y T4 del atlas BodyParts3D; el corte docente se estudia por separado y no establece equivalencia entre niveles medulares y vertebrales. El plano 3D muestra la orientación transversal; el SVG amplía y organiza el contenido para estudiarlo.
 
@@ -68,7 +72,9 @@ Las dos láminas de «Anatomía» son ilustraciones generadas con IA, con fondo 
 
 ## Estudiar la sustancia gris
 
-«Sustancia gris» complementa el mapa de tractos con dos imágenes descargadas bajo licencias abiertas:
+«Sustancia gris» comienza con el comparador interactivo de niveles. Puedes seleccionar una estructura o lámina con clic, toque, Enter o espacio. «Acercar selección» enfoca el lado elegido en el dibujo y «Vista completa» devuelve el corte entero. En móvil, seleccionar una región lleva a su ficha y «Volver al corte» permite continuar. El modo docente añade una actividad de comparación.
+
+La sección también complementa el mapa de tractos con dos imágenes descargadas bajo licencias abiertas:
 
 - Un esquema de regiones del asta posterior, zona intermedia, asta anterior y conducto central, de ExplicitImplicity (Wikimedia Commons, CC BY-SA 3.0). Conserva los rótulos originales en inglés; no delimita todas las láminas I–X.
 - La figura 4 de Veshchitskii, Shkorbatova y Merkulyeva (2022), *Neurochemical atlas of the cat spinal cord*, DOI [10.3389/fnana.2022.1034395](https://doi.org/10.3389/fnana.2022.1034395), CC BY 4.0. Muestra láminas I–V en gato, con paneles de C1 y L5; no representa histología humana de T3.
@@ -90,6 +96,7 @@ medula-atlas/
 ├── illustrations.css        Estilo del corte ilustrado y galería
 ├── info-pages.css           Diseño de sustancia gris y presentación del proyecto
 ├── anatomy.css              Regiones, cubiertas y controles de capas
+├── gray-explorer.css        Comparador, selección y zoom de sustancia gris
 ├── src/
 │   ├── content.js           Tractos, estructuras, preguntas y bibliografía
 │   ├── anatomy-content.js   Regiones, meninges, raíces y sus fuentes
@@ -103,6 +110,9 @@ medula-atlas/
 │   ├── anatomical-bones.js  Carga de mallas locales y normales
 │   ├── model-viewer.js      Diálogo ampliado del mismo visor
 │   ├── gray-resources.js    Imágenes, visores, especies, fuentes y licencias
+│   ├── gray-level-content.js Segmentos, estructuras, láminas y fuentes científicas
+│   ├── gray-level-geometry.js Contornos y territorios SVG docentes
+│   ├── gray-level-explorer.js Estado, selección, fichas y encuadre del corte
 │   ├── project-info.js      Identidad, catálogo, contacto y créditos
 │   ├── info-pages.js        Presentación de las dos nuevas secciones
 │   ├── spine-scene.js       Modelo 3D, cámara, capas y selección
@@ -131,6 +141,8 @@ La presentación de las láminas de «Anatomía» se edita en `src/anatomy-illus
 Para cambiar el texto de las láminas generales, edita `src/illustrations.js`. Los cinco PNG están en `assets/illustrations/`; `generation-manifest.json` conserva los prompts completos, referencias y método de generación. Las referencias originales se conservan en la entrega local independiente y no se sirven desde este repositorio.
 
 Para añadir un recurso de sustancia gris, edita `src/gray-resources.js`. Comprueba su autoría, técnica, especie y condiciones de reutilización antes de copiar la imagen. Si solo se permite consultarla en su web, añade un enlace a `viewers`. El contenido científico se mantiene separado del diseño en `src/info-pages.js` e `info-pages.css`.
+
+El comparador usa tres módulos independientes. `gray-level-content.js` contiene las fichas, referencias y disponibilidad por segmento; `resolveGraySelection()` impide conservar una estructura no representada. `gray-level-geometry.js` contiene la forma de cada corte, los territorios seleccionables y el encuadre. `gray-level-explorer.js` coordina el nivel, el modo de contenido, la selección bilateral, la ficha y el zoom, sin WebGL ni nuevas dependencias. El lienzo usa 600 × 480 unidades de dibujo, sin escala física. Cambia su presentación en `gray-explorer.css`.
 
 La identidad y los accesos se editan en `src/project-info.js`. Se reutilizan NeuroPsicoLocos / Simu-LAB y `admin@neuropsicolocos.com`, documentados en el portal y en NeuroCell Explorer. `people` acepta objetos con `name`, `role` e `institution`; los datos de personas o afiliaciones adicionales se incorporan solo cuando están confirmados. Los bloques vacíos permanecen ocultos.
 
@@ -176,7 +188,7 @@ Conserva la carpeta completa al desplegar: las licencias, los manifiestos, las m
 
 ## Verificación
 
-Desde la carpeta del atlas, `npm run check` comprueba la sintaxis de sus diecisiete archivos JavaScript. Desde la raíz del repositorio, `node --test tests/*.test.mjs` verifica también la tarjeta del portal, las rutas del módulo, sus recursos esenciales y las traducciones del portal. `tests/medula-anatomy.test.mjs` comprueba los 31 pares, los cinco recuentos regionales, el descenso de raíces inferiores, la integridad de las fichas y las claves de las doce preguntas.
+Desde la carpeta del atlas, `npm run check` comprueba la sintaxis de sus veinte archivos JavaScript. Desde la raíz del repositorio, `node --test tests/*.test.mjs` verifica también la tarjeta del portal, las rutas del módulo, sus recursos esenciales y las traducciones del portal. `tests/medula-anatomy.test.mjs` comprueba los 31 pares, los cinco recuentos regionales, el descenso de raíces inferiores, la integridad de las fichas y las claves de las doce preguntas. `tests/medula-gray-levels.test.mjs` comprueba la disponibilidad y continuidad de selección entre segmentos, las fuentes de las fichas y la orientación, proporción y límites del zoom.
 
 La revisión de integración se documenta en [RELEASE_QA.md](../../docs/medula-atlas/RELEASE_QA.md). La evidencia de las versiones anteriores se conserva en la entrega local independiente. No se distribuyen capturas ni dependencias de pruebas dentro del atlas publicado.
 

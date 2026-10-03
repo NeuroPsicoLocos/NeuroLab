@@ -2,6 +2,18 @@
 
 Fecha: 3 de octubre de 2026. Módulo: `apps/medula-atlas/`.
 
+## Niveles y zoom de sustancia gris, versión 8.0
+
+- Pasaron las 72 pruebas del repositorio, la sintaxis de los 20 módulos del atlas y los 60 archivos JavaScript del repositorio, y la verificación de los dos bundles deterministas.
+- Se recorrieron 71 selecciones en el navegador: las estructuras disponibles y las diez láminas en C6, T3, L4 y S3. Cada selección actualizó su ficha de cinco apartados, la lista y el SVG.
+- Clarke y el asta lateral simpática están disponibles en T3; el núcleo parasimpático sacro en S3. Al pasar de Clarke a L4, la selección volvió al asta posterior, se desactivó Clarke y apareció la explicación del cambio.
+- Enter seleccionó II en el lado derecho del sujeto; el zoom indicó ese lado. Espacio seleccionó X y el encuadre cambió a línea media. Se comprobaron el límite de 4×, el retorno al corte completo y el reinicio del zoom al cambiar de segmento.
+- No hubo desbordamiento horizontal a 336, 390, 900 y 1440 px. Se revisaron el corte y las fichas en escritorio y móvil; el retorno móvil deja accesibles los controles de contenido y acercamiento.
+- El modo docente muestra la actividad de comparación. El acceso desde «Anatomía» abre el comparador y lleva el foco a él. Las dos láminas anatómicas anteriores cargaron y el mapa original siguió ofreciendo sus diez vías.
+- No se registraron errores ni advertencias de consola durante el recorrido funcional. Las cinco pruebas nuevas cubren disponibilidad por segmento, selección persistente, referencias y geometría del encuadre.
+
+Son cuatro cortes SVG de referencia, con formas y proporciones cualitativas y límites de Rexed orientativos. No representan medidas de tejido ni todos los segmentos medulares. La comparación de sustancia gris no modifica el corte T3 de las diez vías. Los recursos de histología animal conservan especie, técnica, nivel y licencia.
+
 ## Láminas anatómicas, versión 7.0
 
 - Pasaron las 67 pruebas del repositorio, la sintaxis de los 17 módulos del atlas y del resto del repositorio, y la verificación de los dos bundles deterministas.

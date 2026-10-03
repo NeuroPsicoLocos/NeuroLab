@@ -6,6 +6,7 @@ import { setupModelViewer } from './model-viewer.js?v=4';
 import { setupInfoPages } from './info-pages.js?v=6';
 import { setupAnatomyPage } from './anatomy-page.js?v=7';
 import { coverings } from './anatomy-content.js?v=6';
+import { setupGrayLevelExplorer } from './gray-level-explorer.js?v=8';
 
 const $=selector=>document.querySelector(selector);
 let selected=tracts[0].id,selectedStructure='spinous',filter='all',teacher=false,labels=true,scene=null;
@@ -15,6 +16,7 @@ setupBonePresentation();
 setupModelViewer();
 setupInfoPages();
 setupAnatomyPage();
+setupGrayLevelExplorer();
 $('#model-tissue-options').innerHTML=coverings.map(item=>`<button data-structure="${item.id}" aria-pressed="false">${item.name}</button>`).join('');
 function escape(text){return String(text).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));}
 function sourceLink(id){const source=sources[id];return `<a href="${source.url}" target="_blank" rel="noopener noreferrer">${escape(source.title)} ↗</a>`;}
@@ -98,6 +100,7 @@ $('#teacher-toggle').addEventListener('click',()=>{
   teacher=!teacher;$('#teacher-toggle').setAttribute('aria-pressed',teacher);$('#mode-text').textContent=teacher?'Modo docente':'Modo estudiante';$('#teacher-guide').hidden=!teacher||$('#explore-page').hidden;
   $('#quiz-score').textContent=teacher?'Respuestas visibles al contestar':`${quizScore} aciertos`;
   $('#anatomy-teacher-guide').hidden=!teacher;
+  $('#gray-teacher-guide').hidden=!teacher;
 });
 $('#print-button').addEventListener('click',()=>window.print());
 $('#back-to-map').addEventListener('click',()=>$('#cross-section').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth',block:'start'}));
@@ -113,6 +116,11 @@ function openPage(name){
   history.replaceState(null,'',`${location.pathname}${location.search}#${valid}`);
 }
 document.querySelectorAll('[data-page]').forEach(button=>button.addEventListener('click',()=>openPage(button.dataset.page)));
+$('#open-gray-levels').addEventListener('click',()=>{
+  openPage('gray');
+  $('#gray-level-explorer').scrollIntoView({block:'start'});
+  $('#gray-level-explorer').focus({preventScroll:true});
+});
 window.addEventListener('hashchange',()=>openPage(location.hash.slice(1)));
 $('#source-list').innerHTML=Object.entries(sources).map(([id,source],index)=>`<div class="source-entry"><span>${String(index+1).padStart(2,'0')}</span><div>${sourceLink(id)}<p>${escape(source.institution)}</p></div></div>`).join('');
 
