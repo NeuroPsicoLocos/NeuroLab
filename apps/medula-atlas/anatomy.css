@@ -1,0 +1,65 @@
+/* Anatomía longitudinal y cubiertas: SVG independientes de la GPU. */
+.anatomy-layout { display:grid; grid-template-columns:minmax(320px,.85fr) minmax(420px,1.15fr); gap:24px; align-items:start; }
+.anatomy-card { overflow:hidden; }
+.anatomy-card > header { padding:24px 28px; border-bottom:1px solid var(--line); }
+.anatomy-card h2 { margin:12px 0 8px; font-size:1.4rem; }
+.anatomy-card header p { margin:0; color:var(--muted); line-height:1.65; font-size:.9rem; }
+.anatomy-card svg { display:block; width:100%; height:auto; background:linear-gradient(135deg,#fffefa,#f3f5ee); }
+#region-map { max-height:700px; padding:14px 8px; }
+#covering-map { padding:8px; }
+.anatomy-card svg text { font:11px 'Avenir Next',Avenir,sans-serif; fill:var(--muted); }
+.anatomy-card svg .diagram-heading { font-size:13px; font-weight:700; fill:var(--ink); }
+.anatomy-card svg .diagram-note { font-size:11px; }
+.region-root-lines path { fill:none; stroke-width:1.8; }
+.region-root-lines [data-region-visual] { transition:opacity .2s; }
+.region-muted { opacity:.48; }
+.vertebral-reference rect,.vertebral-reference path { fill:#ded6c2; stroke:#b8ad93; stroke-width:1; }
+.level-guide { fill:none; stroke:var(--teal); stroke-dasharray:4 4; }
+svg [role=button] { cursor:pointer; }
+svg [role=button]:focus-visible { outline:none; filter:drop-shadow(0 0 4px #408fba); }
+svg [data-region].selected rect { stroke:#fffefa; stroke-width:3; }
+svg [data-covering].selected { filter:drop-shadow(0 0 3px #527c79); }
+.root-stroke { stroke-width:6; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+.sensory { stroke:#bc9b59; }.motor { stroke:#c87765; }.mixed { stroke:#888057; }
+.signal-arrow { fill:none; stroke-width:2; }
+.anatomy-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); padding:20px; gap:8px; border-block:1px solid var(--line); }
+#region-options { grid-template-columns:1fr; }
+.anatomy-options button { display:flex; align-items:center; gap:10px; text-align:left; padding:12px; background:transparent; border:1px solid transparent; border-radius:8px; font-size:.85rem; }
+.anatomy-options button:hover { background:var(--teal-pale); }
+.anatomy-options button.selected { border-color:#c8d6cd; background:var(--teal-pale); }
+.anatomy-options button small { display:block; margin-top:3px; color:var(--muted); }
+.anatomy-options button b { margin-left:auto; white-space:nowrap; font-size:.76rem; color:var(--muted); }
+.anatomy-swatch { flex:none; width:10px; height:10px; border-radius:50%; }
+.anatomy-detail { margin:24px; padding:24px 0 0; border-top:3px solid var(--teal); }
+.anatomy-detail h3 { font-family:Georgia,serif; font-size:1.65rem; margin:12px 0 24px; font-weight:500; }
+.anatomy-detail-block { margin:18px 0; }
+.anatomy-detail-block h4 { font-size:.7rem; text-transform:uppercase; letter-spacing:.1em; margin:0 0 8px; }
+.anatomy-detail-block p { color:var(--muted); font-size:.9rem; line-height:1.7; margin:0; }
+.anatomy-detail-block a { display:block; font-size:.8rem; margin:10px 0; }
+.diagram-caption { padding:0 24px; color:var(--muted); font-size:.78rem; line-height:1.7; }
+.anatomy-teacher { margin:24px 0; padding:24px; background:var(--teal-pale); border-radius:var(--radius); }
+.anatomy-teacher p { line-height:1.7; margin-bottom:0; }
+.model-layers { margin-top:14px; border-top:1px solid var(--line); padding-top:12px; font-size:11px; }
+.model-layers summary { cursor:pointer; font-weight:600; margin-bottom:10px; }
+.model-layer-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.model-layer-grid label { display:flex; align-items:center; gap:7px; }
+.model-structure-options { display:flex; flex-wrap:wrap; gap:5px; margin-top:14px; }
+.model-structure-options button { border:1px solid var(--line); background:var(--card); border-radius:6px; padding:7px 9px; font-size:10px; }
+.model-structure-options button.active { border-color:var(--teal); background:var(--teal-pale); }
+.coverings-preset { width:100%; margin-top:12px; font-size:11px; }
+@media(max-width:1100px) { .anatomy-layout { grid-template-columns:1fr 1fr; gap:18px; } }
+@media(max-width:760px) {
+  .anatomy-layout { grid-template-columns:1fr; }
+  .anatomy-card > header { padding:22px; }
+  .anatomy-options { padding:16px; }
+  .anatomy-detail { margin:22px; }
+  #region-map { max-height:680px; }
+  .model-layer-grid { font-size:12px; }
+  .main-nav .nav-btn:last-child { grid-column:1/-1; }
+}
+@media print {
+  .anatomy-options,.anatomy-3d-link { display:none; }
+  .anatomy-layout { display:block; }
+  .anatomy-card { break-inside:avoid; margin:18px 0; }
+  .anatomy-card svg { max-height:450px; }
+}

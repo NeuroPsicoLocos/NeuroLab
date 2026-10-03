@@ -1,17 +1,21 @@
-import { tracts, sources, structures, questions } from './content.js?v=4';
+import { tracts, sources, structures, questions } from './content.js?v=6';
 import { createCrossSection } from './cross-section.js?v=4';
 import { illustrations } from './illustrations.js?v=4';
 import { setupBonePresentation } from './bone-presentation.js?v=4';
 import { setupModelViewer } from './model-viewer.js?v=4';
-import { setupInfoPages } from './info-pages.js?v=5.1';
+import { setupInfoPages } from './info-pages.js?v=6';
+import { setupAnatomyPage } from './anatomy-page.js?v=6';
+import { coverings } from './anatomy-content.js?v=6';
 
 const $=selector=>document.querySelector(selector);
-let selected=tracts[0].id,filter='all',teacher=false,labels=true,scene=null;
+let selected=tracts[0].id,selectedStructure='spinous',filter='all',teacher=false,labels=true,scene=null;
 let quizIndex=0,quizScore=0,answered=false;
 const map=createCrossSection($('#cord-svg'),tracts,id=>selectTract(id,true));
 setupBonePresentation();
 setupModelViewer();
 setupInfoPages();
+setupAnatomyPage();
+$('#model-tissue-options').innerHTML=coverings.map(item=>`<button data-structure="${item.id}" aria-pressed="false">${item.name}</button>`).join('');
 function escape(text){return String(text).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));}
 function sourceLink(id){const source=sources[id];return `<a href="${source.url}" target="_blank" rel="noopener noreferrer">${escape(source.title)} ↗</a>`;}
 
@@ -53,6 +57,7 @@ $('#labels-toggle').addEventListener('click',()=>{
 });
 function selectStructure(id){
   const structure=structures[id];if(!structure)return;
+  selectedStructure=id;
   document.querySelectorAll('[data-structure]').forEach(button=>{const active=button.dataset.structure===id;button.classList.toggle('active',active);button.setAttribute('aria-pressed',active);});
   $('#structure-description').innerHTML=`<strong>${escape(structure.name)}</strong><p>${escape(structure.description)}</p>`;
   $('#model-dialog-description').innerHTML=$('#structure-description').innerHTML;
@@ -62,7 +67,7 @@ document.querySelectorAll('[data-structure]').forEach(button=>button.addEventLis
 document.querySelectorAll('[data-view]').forEach(button=>button.addEventListener('click',()=>{
   scene?.view(button.dataset.view);
   document.querySelectorAll('[data-view]').forEach(item=>{const active=item===button;item.classList.toggle('active',active);item.setAttribute('aria-pressed',active);});
-  $('#view-name').textContent=`Vista ${button.textContent.toLowerCase()}`;
+  $('#view-name').textContent=button.dataset.view==='coverings'?'Vista de cubiertas':`Vista ${button.textContent.toLowerCase()}`;
 }));
 $('#spine-viewport').addEventListener('model-orbit',()=>{
   $('#view-name').textContent='Vista libre';
@@ -74,19 +79,35 @@ for(const [selector,key] of [['#show-bones','bones'],['#show-canal','canal'],['#
   if(key==='plane')$('.plane-label').hidden=!event.target.checked;
 });
 $('.plane-label').hidden=!$('#show-plane').checked;
+document.querySelectorAll('[data-model-layer]').forEach(input=>input.addEventListener('change',()=>scene?.layer(input.dataset.modelLayer,input.checked)));
+function showCoverings(expand=false) {
+  openPage('explore');
+  document.querySelector('[data-bone-presentation="model"]').click();
+  $('#show-bones').checked=false;scene?.bones(false);
+  $('#show-canal').checked=false;scene?.canal(false);
+  $('#show-plane').checked=false;scene?.plane(false);$('.plane-label').hidden=true;
+  document.querySelectorAll('[data-model-layer]').forEach(input=>{input.checked=true;scene?.layer(input.dataset.modelLayer,true);});
+  $('.model-layers').open=true;
+  document.querySelector('[data-view="coverings"]').click();
+  selectStructure('dura');
+  if(expand)$('#expand-model').click();
+}
+$('#coverings-preset').addEventListener('click',()=>showCoverings());
+$('#open-coverings-model').addEventListener('click',()=>showCoverings(true));
 $('#teacher-toggle').addEventListener('click',()=>{
   teacher=!teacher;$('#teacher-toggle').setAttribute('aria-pressed',teacher);$('#mode-text').textContent=teacher?'Modo docente':'Modo estudiante';$('#teacher-guide').hidden=!teacher||$('#explore-page').hidden;
   $('#quiz-score').textContent=teacher?'Respuestas visibles al contestar':`${quizScore} aciertos`;
+  $('#anatomy-teacher-guide').hidden=!teacher;
 });
 $('#print-button').addEventListener('click',()=>window.print());
 $('#back-to-map').addEventListener('click',()=>$('#cross-section').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth',block:'start'}));
 
 /** Navegación local sin rutas de servidor: funciona en cualquier subcarpeta de Pages. */
 function openPage(name){
-  const pages=['explore','plates','gray','practice','sources','about'];
+  const pages=['explore','anatomy','plates','gray','practice','sources','about'];
   const valid=pages.includes(name)?name:'explore';
   for(const page of pages)$(`#${page}-page`).hidden=page!==valid;
-  $('.page-heading').hidden=['gray','about'].includes(valid);
+  $('.page-heading').hidden=['anatomy','gray','about'].includes(valid);
   document.querySelectorAll('[data-page]').forEach(button=>{const active=button.dataset.page===valid;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
   $('#teacher-guide').hidden=!teacher||valid!=='explore';
   history.replaceState(null,'',`${location.pathname}${location.search}#${valid}`);
@@ -147,7 +168,7 @@ $('#quiz-next').addEventListener('click',()=>{
   if(quizIndex<questions.length){renderQuestion();$('#quiz-question').setAttribute('tabindex','-1');$('#quiz-question').focus();return;}
   $('#question-number').textContent='Autoevaluación completa';$('#quiz-score').textContent=`${quizScore} de ${questions.length}`;
   $('#quiz-question').textContent=`${quizScore} de ${questions.length} respuestas correctas`;
-  $('#quiz-options').innerHTML='<p class="tract-summary">Vuelve al mapa y compara las vías que te resultaron más difíciles. La clave es ubicar dónde cruzan.</p><button id="restart-quiz" class="primary-button">Volver a practicar</button>';
+  $('#quiz-options').innerHTML='<p class="tract-summary">Vuelve a los mapas y compara las regiones, raíces, cubiertas y vías que te resultaron más difíciles.</p><button id="restart-quiz" class="primary-button">Volver a practicar</button>';
   $('#quiz-feedback').hidden=true;$('#quiz-next').hidden=true;
   $('#restart-quiz').addEventListener('click',()=>{quizIndex=0;quizScore=0;renderQuestion();});
 });
@@ -156,17 +177,19 @@ renderList();selectTract(selected);selectStructure('spinous');renderQuestion();o
 // La carga 3D es independiente: el corte y las fichas siguen funcionando sin WebGL.
 async function initialize3D(){
   try{
-    const {createSpineScene}=await import('./spine-scene.js?v=4.1');
+    const {createSpineScene}=await import('./spine-scene.js?v=6');
     scene=await createSpineScene($('#spine-viewport'),selectStructure);
+    scene.view(document.querySelector('[data-view].active')?.dataset.view || 'oblique');
     scene.opacity(Number($('#bone-opacity').value));scene.bones($('#show-bones').checked);scene.canal($('#show-canal').checked);scene.plane($('#show-plane').checked);
-    scene.selectTract(tracts.find(item=>item.id===selected));selectStructure('spinous');
+    document.querySelectorAll('[data-model-layer]').forEach(input=>scene.layer(input.dataset.modelLayer,input.checked));
+    scene.selectTract(tracts.find(item=>item.id===selected));selectStructure(selectedStructure);
     window.addEventListener('pagehide',()=>scene.dispose(),{once:true});
   }catch(error){
     // WebGL depende de la GPU del equipo. Fallback accesible y con anatomía útil.
     $('#spine-viewport').querySelector('canvas')?.remove();
     $('#spine-viewport').insertAdjacentHTML('afterbegin',`<svg viewBox="0 0 300 330" role="img" aria-label="Vista superior esquemática de una vértebra"><ellipse cx="150" cy="85" rx="65" ry="38" fill="#dfccaa"/><path d="M100 110L91 176L150 220L209 176L200 110" fill="none" stroke="#dfccaa" stroke-width="18"/><path d="M150 217V280M96 169H57M204 169H243" stroke="#dfccaa" stroke-width="16"/><circle cx="150" cy="165" r="20" fill="#cf8d77"/><text x="150" y="313" text-anchor="middle" font-size="10" fill="#d4e2da">Vista superior esquemática (sin WebGL)</text></svg>`);
     $('#spine-viewport').querySelector('.canvas-loading')?.remove();$('#view-name').textContent='Vista superior 2D';
-    document.querySelectorAll('[data-view],#bone-opacity,#show-bones,#show-canal,#show-plane').forEach(control=>control.disabled=true);
+    document.querySelectorAll('[data-view],[data-model-layer],#coverings-preset,#open-coverings-model,#bone-opacity,#show-bones,#show-canal,#show-plane').forEach(control=>control.disabled=true);
     $('.gesture-hint').textContent='No se pudo cargar el modelo 3D. El corte y las fichas están disponibles.';
     $('#spine-viewport').dataset.fallback='true';
   }

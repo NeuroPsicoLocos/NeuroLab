@@ -1,5 +1,9 @@
 /** Contenido científico independiente del dibujo y de los controles. */
+import { coverings } from './anatomy-content.js?v=6';
 export const sources = {
+  external: { title:'Purves et al. · Anatomía externa de la médula', institution:'Neuroscience, 2.ª edición, NCBI Bookshelf', url:'https://www.ncbi.nlm.nih.gov/books/NBK11160/' },
+  spinalnerves: { title:'OpenStax · Nervios espinales y raíces', institution:'Anatomy and Physiology 2e, sección 13.4', url:'https://openstax.org/books/anatomy-and-physiology-2e/pages/13-4-the-peripheral-nervous-system' },
+  csf: { title:'OpenStax · Meninges y LCR', institution:'Anatomy and Physiology 2e, sección 13.3', url:'https://openstax.org/books/anatomy-and-physiology-2e/pages/13-3-circulation-and-the-central-nervous-system' },
   bodyparts: { title: 'BodyParts3D / Anatomography · Mallas óseas T2–T4', institution: 'Database Center for Life Science (DBCLS). Versión 4.3, CC BY-SA 2.1 Japan. Mitsuhashi et al. (2009), DOI: 10.1093/nar/gkn613.', url: 'https://lifesciencedb.jp/bp3d/info_en/index.html' },
   vertebra: { title: 'OpenStax · La columna vertebral', institution: 'Anatomy and Physiology 2e, sección 7.3', url: 'https://openstax.org/books/anatomy-and-physiology-2e/pages/7-3-the-vertebral-column' },
   columns: { title: 'University of Wisconsin · Spinal cord', institution: 'Material docente de neuroanatomía, organización de los cordones y vías medulares', url: 'https://www.neuroanatomy.wisc.edu/coursebook/webcord.pdf' },
@@ -101,6 +105,7 @@ export const tracts = [
 ];
 
 export const structures = {
+  ...Object.fromEntries(coverings.map(item=>[item.id,{name:item.name,description:`${item.anatomy} ${item.connectivity}`} ])),
   spinous: {name:'Apófisis espinosa',description:'Proyección ósea posterior del arco vertebral. Sirve como punto de inserción para músculos y ligamentos. No forma parte de la médula.'},
   canal: {name:'Canal vertebral',description:'Espacio formado por la continuidad de los forámenes vertebrales. Aloja la médula, sus cubiertas y otras estructuras. La envolvente turquesa marca este espacio, no una pared anatómica.'},
   cord: {name:'Médula espinal',description:'Tejido del sistema nervioso central situado dentro del canal vertebral. La sustancia gris central está rodeada por sustancia blanca con vías ascendentes y descendentes.'},
@@ -112,6 +117,10 @@ export const structures = {
 };
 
 export const questions = [
+  {question:'¿Cuántos pares de nervios espinales hay en la organización habitual?',options:['30: siete cervicales y los restantes','31: ocho cervicales, doce torácicos, cinco lumbares, cinco sacros y uno coccígeo','33, uno por cada pieza vertebral'],correct:1,explanation:'Se cuentan segmentos y pares nerviosos, no vértebras. Hay ocho pares cervicales aunque existan siete vértebras cervicales.'},
+  {question:'¿Dónde se encuentra el ganglio sensitivo de un nervio espinal?',options:['En la raíz dorsal','En la raíz ventral','En ambos ramos, siempre'],correct:0,explanation:'El ganglio de la raíz dorsal aloja somas sensitivos. La raíz ventral no tiene un ganglio sensitivo equivalente.'},
+  {question:'¿Qué cubiertas delimitan el espacio subaracnoideo con LCR?',options:['Hueso y duramadre','Duramadre y aracnoides','Aracnoides y piamadre'],correct:2,explanation:'El espacio subaracnoideo está entre aracnoides y piamadre. El espacio epidural está por fuera de la duramadre.'},
+  {question:'¿Qué forma principalmente la cola de caballo?',options:['La continuación de la médula hasta el cóccix','Raíces nerviosas que descienden por debajo del cono medular','Solo el filum terminale'],correct:1,explanation:'La médula termina en el cono, habitualmente cerca de L1–L2 vertebrales en el adulto. Las raíces inferiores continúan descendiendo hacia sus salidas.'},
   {question:'Una lesión medular derecha interrumpe el fascículo grácil. ¿Qué cambio esperas por debajo de la lesión?',options:['Pérdida de vibración y posición consciente a la derecha','Pérdida de dolor y temperatura a la izquierda','Parálisis facial derecha'],correct:0,explanation:'El fascículo grácil todavía no ha cruzado mientras recorre la médula. Su decusación está en el bulbo; por eso el déficit medular es ipsilateral.'},
   {question:'¿Qué tracto se asocia principalmente con dolor y temperatura?',options:['Corticoespinal lateral','Espinotalámico lateral','Fascículo cuneiforme'],correct:1,explanation:'El espinotalámico lateral forma parte del sistema anterolateral. Sus fibras cruzan cerca del nivel medular de entrada.'},
   {question:'¿Dónde cruza la mayoría de las fibras que forman el tracto corticoespinal lateral?',options:['En la comisura blanca anterior de cada segmento','En el cerebelo','En la decusación piramidal del bulbo'],correct:2,explanation:'La mayoría cruza en el bulbo antes de entrar en la médula. Una lesión medular produce por ello debilidad principalmente del mismo lado.'},

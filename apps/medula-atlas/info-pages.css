@@ -1,6 +1,6 @@
 /* Sustancia gris y presentación del proyecto: misma paleta del explorador. */
-/* Seis secciones visibles también en tablet y móvil, sin desbordar la página. */
-.main-nav { gap: 20px; }
+/* Las secciones siguen accesibles también en tablet y móvil. */
+.main-nav { gap: 16px; }
 .info-hero { max-width: 860px; padding: 24px 0 28px; }
 .info-hero h1 { margin: 12px 0; }
 .info-hero > p:last-child { color: var(--muted); font-size: 1.08rem; line-height: 1.7; }

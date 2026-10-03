@@ -1,4 +1,4 @@
-# Médula · Atlas interactivo (versión 5.1)
+# Médula · Atlas interactivo (versión 6.0)
 
 Explorador educativo de la médula espinal, su protección vertebral y sus principales vías. Hecho con HTML, CSS y JavaScript, sin framework ni servidor de aplicación. Three.js se utiliza únicamente para el modelo 3D y está incluido localmente.
 
@@ -25,6 +25,10 @@ Si abres `index.html` directamente con `file://`, aparece una guía de apertura.
 - Modelo 3D con mallas de las vértebras T2, T3 y T4 de BodyParts3D, material mate, grano tenue y sombras. El hueso comienza opaco (0 % de transparencia) y el plano transversal oculto.
 - Vista ampliada que mantiene giro, selección, vistas y controles. Se cierra con «Volver al atlas» o Escape.
 - Vistas oblicua, posterior y superior, transparencia del hueso y visibilidad de capas.
+- Vista «Cubiertas» y acceso «Ver cubiertas y raíces» que oculta el hueso para estudiar duramadre, aracnoides, piamadre, espacio con LCR y nervios. Las capas se pueden ocultar por separado.
+- Selección de raíces dorsal y ventral, ganglio dorsal y nervio mixto, mediante botones o un clic sobre el modelo.
+- Sección «Anatomía» con las cinco regiones medulares, los 31 pares de nervios, cono medular, cola de caballo y filum terminale. Distingue los segmentos medulares de los niveles vertebrales.
+- Esquema transversal interactivo de meninges, LCR, raíces, ganglio, nervio espinal y sus ramos. Sus fichas incluyen anatomía, conectividad, función, clínica y bibliografía.
 - Selección de apófisis espinosa, cuerpo vertebral, canal vertebral y médula. También puedes seleccionar partes del modelo con un clic.
 - Corte transversal con diez vías bilaterales y selección por clic, toque o teclado.
 - Cuatro láminas regeneradas a partir de las referencias aportadas: vías, continuidad longitudinal, sustancia gris y raíces, y relaciones entre vértebras, meninges y médula.
@@ -33,7 +37,7 @@ Si abres `index.html` directamente con `file://`, aparece una guía de apertura.
 - Fichas con anatomía, conectividad, función, correlación clínica y bibliografía.
 - Filtros de vías sensitivas y motoras y rótulos ocultables para practicar identificación.
 - Modo docente con una guía de discusión e impresión de la ficha.
-- Autoevaluación de ocho preguntas, con explicación tanto para aciertos como para errores.
+- Autoevaluación de doce preguntas, con explicación tanto para aciertos como para errores.
 - Diseño para escritorio y móvil. En móvil, seleccionar un tracto lleva a su ficha; el botón «Volver al corte» permite continuar explorando.
 
 Las vías incluidas son los fascículos grácil y cuneiforme, los tractos corticoespinales lateral y anterior, los espinotalámicos lateral y anterior, los espinocerebelosos posterior y anterior, el vestibuloespinal lateral y una representación agrupada de las vías reticuloespinales.
@@ -48,7 +52,9 @@ Las mallas óseas proceden de BodyParts3D / Anatomography 4.3, un atlas de conto
 
 Las zonas coloreadas del corte permiten identificar vías y no representan fronteras histológicas exactas. Las vías se solapan y su distribución cambia según el nivel. Las líneas 3D marcan aproximadamente la ubicación bilateral del tracto elegido; no simulan conducción, decusaciones ni axones individuales.
 
-El modelo 3D omite meninges, raíces nerviosas, vasos, ligamentos, costillas y otras vías. Las láminas complementarias muestran algunas de estas relaciones. La envolvente turquesa señala el espacio del canal vertebral y no representa tejido. El conducto central es la pequeña estructura dentro de la médula, distinta del canal vertebral.
+El modelo 3D incorpora cubiertas y dos salidas nerviosas bilaterales entre las tres vértebras. Las meninges, sus aperturas, espesores, filamentos, ganglios y ramos son esquemáticos, con separaciones ampliadas para estudiar sus relaciones. La posición de las raíces no determina segmentos medulares concretos. El modelo omite vasos, ligamentos, costillas y otras vías. La envolvente turquesa señala el espacio del canal vertebral y no representa tejido. El conducto central es la pequeña estructura dentro de la médula, distinta del canal vertebral.
+
+La vista longitudinal representa ocho pares cervicales, doce torácicos, cinco lumbares, cinco sacros y uno coccígeo. El cono se sitúa aproximadamente junto a L1–L2 vertebrales del adulto; las raíces inferiores continúan como cola de caballo. Las líneas y posiciones comparan estas relaciones, sin proporciones reales ni equivalencias precisas entre cada segmento y una vértebra. No son dermatomas. El LCR se distingue del conducto central y ocupa el espacio subaracnoideo entre aracnoides y piamadre. El ganglio sensitivo está en la raíz dorsal; ambos ramos del nervio espinal son mixtos.
 
 Las nuevas imágenes mantienen un estilo común de ilustración médica con fondo marfil y colores suaves. Son ilustraciones docentes generadas con IA a partir de las cuatro imágenes del usuario. Se revisaron la orientación y las relaciones anatómicas generales; no son una reconstrucción histológica exacta. Las bandas de la sustancia gris no permiten asignar por sí solas las láminas I–X de Rexed. El recorrido longitudinal es conceptual y no identifica cuatro niveles medulares exactos.
 
@@ -79,8 +85,12 @@ medula-atlas/
 ├── styles.css               Diseño, adaptación móvil e impresión
 ├── illustrations.css        Estilo del corte ilustrado y galería
 ├── info-pages.css           Diseño de sustancia gris y presentación del proyecto
+├── anatomy.css              Regiones, cubiertas y controles de capas
 ├── src/
 │   ├── content.js           Tractos, estructuras, preguntas y bibliografía
+│   ├── anatomy-content.js   Regiones, meninges, raíces y sus fuentes
+│   ├── anatomy-page.js      Mapas SVG seleccionables y fichas
+│   ├── spinal-coverings.js  Cubiertas y nervios esquemáticos en Three.js
 │   ├── cross-section.js     Dibujo SVG y selección bilateral
 │   ├── plate-regions.js     Territorios SVG sobre la base ilustrada
 │   ├── illustrations.js     Contenido y fuentes de las cuatro láminas
@@ -107,6 +117,8 @@ medula-atlas/
 ```
 
 Para corregir una descripción, edita el objeto correspondiente de `src/content.js`. Mantén separados los campos `anatomy`, `route`, `crossing`, `function` y `clinical`. Cada vía tiene identificador estable, color, abreviatura y referencias. Las regiones y rótulos del corte ilustrado se editan en `src/plate-regions.js`, sobre un lienzo de 1254 × 1254. La posición `label` conservada en `content.js` orienta la representación 3D.
+
+Las regiones, cubiertas y raíces se editan en `src/anatomy-content.js`, manteniendo sus cinco apartados y referencias. `buildSpinalSegments()` genera los 31 pares del dibujo; sus coordenadas son docentes. `src/anatomy-page.js` dibuja los dos SVG y coordina la selección con clic, toque, Enter o espacio. Funcionan sin WebGL. `src/spinal-coverings.js` construye las superficies y raíces 3D, mientras `src/spine-scene.js` mantiene cámara, iluminación y selección. Cambia el diseño en `anatomy.css`, sin mezclarlo con las descripciones científicas.
 
 Para cambiar el texto de las láminas, edita `src/illustrations.js`. Los cinco PNG están en `assets/illustrations/`; `generation-manifest.json` conserva los prompts completos, referencias y método de generación. Las referencias originales se conservan en la entrega local independiente y no se sirven desde este repositorio.
 
@@ -150,13 +162,13 @@ Las mallas BodyParts3D son © Database Center for Life Science (DBCLS), con lice
 
 ## GitHub Pages
 
-El portal se publica desde `main`, en la raíz del repositorio NeuroPsicoLocos/NeuroLab, bajo el dominio `neurolab.neuropsicolocos.com`. El atlas reside en `apps/medula-atlas/` y usa rutas relativas, recursos locales y navegación con fragmentos (`#explore`, `#plates`, `#gray`, `#practice`, `#sources`, `#about`). No requiere una compilación ni servicios adicionales.
+El portal se publica desde `main`, en la raíz del repositorio NeuroPsicoLocos/NeuroLab, bajo el dominio `neurolab.neuropsicolocos.com`. El atlas reside en `apps/medula-atlas/` y usa rutas relativas, recursos locales y navegación con fragmentos (`#explore`, `#anatomy`, `#plates`, `#gray`, `#practice`, `#sources`, `#about`). No requiere una compilación ni servicios adicionales.
 
 Conserva la carpeta completa al desplegar: las licencias, los manifiestos, las mallas y las imágenes son parte del módulo. No utilices Git LFS para sus recursos, porque GitHub Pages no sirve esos objetos.
 
 ## Verificación
 
-Desde la carpeta del atlas, `npm run check` comprueba la sintaxis de sus trece archivos JavaScript. Desde la raíz del repositorio, `node --test tests/*.test.mjs` verifica también la tarjeta del portal, las rutas del módulo, sus recursos esenciales y las traducciones del portal.
+Desde la carpeta del atlas, `npm run check` comprueba la sintaxis de sus dieciséis archivos JavaScript. Desde la raíz del repositorio, `node --test tests/*.test.mjs` verifica también la tarjeta del portal, las rutas del módulo, sus recursos esenciales y las traducciones del portal. `tests/medula-anatomy.test.mjs` comprueba los 31 pares, los cinco recuentos regionales, el descenso de raíces inferiores, la integridad de las fichas y las claves de las doce preguntas.
 
 La revisión de integración se documenta en [RELEASE_QA.md](../../docs/medula-atlas/RELEASE_QA.md). La evidencia de las versiones anteriores se conserva en la entrega local independiente. No se distribuyen capturas ni dependencias de pruebas dentro del atlas publicado.
 

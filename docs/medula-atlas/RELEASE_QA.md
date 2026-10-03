@@ -1,6 +1,20 @@
 # Revisión de integración de Médula
 
-Fecha: 3 de octubre de 2026. Módulo: `apps/medula-atlas/`, versión 5.1.
+Fecha: 3 de octubre de 2026. Módulo: `apps/medula-atlas/`.
+
+## Ampliación anatómica, versión 6.0
+
+- Pasaron las 67 pruebas del repositorio, la sintaxis de JavaScript y los dos bundles deterministas. Las cuatro pruebas nuevas verifican los recuentos regionales y sus 31 pares, el descenso de raíces inferiores, las fuentes de las fichas y las claves de las doce preguntas.
+- Se seleccionaron las cinco regiones y las ocho estructuras de cubiertas y raíces. Enter y espacio funcionan en los SVG y actualizan sus fichas y selección. Estas vistas no necesitan WebGL.
+- Se probaron los ocho botones de tejidos del visor 3D y la visibilidad independiente de duramadre, aracnoides, piamadre, espacio con LCR y raíces/nervios. Un clic directamente en el ganglio dorsal mostró su descripción con el hueso oculto.
+- La vista de cubiertas oculta hueso, canal y plano, activa las capas y ofrece un acercamiento. Se comprobó también la restitución del hueso y la vista oblicua.
+- El visor ampliado mantiene las raíces dentro de su encuadre móvil. La sección Anatomía no desbordó horizontalmente a 336, 390, 900 y 1440 px.
+- El modo docente muestra su actividad de comparación entre segmentos, vértebras, raíces y meninges. Se completaron las doce preguntas y el resultado mostró `12 de 12`; cada respuesta tuvo explicación.
+- No se registraron errores ni advertencias de consola durante este recorrido en el navegador integrado.
+
+Las cubiertas 3D y sus dos salidas bilaterales son aproximaciones docentes con aperturas y espesores ampliados. La vista longitudinal distingue 31 pares de nervios de la referencia ósea y muestra raíces por debajo del cono; no convierte segmentos en niveles vertebrales exactos. La precisión clínica, la validación con estudiantes y otras GPU quedan fuera de esta revisión. No se incorporaron las capturas de referencia ni se modificaron las mallas óseas.
+
+## Integración inicial, versión 5.1
 
 ## Comprobaciones locales
 

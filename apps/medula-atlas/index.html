@@ -7,11 +7,12 @@
   <meta name="description" content="Explorador educativo de la médula espinal, el canal vertebral, las apófisis espinosas y los tractos medulares.">
   <title>Médula · Atlas interactivo</title>
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./styles.css?v=5.1-portal1">
+  <link rel="stylesheet" href="./styles.css?v=6">
   <link rel="stylesheet" href="./illustrations.css?v=4">
   <script type="importmap">{"imports":{"three":"./assets/vendor/three.module.js"}}</script>
-  <link rel="stylesheet" href="./info-pages.css?v=5.1">
-  <script defer src="./src/start.js?v=5.1"></script>
+  <link rel="stylesheet" href="./info-pages.css?v=6">
+  <link rel="stylesheet" href="./anatomy.css?v=6">
+  <script defer src="./src/start.js?v=6"></script>
 </head>
 <body>
   <a class="skip-link" href="#cross-section">Ir al corte medular</a>
@@ -26,6 +27,7 @@
     </a>
     <nav class="main-nav" aria-label="Secciones">
       <button data-page="explore" class="nav-btn active" aria-current="page">Explorar</button>
+      <button data-page="anatomy" class="nav-btn">Anatomía</button>
       <button data-page="plates" class="nav-btn">Láminas</button>
       <button data-page="gray" class="nav-btn">Sustancia gris</button>
       <button data-page="practice" class="nav-btn">Autoevaluación</button>
@@ -71,15 +73,26 @@
           <span class="plane-label">Plano transversal</span>
         </div>
         <div class="view-buttons" aria-label="Vistas del modelo">
-          <button data-view="oblique" class="active" aria-pressed="true">Oblicua</button><button data-view="posterior" aria-pressed="false">Posterior</button><button data-view="superior" aria-pressed="false">Superior</button>
+          <button data-view="oblique" class="active" aria-pressed="true">Oblicua</button><button data-view="posterior" aria-pressed="false">Posterior</button><button data-view="superior" aria-pressed="false">Superior</button><button data-view="coverings" aria-pressed="false">Cubiertas</button>
         </div>
         <p class="gesture-hint">Arrastra para girar · Pellizca o usa la rueda para acercar</p>
         <div class="bone-controls">
           <label class="range-label" for="bone-opacity">Transparencia del hueso <output id="opacity-value">0 %</output></label>
           <input id="bone-opacity" type="range" min="0" max="100" value="0">
           <div class="checkbox-row"><label><input id="show-bones" type="checkbox" checked> Hueso</label><label><input id="show-canal" type="checkbox" checked> Canal</label><label><input id="show-plane" type="checkbox"> Plano</label></div>
+          <button id="coverings-preset" class="secondary-button coverings-preset">Ver cubiertas y raíces</button>
+          <details class="model-layers"><summary>Meninges y nervios</summary>
+            <div class="model-layer-grid">
+              <label><input data-model-layer="dura" type="checkbox" checked> Duramadre</label>
+              <label><input data-model-layer="arachnoid" type="checkbox" checked> Aracnoides</label>
+              <label><input data-model-layer="pia" type="checkbox" checked> Piamadre</label>
+              <label><input data-model-layer="csf" type="checkbox" checked> Espacio con LCR</label>
+              <label><input data-model-layer="nerves" type="checkbox" checked> Raíces y nervios</label>
+            </div>
+            <div id="model-tissue-options" class="model-structure-options" aria-label="Seleccionar cubiertas y nervios"></div>
+          </details>
         </div>
-        <div class="model-tools"><button id="expand-model" class="secondary-button">Ampliar modelo ↗</button><p>Mallas T2–T4: <a href="https://lifesciencedb.jp/bp3d/info_en/index.html" target="_blank" rel="noopener noreferrer">BodyParts3D · DBCLS</a> (<a href="https://creativecommons.org/licenses/by-sa/2.1/jp/deed.en" target="_blank" rel="noopener noreferrer">CC BY-SA 2.1 JP</a>). Superficies suavizadas; médula y discos esquemáticos.</p></div>
+        <div class="model-tools"><button id="expand-model" class="secondary-button">Ampliar modelo ↗</button><p>Mallas T2–T4: <a href="https://lifesciencedb.jp/bp3d/info_en/index.html" target="_blank" rel="noopener noreferrer">BodyParts3D · DBCLS</a> (<a href="https://creativecommons.org/licenses/by-sa/2.1/jp/deed.en" target="_blank" rel="noopener noreferrer">CC BY-SA 2.1 JP</a>). Médula, discos, cubiertas y dos salidas nerviosas bilaterales esquemáticos. Aperturas y espesores ampliados para estudiar las capas; sin correspondencia exacta con segmentos medulares.</p></div>
         </div></div>
         <div class="structure-buttons" aria-label="Estructuras vertebrales y medulares">
           <button data-structure="spinous"><span class="structure-swatch bone-swatch"></span>Apófisis espinosa<span>↗</span></button>
@@ -112,6 +125,24 @@
       <section class="plate-viewer panel"><div class="panel-heading"><span class="step" id="plate-kicker"></span><a id="plate-fullsize" target="_blank" rel="noopener noreferrer">Ver imagen completa ↗</a></div><figure><div class="plate-image-frame"><img id="plate-image" src="./assets/illustrations/01-vias-v2.png" alt="" decoding="async"></div><figcaption><h2 id="plate-title"></h2><p id="plate-caption"></p></figcaption></figure></section>
       <aside class="plate-notes panel"><span class="step">CLAVES PARA LEER LA LÁMINA</span><div id="plate-notes"></div><p class="plate-caution">Ilustración docente no proporcional. Los límites y recorridos son orientativos.</p><button id="plate-to-map" class="primary-button">Explorar tractos →</button></aside>
     </section>
+    <section id="anatomy-page" hidden aria-labelledby="anatomy-title">
+      <div class="info-hero"><p class="eyebrow">ANATOMÍA / DEL CONJUNTO A LAS CUBIERTAS</p><h1 id="anatomy-title">Una médula, muchas conexiones.</h1><p>Explora las cinco regiones, sigue sus raíces y distingue las capas que protegen el tejido nervioso.</p></div>
+      <div class="study-context panel"><strong>31 segmentos · 31 pares</strong><p>Ocho cervicales, doce torácicos, cinco lumbares, cinco sacros y uno coccígeo. Un segmento medular se define por sus raíces, no por una vértebra del mismo número. En el adulto, el cono suele terminar cerca del nivel vertebral L1–L2; por debajo continúan raíces y filum terminale.</p></div>
+      <div class="anatomy-layout">
+        <article class="anatomy-card panel"><header><span class="step">01 / ORGANIZACIÓN LONGITUDINAL</span><h2>Regiones y nervios espinales</h2><p>Selecciona una región para consultar su organización y sus conexiones.</p></header>
+          <svg id="region-map" viewBox="0 0 430 770" role="group" aria-label="Mapa interactivo de regiones medulares"></svg>
+          <p class="diagram-caption">Comparación esquemática, sin proporciones reales. Las líneas representan cada par de raíces; no son dermatomas ni un mapa para localizar una lesión.</p>
+          <div id="region-options" class="anatomy-options" aria-label="Regiones medulares"></div><div id="region-detail" class="anatomy-detail" aria-live="polite"></div>
+        </article>
+        <article class="anatomy-card panel"><header><span class="step">02 / CUBIERTAS Y CONEXIONES</span><h2>Meninges, raíces y nervio mixto</h2><p>Selecciona una capa, una raíz o el ganglio. Posterior arriba, anterior abajo.</p></header>
+          <svg id="covering-map" viewBox="0 0 560 460" role="group" aria-label="Esquema interactivo de meninges y raíces"></svg>
+          <p class="diagram-caption">Espesores y separaciones ampliados. El LCR ocupa el espacio subaracnoideo, entre aracnoides y piamadre. Ambos ramos del nervio son mixtos.</p>
+          <div id="covering-options" class="anatomy-options" aria-label="Cubiertas y nervios espinales"></div><div id="covering-detail" class="anatomy-detail" aria-live="polite"></div>
+          <div class="resource-body anatomy-3d-link"><button id="open-coverings-model" class="secondary-button">Ver cubiertas y raíces en 3D ↗</button></div>
+        </article>
+      </div>
+      <aside id="anatomy-teacher-guide" class="anatomy-teacher" hidden><strong>Para trabajar en clase</strong><p>Compara C8 con las siete vértebras cervicales. Sigue una raíz sacra desde la médula hasta su salida. Después localiza el ganglio dorsal, explica dónde se forma el nervio mixto y ordena las meninges de fuera hacia dentro.</p></aside>
+    </section>
     <section id="gray-page" class="gray-page" hidden aria-labelledby="gray-title">
       <div class="info-hero"><p class="eyebrow">SUSTANCIA GRIS / DEL MAPA AL TEJIDO</p><h1 id="gray-title">Mira más de cerca.</h1><p>Compara un esquema regional con histología y explora preparaciones de microscopía virtual.</p></div>
       <div class="study-context panel"><strong>Antes de comparar</strong><p>Revisa la especie, el nivel y la técnica de cada preparación. Las imágenes animales complementan el estudio; no corresponden al corte humano T3 del explorador. Una tinción muestra determinados componentes y no revela todas las conexiones.</p></div>
@@ -129,13 +160,14 @@
       <section class="about-credits panel"><span class="step">RECONOCIMIENTOS</span><h2>Fuentes que hacen posible el atlas</h2><div id="about-credits"></div><p>La autoría y la licencia de cada imagen se indican junto al recurso. Las fuentes externas no implican una colaboración institucional con este proyecto.</p></section>
     </section>
     <section id="practice-page" class="practice-page" hidden aria-label="Autoevaluación">
-      <div class="practice-intro"><span class="step">PON A PRUEBA TUS CONEXIONES</span><h2>¿Qué vía es?</h2><p>Relaciona función, ubicación y decusación. Recibirás una explicación después de cada respuesta.</p></div>
+      <div class="practice-intro"><span class="step">PON A PRUEBA TUS CONEXIONES</span><h2>¿Cómo se conecta?</h2><p>Relaciona regiones, cubiertas, raíces y vías. Recibirás una explicación después de cada respuesta.</p></div>
       <div class="quiz-card panel"><div class="quiz-progress"><span id="question-number"></span><span id="quiz-score"></span></div><div class="progress-track"><div id="progress-fill"></div></div><h3 id="quiz-question"></h3><div id="quiz-options"></div><div id="quiz-feedback" role="status" hidden></div><button id="quiz-next" class="primary-button" hidden>Siguiente pregunta →</button></div>
     </section>
     <section id="sources-page" class="sources-page panel" hidden aria-label="Bibliografía y alcance">
       <span class="step">FUENTES Y ALCANCE</span><h2>Leer el mapa con contexto</h2>
       <p>El corte representa un segmento medular torácico alto (T3), con fascículos grácil y cuneiforme. T3 designa aquí el segmento de médula, no la vértebra del mismo número. El modelo óseo utiliza las mallas de T2, T3 y T4 de BodyParts3D. La médula y los discos añadidos son esquemáticos; el corte docente no establece una correspondencia exacta entre vértebra y segmento.</p>
-      <p>Los colores y los límites de los tractos son recursos docentes. No son una segmentación histológica ni una reconstrucción de imagen médica. El modelo 3D omite raíces, meninges, vasos, ligamentos y costillas; las láminas complementarias muestran algunas de estas relaciones. El canal vertebral es el espacio óseo que aloja la médula; el conducto central es una estructura diferente, situada dentro de ella.</p>
+      <p>Los colores y los límites de los tractos son recursos docentes. No son una segmentación histológica ni una reconstrucción de imagen médica. El modelo 3D añade meninges y dos salidas nerviosas bilaterales de forma esquemática; omite vasos, ligamentos y costillas. Las aperturas y los espesores de las cubiertas se amplían para estudiar su orden. El canal vertebral es el espacio óseo que aloja la médula; el conducto central es una estructura diferente, situada dentro de ella.</p>
+      <p>La sección Anatomía compara las cinco regiones medulares y las salidas de 31 pares de nervios. Las posiciones y longitudes del SVG son ilustrativas, no sirven para convertir un nivel vertebral en un segmento medular. Las raíces inferiores descienden formando la cola de caballo; la médula no se prolonga hasta el sacro. Las referencias aportadas se usaron como orientación visual, con la distinción entre siete vértebras cervicales y ocho pares de nervios cervicales.</p>
       <p>Las cuatro láminas docentes fueron regeneradas con apoyo de IA a partir de referencias aportadas por el usuario. Se revisaron su orientación y relaciones generales. Los rótulos y controles se añadieron por separado; las bandas de la lámina de sustancia gris no son una delimitación exacta de las diez láminas de Rexed.</p>
       <p>La sección <a href="#gray">Sustancia gris</a> incluye un esquema con licencia abierta, histología comparativa de gato y enlaces a preparaciones de microscopía virtual. Cada recurso conserva su autoría y fuente, e indica su especie y técnica cuando están disponibles. El neuroarte de Greg Dunn y Brian Edwards se consulta en la web del autor.</p>
       <p>Las mallas óseas proceden de BodyParts3D / Anatomography 4.3, © Database Center for Life Science (DBCLS), con licencia CC BY-SA 2.1 Japan. Se aplicaron una subdivisión suave, normales continuas, rotación de ejes y escala uniforme; se conserva la disposición relativa de las vértebras. Son modelos de atlas, no una tomografía de un paciente. Los grupos de selección del cuerpo, arco y apófisis son aproximados.</p>
@@ -145,7 +177,7 @@
     <footer><span>Aprender anatomía, conectar funciones.</span><span>Modelo educativo esquemático · No proporcional</span></footer>
   </main>
   <dialog id="model-dialog" class="model-dialog" aria-labelledby="model-dialog-title">
-    <div class="model-dialog-heading"><div><span class="step">VISTA AMPLIADA</span><h2 id="model-dialog-title">Vértebras T2 a T4</h2></div><button id="close-model" class="secondary-button">Volver al atlas ✕</button></div>
+    <div class="model-dialog-heading"><div><span class="step">VISTA AMPLIADA</span><h2 id="model-dialog-title">Vértebras, médula y cubiertas</h2></div><button id="close-model" class="secondary-button">Volver al atlas ✕</button></div>
     <div id="model-dialog-host"></div><div id="model-dialog-description" class="structure-description" aria-live="polite"></div>
   </dialog>
   <noscript>Activa JavaScript para seleccionar tractos y explorar el modelo.</noscript>
