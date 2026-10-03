@@ -1,4 +1,4 @@
-import { projectInfo } from './project-info.js?v=5.1';
+import { projectInfo } from './project-info.js?v=6';
 import { grayResources } from './gray-resources.js?v=5';
 
 const escape = value => String(value).replace(/[&<>"']/g, character => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[character]));

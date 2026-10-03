@@ -3,7 +3,7 @@ export const projectInfo = {
   name: 'Médula · Atlas interactivo',
   tagline: 'Explorar, contrastar y enseñar neurociencias.',
   introduction: 'Somos NeuroPsicoLocos. Desarrollamos recursos para aprender neurociencias, explorar modelos y trabajar con datos. Simu-LAB reúne nuestros laboratorios digitales; los modelos imprimibles llevan parte de esa experiencia al aula.',
-  purpose: 'Médula amplía esta colección con un atlas de protección vertebral y vías medulares. Compartimos un mismo propósito: conectar anatomía, función y clínica, hacer visibles las fuentes y distinguir las observaciones de las simplificaciones docentes.',
+  purpose: 'Médula amplía esta colección con un atlas de regiones medulares, protección vertebral, meninges, raíces nerviosas y vías. Compartimos un mismo propósito: conectar anatomía, función y clínica, hacer visibles las fuentes y distinguir las observaciones de las simplificaciones docentes.',
   portal: { label: 'Explorar Simu-LAB', url: 'https://neurolab.neuropsicolocos.com/' },
   people: [],
   contact: { label: 'admin@neuropsicolocos.com', url: 'mailto:admin@neuropsicolocos.com' },

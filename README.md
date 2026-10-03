@@ -57,7 +57,7 @@ Atlas tridimensional docente de células del sistema nervioso. Incluye reconstru
 
 Ruta: `apps/medula-atlas/`
 
-Atlas de médula espinal con vértebras 3D de BodyParts3D, diez vías seleccionables en un corte transversal, fichas científicas, láminas, histología comparativa de sustancia gris, modo docente y autoevaluación. Incluye la presentación de NeuroPsicoLocos y los modelos docentes del encéfalo desmontable para impresión 3D. El atlas está en español; su tarjeta del portal tiene traducción al inglés.
+Atlas de médula espinal con vértebras 3D de BodyParts3D, meninges y raíces seleccionables, cinco regiones con sus 31 pares de nervios y diez vías en un corte transversal. Incluye fichas científicas, láminas, histología comparativa de sustancia gris, modo docente y doce preguntas de autoevaluación. También presenta NeuroPsicoLocos y los modelos docentes del encéfalo desmontable para impresión 3D. El atlas está en español; su tarjeta del portal tiene traducción al inglés.
 
 El corte es un esquema de un segmento medular torácico alto (T3), estudiado por separado del modelo óseo T2–T4. Las ilustraciones, los tejidos aproximados y las imágenes animales están identificados como tales. Véanse el [README del módulo](apps/medula-atlas/README.md) y la [revisión de integración](docs/medula-atlas/RELEASE_QA.md).
 

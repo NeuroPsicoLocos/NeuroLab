@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from '../assets/vendor/OrbitControls.js';
 import { loadAnatomicalBones } from './anatomical-bones.js?v=4';
+import { createSpinalCoverings } from './spinal-coverings.js?v=6';
 
 /** T2, T3 y T4 de BodyParts3D. +Y superior, +Z anterior, +X izquierda. */
 export async function createSpineScene(host, onStructureSelect) {
@@ -16,7 +17,7 @@ export async function createSpineScene(host, onStructureSelect) {
   renderer.shadowMap.autoUpdate = false;
   renderer.shadowMap.needsUpdate = true;
   host.prepend(renderer.domElement);
-  renderer.domElement.setAttribute('aria-label', 'Vértebras T2 a T4 de BodyParts3D y médula esquemática');
+  renderer.domElement.setAttribute('aria-label', 'Vértebras T2 a T4 de BodyParts3D, médula, meninges, raíces y nervios espinales esquemáticos');
   renderer.domElement.setAttribute('role', 'img');
 
   const scene = new THREE.Scene();
@@ -129,6 +130,7 @@ export async function createSpineScene(host, onStructureSelect) {
   butterfly.bezierCurveTo(.17, .19, .03, .13, 0, .035);
   const gray = new THREE.Mesh(new THREE.ShapeGeometry(butterfly, 16), new THREE.MeshStandardMaterial({ color: 0xbb7565, side: THREE.DoubleSide }));
   gray.position.z = .003; cap.add(gray); scene.add(cap);
+  const coverings = createSpinalCoverings(scene, cordPath, models, pickables);
 
   const tractLines = new THREE.Group(); scene.add(tractLines);
   const lineMaterial = new THREE.MeshStandardMaterial({ color: 0x488f80, roughness: .8 });
@@ -146,7 +148,7 @@ export async function createSpineScene(host, onStructureSelect) {
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.ShadowMaterial({ opacity: .22 }));
   floor.rotation.x = -Math.PI / 2; floor.position.y = -3.65;
   floor.receiveShadow = true; scene.add(floor);
-  const views = { oblique: [8.6, 5.2, 10.4], posterior: [0, 1, -14], superior: [0, 14.8, .7] };
+  const views = { oblique: [8.6, 5.2, 10.4], posterior: [0, 1, -14], superior: [0, 14.8, .7], coverings: [4.8, 3.2, -8.5] };
   function view(name) {
     // Una vista fija cancela la inercia restante del giro manual.
     const damping = controls.enableDamping;
@@ -159,7 +161,10 @@ export async function createSpineScene(host, onStructureSelect) {
     const { width, height } = host.getBoundingClientRect();
     if (!width || !height) return;
     renderer.setSize(width, height, false);
-    camera.aspect = width / height; camera.updateProjectionMatrix();
+    camera.aspect = width / height;
+    // En un visor estrecho, ampliar el campo evita cortar los ramos laterales.
+    camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(16)) * Math.max(1, 1.15 / camera.aspect)));
+    camera.updateProjectionMatrix();
     dirty = true;
   }
   let frame = 0, active = true, disposed = false;
@@ -183,9 +188,10 @@ export async function createSpineScene(host, onStructureSelect) {
     const bounds = renderer.domElement.getBoundingClientRect();
     pointer.set((event.clientX - bounds.left) / bounds.width * 2 - 1, -(event.clientY - bounds.top) / bounds.height * 2 + 1);
     raycaster.setFromCamera(pointer, camera);
-    const hit = raycaster.intersectObjects(pickables.filter(item => item === cord || bones.visible))[0];
+    const visible = object => {for(let parent=object;parent;parent=parent.parent)if(!parent.visible)return false;return true;};
+    const hit = raycaster.intersectObjects(pickables.filter(visible))[0];
     if (!hit) return;
-    const id = hit.object === cord ? 'cord' : ['body', 'arch', 'spinous'][hit.face.materialIndex];
+    const id = hit.object.userData.structure === 'vertebra' ? ['body', 'arch', 'spinous'][hit.face.materialIndex] : hit.object.userData.structure;
     onStructureSelect(id);
   });
   view('oblique'); resize(); animate();
@@ -212,8 +218,10 @@ export async function createSpineScene(host, onStructureSelect) {
     bones(visible) { bones.visible = visible; dirty = true; renderer.shadowMap.needsUpdate = true; },
     canal(visible) { canal.visible = visible; dirty = true; },
     plane(visible) { plane.visible = visible; dirty = true; },
+    layer(id, visible) { coverings.layer(id, visible); dirty = true; },
     selectStructure(id) {
       dirty = true;
+      coverings.select(id);
       materials.forEach((material, index) => {
         const selected = ['body', 'arch', 'spinous'][index] === id;
         material.color.set(selected ? 0xe3cba0 : 0xd9c9ac);
