@@ -1,0 +1,77 @@
+{
+  "version": 10,
+  "date": "2026-10-03",
+  "tool": "built-in image_gen",
+  "mode": "edit",
+  "useCase": "scientific-educational",
+  "outputs": [
+    {
+      "segment": "C6",
+      "file": "corte-c6-v10.png",
+      "width": 1402,
+      "height": 1122,
+      "bytes": 1499488,
+      "sha256": "3de1d62a4dbce940813eb7182d545892dd65c5cc672e9361b4468832f2d51f2c",
+      "prompt": "Use case: scientific-educational. Edit target: image 1 (flat Cervical enlargement C6 spinal cord cross-section). Image 2 is ONLY the style reference for a realistic thoracic rendering. Keep image 1 geometry; do not copy the thoracic shape from image 2.\nRender the flat target as a high-quality realistic anatomical atlas illustration, matching the tissue texture, ivory white matter, warm rose-taupe gray matter, soft volume and refined lighting of image 2. Broad flattened oval, long thin posterior horns, large bulbous anterior horns, no thoracic lateral horns.\nLOCK the outer boundary and H/butterfly gray matter boundaries in the exact normalized positions of image 1. Do not enlarge or recenter. Preserve the 5:4 canvas, all margins, posterior up, anterior down and symmetric shape. Preserve the deep anterior fissure, shallow posterior sulcus and central canal at x50%, y52.9%. Fine subtle fibers and delicate neuronal tissue texture without oversized cell symbols. This is a realistic artist's rendering, not actual histology.\nOnly add tissue material and volume. White background. No roots, meninges, tract colors, patches, legends, arrows, lettering, numbers, logos, signatures or watermarks. Complete cross section, no perspective rotation, no crop.",
+      "styleReference": "corte-t3-v10.png"
+    },
+    {
+      "segment": "T3",
+      "file": "corte-t3-v10.png",
+      "width": 1402,
+      "height": 1122,
+      "bytes": 1432115,
+      "sha256": "aa245ee9a17aa14a0c3d441f25fea748c0cf91cd51c7062f10619a381995f823",
+      "prompt": "Use case: scientific-educational. Edit target: image 1 (the 600 by 480 thoracic spinal cord diagram). Image 2 is ONLY a rendering style reference (the detailed anatomical plate with meninges); do not copy its shape, nerves, membranes or composition.\nTransform the flat target into a highly detailed realistic medical atlas illustration, soft sculpted tissue volume, subtle moist material, finely brushed ivory white matter fibers and delicate warm rose-taupe gray matter neuronal texture. Match the refined realism of image 2.\nCRITICAL: keep the target's outer boundary, every gray-matter boundary, anterior deep fissure, posterior shallow sulcus, central canal and H silhouette in exactly the same normalized coordinates. Keep the canvas aspect ratio 5:4, the same complete framing and white background, with all original margins. No enlargement, crop or camera rotation. Posterior remains up. A thoracic reference has thin long posterior horns, modest anterior horns and lateral gray protrusions. The central canal is at 50% canvas width and 52.9% height. Outer tissue spans approximately x20–80% and y15–84%. This is an artist's anatomical rendering, not a laboratory photomicrograph. Subtle volume, no inflated bulges or exaggerated cells. Crisp usable detail at 4x zoom.\nNO text, numbers, labels, colored tract patches, legend, arrows, roots, meninges, logos, signatures or watermarks. Only replace flat fills with realistic tissue rendering.",
+      "styleReference": "corte-meninges-v7.png"
+    },
+    {
+      "segment": "L4",
+      "file": "corte-l4-v10.png",
+      "width": 1402,
+      "height": 1122,
+      "bytes": 1388192,
+      "sha256": "cbc86ef8e0c1f646bf4ebda3976f56f382e219199a9d96a41307bce91de6eb00",
+      "prompt": "Use case: scientific-educational. Edit target: image 1 (flat Lumbar enlargement L4 spinal cord cross-section). Image 2 is ONLY the style reference for a realistic thoracic rendering. Keep image 1 geometry; do not copy the thoracic shape from image 2.\nRender the flat target as a high-quality realistic anatomical atlas illustration, matching the tissue texture, ivory white matter, warm rose-taupe gray matter, soft volume and refined lighting of image 2. Broad oval, thick substantial gray matter with broad bulky anterior horns, slightly thicker posterior horns, no thoracic lateral horns.\nLOCK the outer boundary and H/butterfly gray matter boundaries in the exact normalized positions of image 1. Do not enlarge or recenter. Preserve the 5:4 canvas, all margins, posterior up, anterior down and symmetric shape. Preserve the deep anterior fissure, shallow posterior sulcus and central canal at x50%, y52.9%. Fine subtle fibers and delicate neuronal tissue texture without oversized cell symbols. This is a realistic artist's rendering, not actual histology.\nOnly add tissue material and volume. White background. No roots, meninges, tract colors, patches, legends, arrows, lettering, numbers, logos, signatures or watermarks. Complete cross section, no perspective rotation, no crop.",
+      "styleReference": "corte-t3-v10.png"
+    },
+    {
+      "segment": "S3",
+      "file": "corte-s3-v10.png",
+      "width": 1402,
+      "height": 1122,
+      "bytes": 1344201,
+      "sha256": "3a296985185c88b32317f0b91343e91893a26aa141f47c0059482927618f7c5b",
+      "prompt": "Use case: scientific-educational. Edit target: image 1 (flat Sacral S3 spinal cord cross-section). Image 2 is ONLY the style reference for a realistic thoracic rendering. Keep image 1 geometry; do not copy the thoracic shape from image 2.\nRender the flat target as a high-quality realistic anatomical atlas illustration, matching the tissue texture, ivory white matter, warm rose-taupe gray matter, soft volume and refined lighting of image 2. Smaller rounder outline, high proportion of gray matter, relatively little surrounding white matter, broad anterior horns, no thoracic lateral protrusions.\nLOCK the outer boundary and H/butterfly gray matter boundaries in the exact normalized positions of image 1. Do not enlarge or recenter. Preserve the 5:4 canvas, all margins, posterior up, anterior down and symmetric shape. Preserve the deep anterior fissure, shallow posterior sulcus and central canal at x50%, y52.9%. Fine subtle fibers and delicate neuronal tissue texture without oversized cell symbols. This is a realistic artist's rendering, not actual histology.\nOnly add tissue material and volume. White background. No roots, meninges, tract colors, patches, legends, arrows, lettering, numbers, logos, signatures or watermarks. Complete cross section, no perspective rotation, no crop.",
+      "styleReference": "corte-t3-v10.png"
+    }
+  ],
+  "reusedCoveringPlate": {
+    "file": "corte-meninges-v7.png",
+    "sha256": "c8d0ed5b3ed2e41da3a11324c363e3e2bc84f83fda7dd2fde70810c64696dd39"
+  },
+  "review": [
+    "Posterior arriba y anterior abajo.",
+    "Canal central y fisura anterior conservados.",
+    "C6 y L4 con astas anteriores más amplias; T3 conserva salientes laterales.",
+    "S3 mantiene mayor proporción de sustancia gris en la referencia.",
+    "Sin texto incorporado ni marcas de agua.",
+    "Alineación visual de las zonas interactivas revisada en navegador."
+  ],
+  "limits": [
+    "Texturas artísticas, no histología ni datos experimentales.",
+    "Límites de tractos y de Rexed orientativos.",
+    "Relaciones generales revisadas; sin validación anatómica clínica independiente."
+  ],
+  "geometryReference": {
+    "module": "src/gray-level-geometry.js",
+    "fields": [
+      "outer",
+      "gray"
+    ],
+    "canvas": [
+      600,
+      480
+    ]
+  }
+}

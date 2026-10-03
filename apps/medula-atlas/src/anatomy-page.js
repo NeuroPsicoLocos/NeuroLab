@@ -1,7 +1,7 @@
 import { regions, coverings, anatomySources, buildSpinalSegments } from './anatomy-content.js?v=6';
 import { anatomyIllustrations } from './anatomy-illustrations.js?v=7';
-import { buildCoveringCut, coveringFocusBounds } from './covering-cut.js?v=9';
-import { setupCutZoom } from './cut-zoom.js?v=9';
+import { buildCoveringCut, coveringFocusBounds } from './covering-cut.js?v=10';
+import { setupCutZoom } from './cut-zoom.js?v=10';
 
 const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const ns = 'http://www.w3.org/2000/svg';

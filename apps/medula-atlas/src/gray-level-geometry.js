@@ -2,6 +2,8 @@
  * Lienzo 600 × 480, posterior arriba. No hay escala física ni áreas medidas.
  * Las dos mitades se dibujan por reflexión en x=300.
  */
+import { realisticCuts } from './realistic-cuts.js?v=10';
+
 export const grayGeometry = {
   c6: {
     posteriorTop: 78,
@@ -83,16 +85,21 @@ export function grayFocusViewBox(bounds, side = 'left', midline = false) {
 
 export function grayBaseMarkup(levelId, prefix) {
   const geometry = grayGeometry[levelId];
+  const plate = realisticCuts[levelId];
+  const [imageX, imageY, imageWidth, imageHeight] = plate.placement;
   return `<defs>
     <radialGradient id="${prefix}-white" cx="43%" cy="34%" r="72%"><stop stop-color="#fff9e9"/><stop offset=".75" stop-color="#eee0c7"/><stop offset="1" stop-color="#d9c9ab"/></radialGradient>
     <linearGradient id="${prefix}-gray" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#d7b4a5"/><stop offset="1" stop-color="#b88d7e"/></linearGradient>
     <filter id="${prefix}-shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="7" stdDeviation="7" flood-color="#594c37" flood-opacity=".13"/></filter>
     <clipPath id="${prefix}-gray-clip"><path d="${geometry.gray}"/><path d="${geometry.gray}" transform="translate(600 0) scale(-1 1)"/></clipPath>
+    <clipPath id="${prefix}-tissue-clip"><path d="${geometry.outer}"/></clipPath>
   </defs>
   <path d="${geometry.outer}" fill="url(#${prefix}-white)" stroke="#c6b89c" stroke-width="2" filter="url(#${prefix}-shadow)"/>
   <path d="${geometry.gray}" fill="url(#${prefix}-gray)" stroke="#b99385" stroke-width="1.6"/>
   <path d="${geometry.gray}" transform="translate(600 0) scale(-1 1)" fill="url(#${prefix}-gray)" stroke="#b99385" stroke-width="1.6"/>
   <rect x="297" y="235" width="6" height="37" fill="url(#${prefix}-gray)" clip-path="url(#${prefix}-gray-clip)"/>
   <path d="M300 ${geometry.posteriorTop}V231" fill="none" stroke="#c4b699" stroke-width="1.3"/>
-  <circle cx="300" cy="254" r="5" fill="#fffefa" stroke="#8b877a" stroke-width="1.5"/>`;
+  <circle cx="300" cy="254" r="5" fill="#fffefa" stroke="#8b877a" stroke-width="1.5"/>
+  <image class="realistic-tissue" data-cut-level="${levelId}" href="${plate.image}" x="${imageX}" y="${imageY}" width="${imageWidth}" height="${imageHeight}" preserveAspectRatio="none" clip-path="url(#${prefix}-tissue-clip)" pointer-events="none" aria-hidden="true"/>
+  <path d="${geometry.outer}" fill="none" stroke="#b6a382" stroke-opacity=".28" stroke-width="1.2" pointer-events="none"/>`;
 }
