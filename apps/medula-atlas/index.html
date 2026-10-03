@@ -12,7 +12,8 @@
   <script type="importmap">{"imports":{"three":"./assets/vendor/three.module.js"}}</script>
   <link rel="stylesheet" href="./info-pages.css?v=6">
   <link rel="stylesheet" href="./anatomy.css?v=7">
-  <script defer src="./src/start.js?v=7"></script>
+  <link rel="stylesheet" href="./gray-explorer.css?v=8">
+  <script defer src="./src/start.js?v=8"></script>
 </head>
 <body>
   <a class="skip-link" href="#cross-section">Ir al corte medular</a>
@@ -127,7 +128,7 @@
     </section>
     <section id="anatomy-page" hidden aria-labelledby="anatomy-title">
       <div class="info-hero"><p class="eyebrow">ANATOMÍA / DEL CONJUNTO A LAS CUBIERTAS</p><h1 id="anatomy-title">Una médula, muchas conexiones.</h1><p>Explora las cinco regiones, sigue sus raíces y distingue las capas que protegen el tejido nervioso.</p></div>
-      <div class="study-context panel"><strong>31 segmentos · 31 pares</strong><p>Ocho cervicales, doce torácicos, cinco lumbares, cinco sacros y uno coccígeo. Un segmento medular se define por sus raíces, no por una vértebra del mismo número. En el adulto, el cono suele terminar cerca del nivel vertebral L1–L2; por debajo continúan raíces y filum terminale.</p></div>
+      <div class="study-context panel"><strong>31 segmentos · 31 pares</strong><div><p>Ocho cervicales, doce torácicos, cinco lumbares, cinco sacros y uno coccígeo. Un segmento medular se define por sus raíces, no por una vértebra del mismo número. En el adulto, el cono suele terminar cerca del nivel vertebral L1–L2; por debajo continúan raíces y filum terminale.</p><button id="open-gray-levels" class="secondary-button">Comparar cortes y ampliar sustancia gris →</button></div></div>
       <div class="anatomy-layout">
         <article class="anatomy-card panel"><header><span class="step">01 / ORGANIZACIÓN LONGITUDINAL</span><h2>Regiones y nervios espinales</h2><p>Selecciona una región para consultar su organización y sus conexiones.</p></header>
           <div class="anatomy-mode" role="group" aria-label="Representación de las regiones"><button data-anatomy-view="plate" class="active" aria-pressed="true">Lámina anatómica</button><button data-anatomy-view="map" aria-pressed="false">Mapa de estudio</button></div>
@@ -152,8 +153,9 @@
       <aside id="anatomy-teacher-guide" class="anatomy-teacher" hidden><strong>Para trabajar en clase</strong><p>Compara C8 con las siete vértebras cervicales. Sigue una raíz sacra desde la médula hasta su salida. Después localiza el ganglio dorsal, explica dónde se forma el nervio mixto y ordena las meninges de fuera hacia dentro.</p></aside>
     </section>
     <section id="gray-page" class="gray-page" hidden aria-labelledby="gray-title">
-      <div class="info-hero"><p class="eyebrow">SUSTANCIA GRIS / DEL MAPA AL TEJIDO</p><h1 id="gray-title">Mira más de cerca.</h1><p>Compara un esquema regional con histología y explora preparaciones de microscopía virtual.</p></div>
-      <div class="study-context panel"><strong>Antes de comparar</strong><p>Revisa la especie, el nivel y la técnica de cada preparación. Las imágenes animales complementan el estudio; no corresponden al corte humano T3 del explorador. Una tinción muestra determinados componentes y no revela todas las conexiones.</p></div>
+      <div class="info-hero"><p class="eyebrow">SUSTANCIA GRIS / DEL MAPA AL TEJIDO</p><h1 id="gray-title">Mira más de cerca.</h1><p>Cambia de nivel medular, explora astas y láminas de Rexed, y compara después con histología.</p></div>
+      <section id="gray-level-explorer" class="gray-level-explorer panel" aria-label="Comparador de niveles y zoom de sustancia gris" tabindex="-1"></section>
+      <div class="study-context panel"><strong>Del esquema a la histología</strong><p>Los cortes interactivos son esquemas de segmentos medulares humanos. Revisa la especie, el nivel y la técnica de cada preparación microscópica. Las imágenes animales complementan el estudio; una tinción muestra determinados componentes y no revela todas las conexiones.</p></div>
       <div id="gray-images" class="gray-images"></div>
       <div class="resource-section-heading"><div><span class="step">CONTINÚA CON EL MICROSCOPIO</span><h2>Preparaciones y lecturas</h2></div><a href="#explore">Volver al mapa ↗</a></div>
       <div id="gray-viewers" class="gray-viewers"></div><p id="gray-check-date" class="resource-credit"></p>
