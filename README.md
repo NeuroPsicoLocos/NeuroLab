@@ -53,6 +53,14 @@ Ruta: `apps/neurocell-explorer/`
 
 Atlas tridimensional docente de células del sistema nervioso. Incluye reconstrucciones SWC de NeuroMorpho.Org, procedencia científica y paneles de anatomía, conectividad, función y clínica. Véanse su [README](apps/neurocell-explorer/README.md) y la [documentación de procedencia](docs/neurocell-explorer/NEUROMORPHO_INTEGRATION.md).
 
+### Médula · Atlas interactivo
+
+Ruta: `apps/medula-atlas/`
+
+Atlas de médula espinal con vértebras 3D de BodyParts3D, diez vías seleccionables en un corte transversal, fichas científicas, láminas, histología comparativa de sustancia gris, modo docente y autoevaluación. Incluye la presentación de NeuroPsicoLocos y los modelos docentes del encéfalo desmontable para impresión 3D. El atlas está en español; su tarjeta del portal tiene traducción al inglés.
+
+El corte es un esquema de un segmento medular torácico alto (T3), estudiado por separado del modelo óseo T2–T4. Las ilustraciones, los tejidos aproximados y las imágenes animales están identificados como tales. Véanse el [README del módulo](apps/medula-atlas/README.md) y la [revisión de integración](docs/medula-atlas/RELEASE_QA.md).
+
 ### Topological Lab
 
 El nudo borromeo permanece como proyecto asociado durante esta primera integración. Se enlaza desde el portal y se migrará cuando su contenido, licencia y navegación estén estabilizados.
@@ -72,6 +80,7 @@ http://127.0.0.1:8005/
 http://127.0.0.1:8005/apps/electrophysiology-lab/
 http://127.0.0.1:8005/apps/psp-lab/
 http://127.0.0.1:8005/apps/neurocell-explorer/
+http://127.0.0.1:8005/apps/medula-atlas/
 ```
 
 Electrophysiology Lab y PSP Lab también pueden abrirse directamente con `file://`. Electrophysiology Lab necesita conexión a internet para descargar SheetJS al leer o exportar libros de cálculo. Para revisar el portal completo sigue siendo preferible usar el servidor local.
@@ -105,7 +114,8 @@ NeuroLab/
 │   │       ├── io/workbook.js         # Entrada/salida tabular
 │   │       └── ui/plot.js              # Visualización Canvas
 │   ├── psp-lab/                         # Retos PSP y tutor local
-│   └── neurocell-explorer/
+│   ├── neurocell-explorer/
+│   └── medula-atlas/                    # Anatomía medular, histología y modelo 3D
 ├── docs/
 └── tests/
 ```

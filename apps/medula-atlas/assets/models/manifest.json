@@ -1,0 +1,165 @@
+{
+  "dataset": "BodyParts3D / Anatomography 4.3",
+  "author": "Database Center for Life Science (DBCLS)",
+  "source": "https://lifesciencedb.jp/bp3d/info_en/index.html",
+  "license": "CC BY-SA 2.1 Japan",
+  "licenseURL": "https://creativecommons.org/licenses/by-sa/2.1/jp/deed.en",
+  "changes": "Una subdivisión Loop, normales suaves, rotación de ejes y escala uniforme. Grupos de selección aproximados.",
+  "binaryFormat": "Cinco uint32 LE: vértices, índices y número de índices de cuerpo/arco/espinosa. Después posiciones float32 xyz e índices uint32.",
+  "nativeOrigin": [
+    -0.784,
+    -45.056,
+    1328.0
+  ],
+  "scale": 0.07,
+  "models": [
+    {
+      "id": "t2",
+      "component": "FJ3160",
+      "fma": "FMA9187",
+      "file": "t2.bin",
+      "sourceFile": "source/t2.stl",
+      "mirror": "https://commons.wikimedia.org/wiki/File:BodyParts3D_FJ3160_Second_thoracic_vertebra.stl",
+      "sourceSHA1": "18d835306b6b981a9356c2f759ad46ce5f509cdc",
+      "preparedSHA256": "4df557e551880876fcd9e44c36447dc068effbed01cf60aaf1e9cefa172ab2e5",
+      "sourceTriangles": 1938,
+      "triangles": 7752,
+      "vertices": 3876,
+      "foramenCenter": [
+        0.0,
+        1.0832482910156251,
+        0.6264300000000004
+      ],
+      "bodyCenter": [
+        0.054880000000000005,
+        1.0832482910156251,
+        1.875670816497803
+      ],
+      "bodyBottom": -0.098702392578125,
+      "bodyTop": 2.2651989746093752,
+      "topEndplate": {
+        "point": [
+          0.22769201174646103,
+          1.4947109396415614,
+          1.558111509332489
+        ],
+        "normal": [
+          -0.06829151116912008,
+          0.8800913636621676,
+          0.1384771706928548
+        ]
+      },
+      "bottomEndplate": {
+        "point": [
+          0.12522461908306637,
+          0.04658794430130684,
+          1.8323878337865545
+        ],
+        "normal": [
+          0.03360064761673517,
+          0.9064780689300375,
+          0.11495002307631869
+        ]
+      }
+    },
+    {
+      "id": "t3",
+      "component": "FJ3163",
+      "fma": "FMA9209",
+      "file": "t3.bin",
+      "sourceFile": "source/t3.stl",
+      "mirror": "https://commons.wikimedia.org/wiki/File:BodyParts3D_FJ3163_Third_thoracic_vertebra.stl",
+      "sourceSHA1": "7cbe687e75e3e21a03e6111438fc95bca80f5958",
+      "preparedSHA256": "de7f2d9d143e303ebecbc953eb8d0f838abd56495f97e0e0e46d62fdd8618fac",
+      "sourceTriangles": 2038,
+      "triangles": 8152,
+      "vertices": 4076,
+      "foramenCenter": [
+        0.0,
+        -0.3181488037109375,
+        -0.0
+      ],
+      "bodyCenter": [
+        0.054880000000000005,
+        -0.3181488037109375,
+        1.3549619694519046
+      ],
+      "bodyBottom": -1.5826989746093751,
+      "bodyTop": 0.9464013671875001,
+      "topEndplate": {
+        "point": [
+          0.09553210700035104,
+          -0.04191775652319166,
+          1.1528418508432412
+        ],
+        "normal": [
+          -0.007753202830916088,
+          0.876185185769025,
+          0.24360391563352415
+        ]
+      },
+      "bottomEndplate": {
+        "point": [
+          0.026338125992824993,
+          -1.3515468450178083,
+          1.1538741894531244
+        ],
+        "normal": [
+          -0.06791381316112452,
+          0.9076116022310758,
+          0.19590883113835988
+        ]
+      }
+    },
+    {
+      "id": "t4",
+      "component": "FJ3166",
+      "fma": "FMA9248",
+      "file": "t4.bin",
+      "sourceFile": "source/t4.stl",
+      "mirror": "https://commons.wikimedia.org/wiki/File:BodyParts3D_FJ3166_Fourth_thoracic_vertebra.stl",
+      "sourceSHA1": "2f62897419d4795ff095eb200298019bc9c4a21a",
+      "preparedSHA256": "47358cb8a9e9ebd22a452a24faca66699145c738f100ba8c2d993bc76dc76c75",
+      "sourceTriangles": 2066,
+      "triangles": 8264,
+      "vertices": 4132,
+      "foramenCenter": [
+        0.0,
+        -2.1346496582031254,
+        -0.49279999999999996
+      ],
+      "bodyCenter": [
+        0.054880000000000005,
+        -2.1346496582031254,
+        0.8626273365783694
+      ],
+      "bodyBottom": -3.117802734375,
+      "bodyTop": -1.1514965820312502,
+      "topEndplate": {
+        "point": [
+          -0.030335913941462827,
+          -1.6046237386067652,
+          0.7392541345723468
+        ],
+        "normal": [
+          0.019345323904417455,
+          0.8918411638055529,
+          0.25054252818226813
+        ]
+      },
+      "bottomEndplate": {
+        "point": [
+          0.08243790146266874,
+          -2.9543341333161153,
+          0.771251808926565
+        ],
+        "normal": [
+          -0.027850080815249315,
+          0.9208416500181522,
+          0.09442850736514577
+        ]
+      }
+    }
+  ],
+  "limits": "Mallas de atlas anatómico, no reconstrucción clínica de un paciente. Médula, canal, discos y selección regional son esquemáticos."
+}

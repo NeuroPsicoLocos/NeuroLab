@@ -391,7 +391,7 @@ h1 {
 }
 
 .learning-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .lab-card {
@@ -516,6 +516,32 @@ h1 {
   height: 52px;
   box-shadow: -16px 15px 0 -1px currentColor, 16px 15px 0 -1px currentColor;
 }
+
+/* El símbolo medular conserva el mismo lenguaje de líneas que los otros módulos. */
+.lab-icon.spinal span {
+  position: absolute;
+  top: 12px;
+  left: 33px;
+  width: 5px;
+  height: 48px;
+  border-radius: 5px;
+  background: currentColor;
+}
+
+.lab-icon.spinal::before,
+.lab-icon.spinal::after {
+  position: absolute;
+  top: 16px;
+  width: 13px;
+  height: 7px;
+  border: 2px solid currentColor;
+  border-radius: 4px;
+  box-shadow: 0 13px 0 -1px currentColor, 0 26px 0 -1px currentColor;
+  content: "";
+}
+
+.lab-icon.spinal::before { left: 14px; }
+.lab-icon.spinal::after { right: 14px; }
 
 .lab-icon.topology span,
 .lab-icon.topology::before,

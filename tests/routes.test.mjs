@@ -11,6 +11,7 @@ test("portal links to all local laboratories", async () => {
   assert.match(portal, /apps\/electrophysiology-lab\//);
   assert.match(portal, /apps\/psp-lab\//);
   assert.match(portal, /apps\/neurocell-explorer\//);
+  assert.match(portal, /apps\/medula-atlas\//);
 });
 
 test("electrophysiology lab exposes review controls beside the plot", async () => {
@@ -44,6 +45,17 @@ test("required GitHub Pages entry points and modules exist", async () => {
     "scripts/portal.js",
     "docs/I18N.md",
     "apps/neurocell-explorer/index.html",
+    "apps/medula-atlas/index.html",
+    "apps/medula-atlas/README.md",
+    "apps/medula-atlas/src/start.js",
+    "apps/medula-atlas/src/app.js",
+    "apps/medula-atlas/assets/vendor/THREE-LICENSE.txt",
+    "apps/medula-atlas/assets/models/LICENSE.md",
+    "apps/medula-atlas/assets/models/t2.bin",
+    "apps/medula-atlas/assets/models/t3.bin",
+    "apps/medula-atlas/assets/models/t4.bin",
+    "apps/medula-atlas/assets/gray-matter/LICENSE.md",
+    "apps/medula-atlas/assets/downloads/encefalo-desmontable.zip",
     ".nojekyll",
     "CNAME",
   ];
@@ -83,7 +95,7 @@ test("portal separates learning from analysis and exposes language controls", as
 });
 
 test("new HTML entry points have no broken local assets", async () => {
-  const pages = ["index.html", "apps/electrophysiology-lab/index.html", "apps/psp-lab/index.html"];
+  const pages = ["index.html", "apps/electrophysiology-lab/index.html", "apps/psp-lab/index.html", "apps/medula-atlas/index.html"];
   for (const page of pages) {
     const markup = await readFile(path.join(root, page), "utf8");
     const references = [...markup.matchAll(/(?:href|src)="([^"]+)"/g)].map((match) => match[1]);

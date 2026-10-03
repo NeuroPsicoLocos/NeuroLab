@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f3ed">
+  <meta name="description" content="Explorador educativo de la médula espinal, el canal vertebral, las apófisis espinosas y los tractos medulares.">
+  <title>Médula · Atlas interactivo</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css?v=5.1-portal1">
+  <link rel="stylesheet" href="./illustrations.css?v=4">
+  <script type="importmap">{"imports":{"three":"./assets/vendor/three.module.js"}}</script>
+  <link rel="stylesheet" href="./info-pages.css?v=5.1">
+  <script defer src="./src/start.js?v=5.1"></script>
+</head>
+<body>
+  <a class="skip-link" href="#cross-section">Ir al corte medular</a>
+  <div class="portal-bar">
+    <a href="../../">← Simu-LAB · Todos los laboratorios</a>
+    <span>NeuroPsicoLocos</span>
+  </div>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Médula, inicio">
+      <svg viewBox="0 0 36 36" aria-hidden="true"><path d="M18 5v26M10 8h16M8 15h20M8 22h20M10 29h16"/><circle cx="18" cy="18" r="5"/></svg>
+      <span>MÉDULA<span class="brand-sub">Atlas interactivo</span></span>
+    </a>
+    <nav class="main-nav" aria-label="Secciones">
+      <button data-page="explore" class="nav-btn active" aria-current="page">Explorar</button>
+      <button data-page="plates" class="nav-btn">Láminas</button>
+      <button data-page="gray" class="nav-btn">Sustancia gris</button>
+      <button data-page="practice" class="nav-btn">Autoevaluación</button>
+      <button data-page="sources" class="nav-btn">Bibliografía</button>
+      <button data-page="about" class="nav-btn">Quiénes somos</button>
+    </nav>
+    <button id="teacher-toggle" class="mode-button" aria-pressed="false"><span class="mode-dot"></span><span id="mode-text">Modo estudiante</span></button>
+  </header>
+  <section id="startup-notice" class="startup-notice" role="alert" hidden>
+    <p class="eyebrow">MÉDULA / ATLAS INTERACTIVO</p>
+    <h1 id="startup-title">Abre el atlas desde su acceso local.</h1>
+    <p id="startup-message">El navegador ha abierto el archivo directamente. Para cargar el corte, las fichas y el modelo 3D, utiliza el acceso que acompaña al atlas.</p>
+    <ol id="startup-steps"><li>Abre la carpeta <strong>medula-atlas</strong> en Finder.</li><li>Haz doble clic en <strong>Abrir atlas.command</strong>.</li><li>El atlas se abrirá en el navegador. Si aparece una ventana de Terminal, déjala abierta mientras lo utilizas.</li></ol>
+    <a class="primary-button" href="http://127.0.0.1:8024/#explore">Abrir atlas local →</a>
+    <p class="startup-help">Si el atlas ya está iniciado, este botón te lleva a él. Si no responde, usa primero el acceso de doble clic.</p>
+  </section>
+  <main>
+    <div class="page-heading">
+      <div><p class="eyebrow">NEUROANATOMÍA / MÉDULA ESPINAL</p><h1>De la vértebra al tracto.</h1><p class="intro">Explora la protección ósea y selecciona una vía en el corte transversal.</p></div>
+      <div class="level-tag"><span class="status-dot"></span>Referencia: segmento medular T3</div>
+    </div>
+    <section id="teacher-guide" class="teacher-guide" hidden>
+      <div><strong>Guía para la clase</strong><p>1. Localiza la médula dentro del canal. 2. Compara una vía sensitiva con una motora. 3. Relaciona el lugar del cruce con el lado del déficit.</p></div>
+      <button id="print-button" class="secondary-button">Imprimir ficha</button>
+    </section>
+    <section id="explore-page" class="workspace" aria-label="Explorador anatómico">
+      <aside class="bone-panel panel">
+        <div class="panel-heading"><div><span class="step">01 / CONTEXTO</span><h2>Protección vertebral</h2></div><span class="small-tag" id="bone-view-kind">Lámina</span></div>
+        <div class="bone-presentation-tabs" role="group" aria-label="Representación de las vértebras"><button data-bone-presentation="illustration" class="active" aria-pressed="true">Lámina anatómica</button><button data-bone-presentation="model" aria-pressed="false">Modelo 3D</button></div>
+        <figure id="bone-illustration" class="bone-art">
+          <div class="bone-art-image"><img src="./assets/illustrations/04-vertebras-meninges-v2.png" alt="Ilustración de vértebras abiertas que muestra la médula, sus cubiertas y la salida de las raíces nerviosas.">
+            <button class="bone-pin" data-structure="body" style="--pin-x:31%;--pin-y:66%" aria-label="Cuerpo vertebral en la lámina" title="Cuerpo vertebral"></button>
+            <button class="bone-pin" data-structure="cord" style="--pin-x:38%;--pin-y:41%" aria-label="Médula espinal en la lámina" title="Médula espinal"></button>
+            <button class="bone-pin" data-structure="canal" style="--pin-x:56%;--pin-y:20%" aria-label="Canal vertebral en la lámina" title="Canal vertebral"></button>
+            <button class="bone-pin" data-structure="spinous" style="--pin-x:82%;--pin-y:71%" aria-label="Apófisis espinosa en la lámina" title="Apófisis espinosa"></button>
+          </div>
+          <figcaption>Selecciona un punto o una estructura para leer su descripción. Ilustración docente no proporcional.</figcaption>
+        </figure>
+        <div id="spine-model-slot"><div id="spine-model-content" data-model-only hidden>
+        <div id="spine-viewport" class="spine-viewport" aria-label="Modelo 3D de las vértebras T2 a T4, canal vertebral y médula. Usa las vistas o arrastra para girar.">
+          <p class="canvas-loading">Preparando el modelo…</p>
+          <div class="orientation"><span>↑ Superior</span><span id="view-name">Vista oblicua</span></div>
+          <span class="plane-label">Plano transversal</span>
+        </div>
+        <div class="view-buttons" aria-label="Vistas del modelo">
+          <button data-view="oblique" class="active" aria-pressed="true">Oblicua</button><button data-view="posterior" aria-pressed="false">Posterior</button><button data-view="superior" aria-pressed="false">Superior</button>
+        </div>
+        <p class="gesture-hint">Arrastra para girar · Pellizca o usa la rueda para acercar</p>
+        <div class="bone-controls">
+          <label class="range-label" for="bone-opacity">Transparencia del hueso <output id="opacity-value">0 %</output></label>
+          <input id="bone-opacity" type="range" min="0" max="100" value="0">
+          <div class="checkbox-row"><label><input id="show-bones" type="checkbox" checked> Hueso</label><label><input id="show-canal" type="checkbox" checked> Canal</label><label><input id="show-plane" type="checkbox"> Plano</label></div>
+        </div>
+        <div class="model-tools"><button id="expand-model" class="secondary-button">Ampliar modelo ↗</button><p>Mallas T2–T4: <a href="https://lifesciencedb.jp/bp3d/info_en/index.html" target="_blank" rel="noopener noreferrer">BodyParts3D · DBCLS</a> (<a href="https://creativecommons.org/licenses/by-sa/2.1/jp/deed.en" target="_blank" rel="noopener noreferrer">CC BY-SA 2.1 JP</a>). Superficies suavizadas; médula y discos esquemáticos.</p></div>
+        </div></div>
+        <div class="structure-buttons" aria-label="Estructuras vertebrales y medulares">
+          <button data-structure="spinous"><span class="structure-swatch bone-swatch"></span>Apófisis espinosa<span>↗</span></button>
+          <button data-structure="canal"><span class="structure-swatch canal-swatch"></span>Canal vertebral<span>↗</span></button>
+          <button data-structure="cord"><span class="structure-swatch cord-swatch"></span>Médula espinal<span>↗</span></button>
+          <button data-structure="body"><span class="structure-swatch bone-swatch"></span>Cuerpo vertebral<span>↗</span></button>
+        </div>
+        <div id="structure-description" class="structure-description" aria-live="polite"><strong>Apófisis espinosa</strong><p>Proyección ósea posterior del arco vertebral. Sirve como punto de inserción para músculos y ligamentos.</p></div>
+        <button class="anatomy-plate-link" data-open-plate="vertebral">Ver lámina de vértebras y meninges ↗</button>
+      </aside>
+      <section class="section-panel panel" id="cross-section" tabindex="-1">
+        <div class="panel-heading"><div><span class="step">02 / CORTE TRANSVERSAL</span><h2>Mapa de vías medulares</h2></div><button id="labels-toggle" class="icon-label-button" aria-pressed="true">Rótulos <span>✓</span></button></div>
+        <div class="filter-bar" role="group" aria-label="Filtrar vías">
+          <button data-filter="all" class="active" aria-pressed="true">Todas</button><button data-filter="ascending" aria-pressed="false"><span class="dot ascending-dot"></span>Sensitivas ↑</button><button data-filter="descending" aria-pressed="false"><span class="dot descending-dot"></span>Motoras ↓</button>
+        </div>
+        <div class="section-map"><svg id="cord-svg" viewBox="0 0 620 490" aria-labelledby="map-title map-description"><title id="map-title">Corte transversal de la médula torácica alta</title><desc id="map-description">Posterior arriba y anterior abajo. Derecha anatómica a la izquierda de la imagen. Cada zona coloreada representa un tracto seleccionable.</desc></svg></div>
+        <div class="map-caption"><span class="selection-indicator"></span><span id="selected-map-label">Fascículo grácil</span><span class="map-direction">Derecha del sujeto a la izquierda</span></div>
+        <p class="anatomy-note">Esquema funcional no proporcional. Las áreas de los tractos son aproximadas y pueden solaparse en la anatomía real.</p>
+        <div class="tract-index-heading"><h3>Selecciona un tracto</h3><span id="tract-count">10 vías</span></div>
+        <div id="tract-list" class="tract-list" aria-label="Lista de tractos"></div>
+      </section>
+      <aside class="detail-panel panel" aria-label="Descripción del tracto seleccionado">
+        <div class="panel-heading"><span class="step">03 / VÍA SELECCIONADA</span><span id="detail-direction" class="direction-badge">↑ Ascendente</span></div>
+        <button id="back-to-map" class="mobile-map-button">↑ Volver al corte</button>
+        <div id="tract-detail" aria-live="polite"></div>
+      </aside>
+    </section>
+    <section id="plates-page" class="plates-page" hidden aria-label="Láminas anatómicas">
+      <aside class="plate-selector panel"><span class="step">CUATRO PERSPECTIVAS</span><h2>Láminas anatómicas</h2><p>Una misma médula, distintas formas de observarla.</p><div id="plate-options"></div></aside>
+      <section class="plate-viewer panel"><div class="panel-heading"><span class="step" id="plate-kicker"></span><a id="plate-fullsize" target="_blank" rel="noopener noreferrer">Ver imagen completa ↗</a></div><figure><div class="plate-image-frame"><img id="plate-image" src="./assets/illustrations/01-vias-v2.png" alt="" decoding="async"></div><figcaption><h2 id="plate-title"></h2><p id="plate-caption"></p></figcaption></figure></section>
+      <aside class="plate-notes panel"><span class="step">CLAVES PARA LEER LA LÁMINA</span><div id="plate-notes"></div><p class="plate-caution">Ilustración docente no proporcional. Los límites y recorridos son orientativos.</p><button id="plate-to-map" class="primary-button">Explorar tractos →</button></aside>
+    </section>
+    <section id="gray-page" class="gray-page" hidden aria-labelledby="gray-title">
+      <div class="info-hero"><p class="eyebrow">SUSTANCIA GRIS / DEL MAPA AL TEJIDO</p><h1 id="gray-title">Mira más de cerca.</h1><p>Compara un esquema regional con histología y explora preparaciones de microscopía virtual.</p></div>
+      <div class="study-context panel"><strong>Antes de comparar</strong><p>Revisa la especie, el nivel y la técnica de cada preparación. Las imágenes animales complementan el estudio; no corresponden al corte humano T3 del explorador. Una tinción muestra determinados componentes y no revela todas las conexiones.</p></div>
+      <div id="gray-images" class="gray-images"></div>
+      <div class="resource-section-heading"><div><span class="step">CONTINÚA CON EL MICROSCOPIO</span><h2>Preparaciones y lecturas</h2></div><a href="#explore">Volver al mapa ↗</a></div>
+      <div id="gray-viewers" class="gray-viewers"></div><p id="gray-check-date" class="resource-credit"></p>
+    </section>
+    <section id="about-page" class="about-page" hidden aria-labelledby="about-title">
+      <div class="info-hero"><p class="eyebrow">NEUROPSICOLOCOS / SIMU-LAB</p><h1 id="about-title">Quiénes somos.</h1><p class="about-tagline">Explorar, contrastar y enseñar neurociencias.</p></div>
+      <div class="about-intro panel"><p id="about-introduction"></p><p id="about-purpose"></p><div class="resource-actions"><a href="#explore">Explorar el atlas ↗</a><span id="about-portal"></span></div></div>
+      <div id="about-people" class="about-people" hidden></div><div id="about-contact" class="about-contact" hidden></div>
+      <section class="about-collection" aria-labelledby="about-modules-title"><div class="resource-section-heading"><div><span class="step">UNA MISMA COLECCIÓN</span><h2 id="about-modules-title">Más herramientas para explorar</h2></div></div><div id="about-modules" class="gray-viewers"></div><p id="about-related" class="resource-credit"></p></section>
+      <div id="about-principles" class="about-principles"></div>
+      <div class="about-details"><section class="panel"><span class="step">CÓMO SE ELABORÓ</span><h2>Contenido y visualización</h2><p id="about-production"></p><a href="#sources">Bibliografía y alcance ↗</a></section><section class="panel"><span class="step">TU EXPERIENCIA</span><h2>Aprendizaje y privacidad</h2><p id="about-privacy"></p></section></div>
+      <section class="about-credits panel"><span class="step">RECONOCIMIENTOS</span><h2>Fuentes que hacen posible el atlas</h2><div id="about-credits"></div><p>La autoría y la licencia de cada imagen se indican junto al recurso. Las fuentes externas no implican una colaboración institucional con este proyecto.</p></section>
+    </section>
+    <section id="practice-page" class="practice-page" hidden aria-label="Autoevaluación">
+      <div class="practice-intro"><span class="step">PON A PRUEBA TUS CONEXIONES</span><h2>¿Qué vía es?</h2><p>Relaciona función, ubicación y decusación. Recibirás una explicación después de cada respuesta.</p></div>
+      <div class="quiz-card panel"><div class="quiz-progress"><span id="question-number"></span><span id="quiz-score"></span></div><div class="progress-track"><div id="progress-fill"></div></div><h3 id="quiz-question"></h3><div id="quiz-options"></div><div id="quiz-feedback" role="status" hidden></div><button id="quiz-next" class="primary-button" hidden>Siguiente pregunta →</button></div>
+    </section>
+    <section id="sources-page" class="sources-page panel" hidden aria-label="Bibliografía y alcance">
+      <span class="step">FUENTES Y ALCANCE</span><h2>Leer el mapa con contexto</h2>
+      <p>El corte representa un segmento medular torácico alto (T3), con fascículos grácil y cuneiforme. T3 designa aquí el segmento de médula, no la vértebra del mismo número. El modelo óseo utiliza las mallas de T2, T3 y T4 de BodyParts3D. La médula y los discos añadidos son esquemáticos; el corte docente no establece una correspondencia exacta entre vértebra y segmento.</p>
+      <p>Los colores y los límites de los tractos son recursos docentes. No son una segmentación histológica ni una reconstrucción de imagen médica. El modelo 3D omite raíces, meninges, vasos, ligamentos y costillas; las láminas complementarias muestran algunas de estas relaciones. El canal vertebral es el espacio óseo que aloja la médula; el conducto central es una estructura diferente, situada dentro de ella.</p>
+      <p>Las cuatro láminas docentes fueron regeneradas con apoyo de IA a partir de referencias aportadas por el usuario. Se revisaron su orientación y relaciones generales. Los rótulos y controles se añadieron por separado; las bandas de la lámina de sustancia gris no son una delimitación exacta de las diez láminas de Rexed.</p>
+      <p>La sección <a href="#gray">Sustancia gris</a> incluye un esquema con licencia abierta, histología comparativa de gato y enlaces a preparaciones de microscopía virtual. Cada recurso conserva su autoría y fuente, e indica su especie y técnica cuando están disponibles. El neuroarte de Greg Dunn y Brian Edwards se consulta en la web del autor.</p>
+      <p>Las mallas óseas proceden de BodyParts3D / Anatomography 4.3, © Database Center for Life Science (DBCLS), con licencia CC BY-SA 2.1 Japan. Se aplicaron una subdivisión suave, normales continuas, rotación de ejes y escala uniforme; se conserva la disposición relativa de las vértebras. Son modelos de atlas, no una tomografía de un paciente. Los grupos de selección del cuerpo, arco y apófisis son aproximados.</p>
+      <h3>Bibliografía consultada</h3><div id="source-list"></div>
+      <p class="source-date">Fuentes del mapa consultadas el 2 de octubre de 2026; recursos de sustancia gris revisados el 3 de octubre de 2026. El atlas combina resúmenes docentes y recursos visuales con atribución.</p>
+    </section>
+    <footer><span>Aprender anatomía, conectar funciones.</span><span>Modelo educativo esquemático · No proporcional</span></footer>
+  </main>
+  <dialog id="model-dialog" class="model-dialog" aria-labelledby="model-dialog-title">
+    <div class="model-dialog-heading"><div><span class="step">VISTA AMPLIADA</span><h2 id="model-dialog-title">Vértebras T2 a T4</h2></div><button id="close-model" class="secondary-button">Volver al atlas ✕</button></div>
+    <div id="model-dialog-host"></div><div id="model-dialog-description" class="structure-description" aria-live="polite"></div>
+  </dialog>
+  <noscript>Activa JavaScript para seleccionar tractos y explorar el modelo.</noscript>
+</body>
+</html>
