@@ -14,7 +14,8 @@
   <link rel="stylesheet" href="./anatomy.css?v=7">
   <link rel="stylesheet" href="./gray-explorer.css?v=8">
   <link rel="stylesheet" href="./cut-presentation.css?v=10">
-  <script defer src="./src/start.js?v=10"></script>
+  <link rel="stylesheet" href="./lesions.css?v=11">
+  <script defer src="./src/start.js?v=11"></script>
 </head>
 <body>
   <a class="skip-link" href="#cross-section">Ir al corte medular</a>
@@ -32,6 +33,7 @@
       <button data-page="anatomy" class="nav-btn">Anatomía</button>
       <button data-page="plates" class="nav-btn">Láminas</button>
       <button data-page="gray" class="nav-btn">Sustancia gris</button>
+      <button data-page="lesions" class="nav-btn">Lesiones</button>
       <button data-page="practice" class="nav-btn">Autoevaluación</button>
       <button data-page="sources" class="nav-btn">Bibliografía</button>
       <button data-page="about" class="nav-btn">Quiénes somos</button>
@@ -186,6 +188,22 @@
       <p>Las mallas óseas proceden de BodyParts3D / Anatomography 4.3, © Database Center for Life Science (DBCLS), con licencia CC BY-SA 2.1 Japan. Se aplicaron una subdivisión suave, normales continuas, rotación de ejes y escala uniforme; se conserva la disposición relativa de las vértebras. Son modelos de atlas, no una tomografía de un paciente. Los grupos de selección del cuerpo, arco y apófisis son aproximados.</p>
       <h3>Bibliografía consultada</h3><div id="source-list"></div>
       <p class="source-date">Fuentes del mapa consultadas el 2 de octubre de 2026; recursos de sustancia gris revisados el 3 de octubre de 2026. El atlas combina resúmenes docentes y recursos visuales con atribución.</p>
+    </section>
+    <section id="lesions-page" hidden aria-labelledby="lesion-title">
+      <div class="lesion-heading"><p class="eyebrow">DEL TERRITORIO A LA FUNCIÓN</p><h1 id="lesion-title">¿Qué cambia cuando una vía se interrumpe?</h1><p>Elige una zona del corte, resuelve el caso y compara las vías comprometidas y respetadas. Todos los casos son ficticios y usan el segmento medular T3 como referencia.</p></div>
+      <div class="lesion-layout">
+        <section class="lesion-card" aria-labelledby="lesion-map-title"><span class="step">01 / TERRITORIO</span><h2 id="lesion-map-title">Selecciona una zona</h2><div id="lesion-zones" class="lesion-zones" aria-label="Zonas de lesión"></div>
+          <svg id="lesion-svg" viewBox="0 0 600 480" role="group" aria-label="Corte medular T3 con cinco zonas seleccionables"></svg>
+          <div id="lesion-cut-tools"></div><button id="lesion-to-case" class="secondary-button lesion-mobile">Ir al caso ↓</button><p id="lesion-selected" class="lesion-caption"></p><p class="lesion-caption">Posterior arriba. Derecha del sujeto a la izquierda de la imagen. El área coral representa un territorio docente aproximado.</p>
+          <div id="lesion-key" class="lesion-key" hidden><span>Vías comprometidas</span><span>Vías respetadas en el caso</span></div><p id="lesion-pending" class="lesion-pending">Las vías y su explicación aparecerán al contestar. En modo docente puedes mostrarlas y ocultarlas.</p>
+        </section>
+        <section class="lesion-card" aria-labelledby="lesion-case-title"><span class="step">02 / RAZONAMIENTO</span><h2 id="lesion-case-title">Del corte al hallazgo</h2><p id="lesion-case"></p><h3 id="lesion-question"></h3><div id="lesion-options" class="lesion-options" role="group" aria-labelledby="lesion-question"></div>
+          <div id="lesion-feedback" class="lesion-feedback" tabindex="-1" role="status" hidden></div><div class="lesion-actions"><button id="lesion-reset" class="secondary-button">Reiniciar caso</button><button id="lesion-reveal" class="secondary-button" aria-pressed="false" hidden>Mostrar explicación y vías</button><button id="lesion-to-cut" class="secondary-button lesion-mobile">Volver al corte ↑</button></div>
+          <aside id="lesion-teacher-guide" class="lesion-teacher-guide" hidden><h3>Para discutir en clase</h3><p></p></aside>
+        </section>
+        <section id="lesion-explanation" class="lesion-card lesion-explanation" aria-label="Explicación del caso" hidden></section>
+      </div>
+      <p class="lesion-limit">Simulación educativa por patrones. Las ilustraciones y zonas SVG son cualitativas; no son una segmentación histológica ni un modelo de diagnóstico, pronóstico o gravedad. Se destacan tres sistemas y el cruce comisural; otros circuitos y efectos autonómicos no se simulan. T3 es un segmento medular, no una equivalencia con la vértebra T3.</p>
     </section>
     <footer><span>Aprender anatomía, conectar funciones.</span><span>Modelo educativo esquemático · No proporcional</span></footer>
   </main>

@@ -1,11 +1,11 @@
 {
   "name": "medula-atlas",
-  "version": "10.0.0",
+  "version": "11.0.0",
   "private": true,
   "type": "module",
   "description": "Atlas educativo estático de médula espinal y protección vertebral",
   "scripts": {
     "serve": "python3 scripts/open_atlas.py --no-browser",
-    "check": "node --check src/start.js && node --check src/app.js && node --check src/content.js && node --check src/cross-section.js && node --check src/spine-scene.js && node --check src/plate-regions.js && node --check src/illustrations.js && node --check src/bone-presentation.js && node --check src/anatomical-bones.js && node --check src/model-viewer.js && node --check src/project-info.js && node --check src/gray-resources.js && node --check src/info-pages.js && node --check src/anatomy-content.js && node --check src/anatomy-page.js && node --check src/spinal-coverings.js && node --check src/anatomy-illustrations.js && node --check src/gray-level-content.js && node --check src/gray-level-geometry.js && node --check src/gray-level-explorer.js && node --check src/cut-zoom.js && node --check src/covering-cut.js && node --check src/realistic-cuts.js"
+    "check": "node --check src/start.js && node --check src/app.js && node --check src/content.js && node --check src/cross-section.js && node --check src/spine-scene.js && node --check src/plate-regions.js && node --check src/illustrations.js && node --check src/bone-presentation.js && node --check src/anatomical-bones.js && node --check src/model-viewer.js && node --check src/project-info.js && node --check src/gray-resources.js && node --check src/info-pages.js && node --check src/anatomy-content.js && node --check src/anatomy-page.js && node --check src/spinal-coverings.js && node --check src/anatomy-illustrations.js && node --check src/gray-level-content.js && node --check src/gray-level-geometry.js && node --check src/gray-level-explorer.js && node --check src/cut-zoom.js && node --check src/covering-cut.js && node --check src/realistic-cuts.js && node --check src/lesion-content.js && node --check src/lesion-geometry.js && node --check src/lesion-page.js"
   }
 }

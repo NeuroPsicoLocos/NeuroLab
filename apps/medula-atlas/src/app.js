@@ -7,6 +7,7 @@ import { setupInfoPages } from './info-pages.js?v=6';
 import { setupAnatomyPage } from './anatomy-page.js?v=10';
 import { coverings } from './anatomy-content.js?v=6';
 import { setupGrayLevelExplorer } from './gray-level-explorer.js?v=10';
+import { setupLesionPage } from './lesion-page.js?v=11';
 
 const $=selector=>document.querySelector(selector);
 let selected=tracts[0].id,selectedStructure='spinous',filter='all',teacher=false,labels=true,scene=null;
@@ -17,6 +18,7 @@ setupModelViewer();
 setupInfoPages();
 setupAnatomyPage();
 setupGrayLevelExplorer();
+const lesions = setupLesionPage();
 $('#model-tissue-options').innerHTML=coverings.map(item=>`<button data-structure="${item.id}" aria-pressed="false">${item.name}</button>`).join('');
 function escape(text){return String(text).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));}
 function sourceLink(id){const source=sources[id];return `<a href="${source.url}" target="_blank" rel="noopener noreferrer">${escape(source.title)} ↗</a>`;}
@@ -101,16 +103,17 @@ $('#teacher-toggle').addEventListener('click',()=>{
   $('#quiz-score').textContent=teacher?'Respuestas visibles al contestar':`${quizScore} aciertos`;
   $('#anatomy-teacher-guide').hidden=!teacher;
   $('#gray-teacher-guide').hidden=!teacher;
+  lesions.setTeacher(teacher);
 });
 $('#print-button').addEventListener('click',()=>window.print());
 $('#back-to-map').addEventListener('click',()=>$('#cross-section').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth',block:'start'}));
 
 /** Navegación local sin rutas de servidor: funciona en cualquier subcarpeta de Pages. */
 function openPage(name){
-  const pages=['explore','anatomy','plates','gray','practice','sources','about'];
+  const pages=['explore','anatomy','plates','gray','lesions','practice','sources','about'];
   const valid=pages.includes(name)?name:'explore';
   for(const page of pages)$(`#${page}-page`).hidden=page!==valid;
-  $('.page-heading').hidden=['anatomy','gray','about'].includes(valid);
+  $('.page-heading').hidden=['anatomy','gray','lesions','about'].includes(valid);
   document.querySelectorAll('[data-page]').forEach(button=>{const active=button.dataset.page===valid;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
   $('#teacher-guide').hidden=!teacher||valid!=='explore';
   history.replaceState(null,'',`${location.pathname}${location.search}#${valid}`);
