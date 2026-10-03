@@ -14,8 +14,8 @@
   <link rel="stylesheet" href="./anatomy.css?v=7">
   <link rel="stylesheet" href="./gray-explorer.css?v=8">
   <link rel="stylesheet" href="./cut-presentation.css?v=10">
-  <link rel="stylesheet" href="./lesions.css?v=11">
-  <script defer src="./src/start.js?v=11"></script>
+  <link rel="stylesheet" href="./lesions.css?v=12">
+  <script defer src="./src/start.js?v=12"></script>
 </head>
 <body>
   <a class="skip-link" href="#cross-section">Ir al corte medular</a>
@@ -190,16 +190,21 @@
       <p class="source-date">Fuentes del mapa consultadas el 2 de octubre de 2026; recursos de sustancia gris revisados el 3 de octubre de 2026. El atlas combina resúmenes docentes y recursos visuales con atribución.</p>
     </section>
     <section id="lesions-page" hidden aria-labelledby="lesion-title">
-      <div class="lesion-heading"><p class="eyebrow">DEL TERRITORIO A LA FUNCIÓN</p><h1 id="lesion-title">¿Qué cambia cuando una vía se interrumpe?</h1><p>Elige una zona del corte, resuelve el caso y compara las vías comprometidas y respetadas. Todos los casos son ficticios y usan el segmento medular T3 como referencia.</p></div>
+      <div class="lesion-heading"><p class="eyebrow">TERRITORIO, VÍAS Y HALLAZGOS</p><h1 id="lesion-title">¿Qué cambia cuando una vía se interrumpe?</h1><p id="lesion-intro">Elige una zona del corte, resuelve el caso y compara las vías comprometidas y respetadas. Todos los casos son ficticios y usan el segmento medular T3 como referencia.</p></div>
+      <div class="lesion-mode-bar" role="group" aria-label="Actividad de lesiones"><button data-lesion-mode="study" aria-pressed="true">Del territorio al hallazgo</button><button data-lesion-mode="locate" aria-pressed="false">Localiza la lesión</button></div>
       <div class="lesion-layout">
-        <section class="lesion-card" aria-labelledby="lesion-map-title"><span class="step">01 / TERRITORIO</span><h2 id="lesion-map-title">Selecciona una zona</h2><div id="lesion-zones" class="lesion-zones" aria-label="Zonas de lesión"></div>
+        <section class="lesion-card" aria-labelledby="lesion-map-title"><span id="lesion-map-step" class="step">01 / TERRITORIO</span><h2 id="lesion-map-title">Selecciona una zona</h2><div id="lesion-zones" class="lesion-zones" aria-label="Zonas de lesión"></div>
           <svg id="lesion-svg" viewBox="0 0 600 480" role="group" aria-label="Corte medular T3 con cinco zonas seleccionables"></svg>
-          <div id="lesion-cut-tools"></div><button id="lesion-to-case" class="secondary-button lesion-mobile">Ir al caso ↓</button><p id="lesion-selected" class="lesion-caption"></p><p class="lesion-caption">Posterior arriba. Derecha del sujeto a la izquierda de la imagen. El área coral representa un territorio docente aproximado.</p>
+          <div id="lesion-cut-tools"></div><button id="lesion-to-case" class="secondary-button lesion-mobile">Ir al caso ↓</button><p id="lesion-selected" class="lesion-caption" aria-live="polite"></p><p id="lesion-map-caption" class="lesion-caption">Posterior arriba. Derecha del sujeto a la izquierda de la imagen. El área coral representa un territorio docente aproximado.</p>
           <div id="lesion-key" class="lesion-key" hidden><span>Vías comprometidas</span><span>Vías respetadas en el caso</span></div><p id="lesion-pending" class="lesion-pending">Las vías y su explicación aparecerán al contestar. En modo docente puedes mostrarlas y ocultarlas.</p>
         </section>
-        <section class="lesion-card" aria-labelledby="lesion-case-title"><span class="step">02 / RAZONAMIENTO</span><h2 id="lesion-case-title">Del corte al hallazgo</h2><p id="lesion-case"></p><h3 id="lesion-question"></h3><div id="lesion-options" class="lesion-options" role="group" aria-labelledby="lesion-question"></div>
+        <section class="lesion-card lesion-case-card" aria-labelledby="lesion-case-title"><span id="lesion-case-step" class="step">02 / RAZONAMIENTO</span><h2 id="lesion-case-title">Del corte al hallazgo</h2>
+          <div id="lesion-localization-controls" class="lesion-case-controls" hidden><label for="lesion-localization-case">Elige un caso</label><select id="lesion-localization-case"></select><span id="lesion-case-progress" aria-live="polite"></span><div class="lesion-case-navigation"><button id="lesion-case-previous" class="secondary-button">Caso anterior</button><button id="lesion-case-next" class="secondary-button">Caso siguiente</button></div><p class="lesion-caption">Referencia de la actividad: segmento medular T3. Elige entre las cinco zonas del corte.</p></div>
+          <p id="lesion-case"></p><h3 id="lesion-question"></h3><div id="lesion-options" class="lesion-options" role="group" aria-labelledby="lesion-question"></div>
+          <button id="lesion-check-location" class="primary-button" disabled hidden>Comprobar ubicación</button>
           <div id="lesion-feedback" class="lesion-feedback" tabindex="-1" role="status" hidden></div><div class="lesion-actions"><button id="lesion-reset" class="secondary-button">Reiniciar caso</button><button id="lesion-reveal" class="secondary-button" aria-pressed="false" hidden>Mostrar explicación y vías</button><button id="lesion-to-cut" class="secondary-button lesion-mobile">Volver al corte ↑</button></div>
           <aside id="lesion-teacher-guide" class="lesion-teacher-guide" hidden><h3>Para discutir en clase</h3><p></p></aside>
+          <aside id="lesion-hints" class="lesion-teacher-guide" hidden><h3>Pistas para discutir en clase</h3><ol id="lesion-hint-list" aria-live="polite"></ol><button id="lesion-next-hint" class="secondary-button">Revelar pista 1 de 3</button></aside>
         </section>
         <section id="lesion-explanation" class="lesion-card lesion-explanation" aria-label="Explicación del caso" hidden></section>
       </div>
