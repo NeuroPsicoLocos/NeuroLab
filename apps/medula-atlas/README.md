@@ -1,4 +1,4 @@
-# Médula · Atlas interactivo (versión 9.0)
+# Médula · Atlas interactivo (versión 10.0)
 
 Explorador educativo de la médula espinal, su protección vertebral y sus principales vías. Hecho con HTML, CSS y JavaScript, sin framework ni servidor de aplicación. Three.js se utiliza únicamente para el modelo 3D y está incluido localmente.
 
@@ -29,7 +29,7 @@ Si abres `index.html` directamente con `file://`, aparece una guía de apertura.
 - Selección de raíces dorsal y ventral, ganglio dorsal y nervio mixto, mediante botones o un clic sobre el modelo.
 - Sección «Anatomía» con las cinco regiones medulares, los 31 pares de nervios, cono medular, cola de caballo y filum terminale. Distingue los segmentos medulares de los niveles vertebrales.
 - Dos nuevas láminas con volumen, textura ósea y detalle del tejido medular: vista longitudinal y corte con meninges y raíces. Incluyen trece puntos seleccionables y apertura a tamaño completo.
-- Botones «Lámina anatómica» y «Mapa de estudio» para cambiar la representación de cada panel sin perder la estructura seleccionada. El mapa conserva los 31 pares y los rótulos de referencia.
+- Botones para cambiar la representación sin perder la estructura seleccionada. Las regiones alternan entre «Lámina anatómica» y «Mapa de estudio», con los 31 pares. Las cubiertas se abren en «Corte interactivo», con selección y zoom sobre la lámina realista.
 - Esquema transversal interactivo de meninges, LCR, raíces, ganglio, nervio espinal y sus ramos. Sus fichas incluyen anatomía, conectividad, función, clínica y bibliografía.
 - Selección de apófisis espinosa, cuerpo vertebral, canal vertebral y médula. También puedes seleccionar partes del modelo con un clic.
 - Corte transversal con diez vías bilaterales y selección por clic, toque o teclado.
@@ -37,7 +37,7 @@ Si abres `index.html` directamente con `file://`, aparece una guía de apertura.
 - Sección «Sustancia gris» con un esquema regional, histología comparativa de las láminas I–V y enlaces a microscopía virtual. Cada recurso indica su técnica, especie y fuente cuando esos datos están disponibles.
 - Comparador de cortes C6, T3, L4 y S3, con morfología diferente, astas y núcleos seleccionables y un modo para estudiar las diez láminas de Rexed.
 - Zoom de la selección hasta 4×, con orientación anatómica, retorno a la vista completa y fichas de cinco apartados. Las estructuras disponibles cambian por segmento.
-- Los cortes de tractos y cubiertas comparten el acabado SVG del comparador: contornos suaves, tonos marfil, sombras discretas y selección clara. Ambos incorporan acercamiento de la selección y retorno a la vista completa.
+- Los cortes C6, T3, L4 y S3 incorporan nuevas láminas realistas con textura de sustancia blanca y gris. T3 también es la base del mapa de vías. El corte de cubiertas usa la lámina anatómica aprobada, ahora con selección y zoom. Los colores transparentes dejan visible el tejido.
 - Sección «Quiénes somos» con la identidad común de NeuroPsicoLocos / Simu-LAB, contacto, criterios editoriales y accesos a otros módulos. Incluye una descarga de los modelos docentes del encéfalo desmontable procedentes de «3D printer».
 - Fichas con anatomía, conectividad, función, correlación clínica y bibliografía.
 - Filtros de vías sensitivas y motoras y rótulos ocultables para practicar identificación.
@@ -51,7 +51,7 @@ Las vías incluidas son los fascículos grácil y cuneiforme, los tractos cortic
 
 El mapa de las diez vías en «Explorar» representa un segmento medular torácico alto (T3). El selector de «Sustancia gris» compara cuatro cortes de referencia (C6, T3, L4 y S3) y no modifica ese mapa de tractos. El fascículo cuneiforme está presente en T3, pero no debería copiarse sin cambios a cortes torácicos bajos o lumbares.
 
-Los cuatro cortes de sustancia gris son SVG docentes con forma y proporciones cualitativas diferentes. No representan medidas de área, reconstrucciones histológicas ni un atlas de todos los segmentos. Sus límites coloreados son orientativos. Clarke y el asta lateral simpática se muestran solo en T3 entre estos cortes, y el núcleo parasimpático sacro solo en S3. La lámina IX se dibuja en grupos discontinuos y la X rodea el conducto central, que es una cavidad. Las regiones homólogas conservan la selección al cambiar de nivel; una estructura no disponible se desactiva y se informa el cambio de selección.
+Los cuatro cortes de sustancia gris combinan láminas de tejido generadas con IA y territorios SVG docentes, con formas y proporciones cualitativas diferentes. No representan medidas de área, reconstrucciones histológicas ni un atlas de todos los segmentos. Sus límites coloreados son orientativos. Clarke y el asta lateral simpática se muestran solo en T3 entre estos cortes, y el núcleo parasimpático sacro solo en S3. La lámina IX se dibuja en grupos discontinuos y la X rodea el conducto central, que es una cavidad. Las regiones homólogas conservan la selección al cambiar de nivel; una estructura no disponible se desactiva y se informa el cambio de selección.
 
 T3 se refiere al segmento de médula, no a la vértebra T3. El modelo óseo utiliza T2, T3 y T4 del atlas BodyParts3D; el corte docente se estudia por separado y no establece equivalencia entre niveles medulares y vertebrales. El plano 3D muestra la orientación transversal; el SVG amplía y organiza el contenido para estudiarlo.
 
@@ -65,7 +65,7 @@ La vista longitudinal representa ocho pares cervicales, doce torácicos, cinco l
 
 Las nuevas imágenes mantienen un estilo común de ilustración médica con fondo marfil y colores suaves. Son ilustraciones docentes generadas con IA a partir de las cuatro imágenes del usuario. Se revisaron la orientación y las relaciones anatómicas generales; no son una reconstrucción histológica exacta. Las bandas de la sustancia gris no permiten asignar por sí solas las láminas I–X de Rexed. El recorrido longitudinal es conceptual y no identifica cuatro niveles medulares exactos.
 
-El mapa de vías utiliza el contorno SVG torácico del comparador y una capa independiente para las diez vías. Los territorios se adaptan desde sus coordenadas de referencia y se recortan a la sustancia blanca. Se pueden seleccionar bilateralmente, acercar, filtrar y estudiar con rótulos ocultos. La forma y la distribución siguen siendo esquemáticas y no representan áreas medidas ni límites histológicos precisos. La base ilustrada anterior permanece conservada entre los recursos del atlas.
+El mapa de vías utiliza la lámina realista T3 del comparador, un contorno SVG de referencia y una capa independiente para las diez vías. Los territorios se adaptan desde sus coordenadas de referencia y se recortan a la sustancia blanca. Se pueden seleccionar bilateralmente, acercar, filtrar y estudiar con rótulos ocultos. La forma y la distribución siguen siendo esquemáticas y no representan áreas medidas ni límites histológicos precisos. La base ilustrada anterior permanece conservada entre los recursos del atlas.
 
 El mapa de cubiertas reutiliza esa forma torácica como referencia de tejido, con la piamadre siguiendo su contorno. Las otras cubiertas y el espacio con LCR se amplían y separan para estudiar su orden. El acercamiento de una meninge muestra un sector de su contorno; el de una raíz o ganglio encuadra esa estructura. El mapa no establece una correspondencia exacta entre cada raíz dibujada y un segmento medular. Las láminas anatómicas con textura continúan disponibles en su representación propia.
 
@@ -118,6 +118,7 @@ medula-atlas/
 │   ├── gray-resources.js    Imágenes, visores, especies, fuentes y licencias
 │   ├── gray-level-content.js Segmentos, estructuras, láminas y fuentes científicas
 │   ├── gray-level-geometry.js Contornos y territorios SVG docentes
+│   ├── realistic-cuts.js    Archivos y colocación de las cuatro láminas de tejido
 │   ├── gray-level-explorer.js Estado, selección, fichas y encuadre del corte
 │   ├── project-info.js      Identidad, catálogo, contacto y créditos
 │   ├── info-pages.js        Presentación de las dos nuevas secciones
@@ -144,13 +145,13 @@ Las regiones, cubiertas y raíces se editan en `src/anatomy-content.js`, manteni
 
 La presentación de las láminas de «Anatomía» se edita en `src/anatomy-illustrations.js`: imágenes, textos alternativos, puntos y posiciones en porcentajes. Los botones, fichas y ambos mapas comparten la misma selección en `src/anatomy-page.js`. Si falla una imagen, su panel cambia al mapa. Los dos PNG y los prompts completos están en `assets/anatomy/`; el manifiesto también conserva dimensiones, hashes, revisión y límites.
 
-`covering-cut.js` conserva la geometría del corte de cubiertas y los sectores de acercamiento. `cut-zoom.js` encuadra la selección dentro del lienzo, mantiene su proporción y limita el aumento a 4×. Ambos mapas coordinan el zoom con sus fichas; cambiar la representación de cubiertas restaura la vista completa y conserva la estructura. En móvil, la selección lleva a la descripción y el botón de retorno deja accesibles los controles. Su diseño se edita en `cut-presentation.css`.
+`covering-cut.js` coloca la lámina de meninges dentro del SVG y conserva puntos y sectores de acercamiento. No deforma la imagen ni asigna un nivel medular a esa lámina. Los puntos permanecen pequeños al ampliar, para no ocultar el tejido. `cut-zoom.js` encuadra la selección dentro del lienzo, mantiene su proporción y limita el aumento a 4×. Ambos mapas coordinan el zoom con sus fichas; cambiar la representación de cubiertas restaura la vista completa y conserva la estructura. En móvil, la selección lleva a la descripción y el botón de retorno deja accesibles los controles. Su diseño se edita en `cut-presentation.css`.
 
 Para cambiar el texto de las láminas generales, edita `src/illustrations.js`. Los cinco PNG están en `assets/illustrations/`; `generation-manifest.json` conserva los prompts completos, referencias y método de generación. Las referencias originales se conservan en la entrega local independiente y no se sirven desde este repositorio.
 
 Para añadir un recurso de sustancia gris, edita `src/gray-resources.js`. Comprueba su autoría, técnica, especie y condiciones de reutilización antes de copiar la imagen. Si solo se permite consultarla en su web, añade un enlace a `viewers`. El contenido científico se mantiene separado del diseño en `src/info-pages.js` e `info-pages.css`.
 
-El comparador usa tres módulos independientes. `gray-level-content.js` contiene las fichas, referencias y disponibilidad por segmento; `resolveGraySelection()` impide conservar una estructura no representada. `gray-level-geometry.js` contiene la forma de cada corte, los territorios seleccionables y el encuadre. `gray-level-explorer.js` coordina el nivel, el modo de contenido, la selección bilateral, la ficha y el zoom, sin WebGL ni nuevas dependencias. El lienzo usa 600 × 480 unidades de dibujo, sin escala física. Cambia su presentación en `gray-explorer.css`.
+El comparador separa cuatro módulos independientes. `gray-level-content.js` contiene las fichas, referencias y disponibilidad por segmento; `resolveGraySelection()` impide conservar una estructura no representada. `gray-level-geometry.js` contiene la forma de cada corte, los territorios seleccionables y el encuadre. `gray-level-explorer.js` coordina el nivel, el modo de contenido, la selección bilateral, la ficha y el zoom, sin WebGL ni nuevas dependencias. El lienzo usa 600 × 480 unidades de dibujo, sin escala física. `realistic-cuts.js` registra los archivos y su colocación; `grayBaseMarkup()` conserva un dibujo de respaldo bajo las imágenes. Las láminas se recortan al contorno docente y los territorios se mantienen separados. Cambia su presentación en `gray-explorer.css` y `cut-presentation.css`.
 
 La identidad y los accesos se editan en `src/project-info.js`. Se reutilizan NeuroPsicoLocos / Simu-LAB y `admin@neuropsicolocos.com`, documentados en el portal y en NeuroCell Explorer. `people` acepta objetos con `name`, `role` e `institution`; los datos de personas o afiliaciones adicionales se incorporan solo cuando están confirmados. Los bloques vacíos permanecen ocultos.
 
@@ -196,8 +197,14 @@ Conserva la carpeta completa al desplegar: las licencias, los manifiestos, las m
 
 ## Verificación
 
-Desde la carpeta del atlas, `npm run check` comprueba la sintaxis de sus veintidós archivos JavaScript. Desde la raíz del repositorio, `node --test tests/*.test.mjs` verifica también la tarjeta del portal, las rutas del módulo, sus recursos esenciales y las traducciones del portal. `tests/medula-anatomy.test.mjs` comprueba los 31 pares, los cinco recuentos regionales, el descenso de raíces inferiores, la integridad de las fichas y las claves de las doce preguntas. `tests/medula-gray-levels.test.mjs` comprueba la disponibilidad y continuidad de selección entre segmentos, las fuentes de las fichas y la orientación, proporción y límites del zoom. `tests/medula-cut-zoom.test.mjs` comprueba el encuadre común con diferentes lienzos, la reflexión anatómica de los tractos y los sectores de las ocho estructuras de cubiertas.
+Desde la carpeta del atlas, `npm run check` comprueba la sintaxis de sus veintitrés archivos JavaScript. Desde la raíz del repositorio, `node --test tests/*.test.mjs` verifica también la tarjeta del portal, las rutas del módulo, sus recursos esenciales y las traducciones del portal. `tests/medula-anatomy.test.mjs` comprueba los 31 pares, los cinco recuentos regionales, el descenso de raíces inferiores, la integridad de las fichas y las claves de las doce preguntas. `tests/medula-gray-levels.test.mjs` comprueba la disponibilidad y continuidad de selección entre segmentos, las fuentes de las fichas y la orientación, proporción y límites del zoom. `tests/medula-cut-zoom.test.mjs` comprueba el encuadre común con diferentes lienzos, la reflexión anatómica de los tractos y los sectores de las ocho estructuras de cubiertas.
 
 La revisión de integración se documenta en [RELEASE_QA.md](../../docs/medula-atlas/RELEASE_QA.md). La evidencia de las versiones anteriores se conserva en la entrega local independiente. No se distribuyen capturas ni dependencias de pruebas dentro del atlas publicado.
 
 La revisión de navegador cubre escritorio y una pantalla móvil de 390 px, la carga del mapa y el modelo WebGL, fichas, sustancia gris, modos docentes y navegación de retorno. No establece compatibilidad con todas las GPU o navegadores.
+
+## Láminas realistas de la versión 10
+
+Las cuatro imágenes `assets/anatomy/corte-c6-v10.png`, `corte-t3-v10.png`, `corte-l4-v10.png` y `corte-s3-v10.png` se generaron con la herramienta integrada de imágenes, usando las siluetas docentes como referencia geométrica y la lámina de meninges como referencia estética. El corte interactivo de cubiertas reutiliza `corte-meninges-v7.png`. Todos los rótulos y zonas seleccionables se dibujan aparte.
+
+`assets/anatomy/generation-manifest-v10.json` conserva los cuatro prompts completos, dimensiones, tamaños y hashes. Los PNG tienen 1402 × 1122 píxeles; sus coordenadas de colocación se editan en `src/realistic-cuts.js`. No incluyen marcas de agua. La textura aporta legibilidad y volumen, pero no representa una preparación histológica, un recuento celular ni fibras reconstruidas a partir de datos. La alineación visual se revisa al cambiar de nivel y al ampliar la selección.

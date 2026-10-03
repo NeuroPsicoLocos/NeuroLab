@@ -1,5 +1,5 @@
 import { grayLevels, grayLevelSources, resolveGraySelection } from './gray-level-content.js?v=8';
-import { grayTerritory, grayBaseMarkup, grayFocusViewBox } from './gray-level-geometry.js?v=8';
+import { grayTerritory, grayBaseMarkup, grayFocusViewBox } from './gray-level-geometry.js?v=10';
 
 const escape = value => String(value).replace(/[&<>"']/g, character => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[character]));
 const sourceLink = id => `<a href="${grayLevelSources[id].url}" target="_blank" rel="noopener noreferrer">${escape(grayLevelSources[id].title)} ↗</a>`;
@@ -16,7 +16,7 @@ export function setupGrayLevelExplorer() {
         <div class="gray-mode-options" role="group" aria-label="Contenido del corte"><button data-gray-mode="structures" class="active" aria-pressed="true">Astas y núcleos</button><button data-gray-mode="laminae" aria-pressed="false">Láminas de Rexed</button></div>
         <div class="gray-zoom-tools"><button id="gray-zoom-in" class="secondary-button">Acercar selección</button><button id="gray-zoom-out" class="secondary-button" disabled>Vista completa</button><output id="gray-zoom-status">Vista general</output></div>
         <figure class="gray-cut-figure"><div class="gray-cut-frame"><svg id="gray-level-map" viewBox="0 0 600 480" role="group" aria-labelledby="gray-cut-title gray-cut-description"></svg></div><figcaption><strong id="gray-selected-label"></strong><span>Posterior arriba · Anterior abajo</span><span>Vista desde caudal: derecha del sujeto a la izquierda.</span></figcaption></figure>
-        <p class="gray-cut-limit">Esquema docente, sin escala física. Los tamaños permiten comparar formas; no son medidas de tejido. Las zonas y los límites de Rexed son orientativos.</p>
+        <p class="gray-cut-limit">Ilustración docente generada con IA, con textura artística y sin escala física. Los tamaños comparan formas; no son medidas de tejido. Las zonas y los límites de Rexed son orientativos.</p>
         <div id="gray-structure-options" class="gray-structure-options" role="group" aria-label="Estructuras de sustancia gris"></div>
       </div>
       <aside class="gray-detail-column" aria-label="Ficha de sustancia gris"><button id="gray-back-to-cut" class="secondary-button">↑ Volver al corte</button><div id="gray-level-detail" aria-live="polite"></div><div class="gray-observations"><h3>Qué observar en este nivel</h3><ul id="gray-level-observations"></ul><div id="gray-level-sources"></div></div></aside>

@@ -1,6 +1,6 @@
 import { plateRegions } from './plate-regions.js';
-import { grayBaseMarkup, grayGeometry } from './gray-level-geometry.js?v=8';
-import { setupCutZoom } from './cut-zoom.js?v=9';
+import { grayBaseMarkup, grayGeometry } from './gray-level-geometry.js?v=10';
+import { setupCutZoom } from './cut-zoom.js?v=10';
 
 const NS = 'http://www.w3.org/2000/svg';
 

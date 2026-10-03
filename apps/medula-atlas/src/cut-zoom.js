@@ -22,6 +22,9 @@ export function setupCutZoom(svg, controls, fullViewBox) {
   function render() {
     const view = zoomed && selectedBounds ? fitCutViewBox(selectedBounds, fullViewBox) : fullViewBox;
     svg.setAttribute('viewBox', view.join(' '));
+    // Mantiene los puntos discretos al ampliar, para no cubrir el tejido.
+    svg.style.setProperty('--cut-zoom', String(fullViewBox[2] / view[2]));
+    svg.classList.toggle('cut-zoomed', zoomed);
     zoomIn.disabled = !selectedBounds;
     zoomOut.disabled = !zoomed;
     status.textContent = zoomed ? `${(fullViewBox[2] / view[2]).toFixed(1).replace('.', ',')}× · ${selectedLabel}` : 'Vista general';

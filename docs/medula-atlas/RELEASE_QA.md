@@ -2,6 +2,18 @@
 
 Fecha: 3 de octubre de 2026. Módulo: `apps/medula-atlas/`.
 
+## Cortes con tejido realista, versión 10.0
+
+- Se generaron cuatro láminas de C6, T3, L4 y S3 a partir de sus siluetas docentes y la referencia estética aprobada. Se revisaron orientación, canal, fisura anterior, diferencias de astas, encuadre y ausencia de marcas de agua. Los cuatro PNG tienen 1402 × 1122 píxeles y un manifiesto con prompts y hashes.
+- T3 también sirve de base al mapa de diez vías. Las zonas siguen recortadas a la sustancia blanca esquemática y sus colores transparentes dejan ver la textura.
+- El corte de meninges reutiliza la lámina realista de la versión 7, sin deformarla. Se revisaron sus ocho puntos y sectores de acercamiento. Se abre como «Corte interactivo»; el cambio de representación restablece la vista completa y mantiene la selección.
+- Se seleccionaron las diez vías y las ocho estructuras de cubiertas. Enter y espacio actualizan sus fichas. Los filtros mantienen seis vías sensitivas y cuatro motoras. Los rótulos conservan tamaño discreto al ampliar y pueden ocultarse y restaurarse.
+- Se comprobaron imagen, asta anterior y zoom en los cuatro segmentos, además de IX en T3 y la población parasimpática sacra en S3. El modo docente conserva su guía.
+- Explorar, Sustancia gris y Anatomía se revisaron a 336, 390, 900 y 1440 px, sin desbordamiento horizontal. En móvil funcionan los retornos al corte y los controles de acercamiento.
+- Pasaron las 75 pruebas, la sintaxis de los 23 módulos del atlas y los 64 archivos JavaScript del repositorio, y los dos bundles deterministas. No se registraron errores ni advertencias de consola durante el recorrido.
+
+Las texturas son artísticas y no representan histología, recuentos de células ni reconstrucciones de fibras. Las zonas de vías y de Rexed son orientativas. La lámina de meninges tiene espesores ampliados y no se asigna a un segmento medular concreto. La revisión visual no constituye validación anatómica clínica independiente. Las fuentes científicas y los recursos histológicos originales se conservan.
+
 ## Acabado común de los cortes anteriores, versión 9.0
 
 - Pasaron las 75 pruebas, la sintaxis de los 22 módulos del atlas y los 63 archivos JavaScript del repositorio, y los dos bundles deterministas.

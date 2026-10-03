@@ -3,11 +3,11 @@
 .cut-tools button { min-height:44px; font-size:.75rem; padding:9px 12px; }
 .cut-tools button:disabled { opacity:.45; cursor:default; }
 .cut-tools output { flex:1 1 100%; font-size:.7rem; color:var(--muted); line-height:1.6; }
-.section-map:has(.study-cut-map) { background:radial-gradient(ellipse at 45% 38%,#fffefa,#f3f1e9); }
+.section-map:has(.study-cut-map) { background:#fff; }
 #cord-svg.study-cut-map { max-height:490px; aspect-ratio:1.25; }
-.study-cut-map .tract-shape { fill:var(--tract-color); fill-opacity:.4; stroke:var(--tract-color); stroke-opacity:.6; stroke-width:1; vector-effect:non-scaling-stroke; }
-.study-cut-map .tract-shape.selected { fill-opacity:.82; stroke:#fffefa; stroke-opacity:1; stroke-width:2; }
-.study-cut-map .tract-shape:hover { fill-opacity:.72; stroke-opacity:1; stroke-width:2; }
+.study-cut-map .tract-shape { fill:var(--tract-color); fill-opacity:.16; stroke:var(--tract-color); stroke-opacity:.5; stroke-width:1; vector-effect:non-scaling-stroke; }
+.study-cut-map .tract-shape.selected { fill-opacity:.42; stroke:#fffefa; stroke-opacity:1; stroke-width:2; }
+.study-cut-map .tract-shape:hover { fill-opacity:.3; stroke-opacity:1; stroke-width:2; }
 .study-cut-map .tract-shape:focus-visible { outline:none; stroke:#286b63; stroke-width:3; filter:none; }
 .study-cut-map .tract-shape.muted { fill-opacity:0; stroke-opacity:0; pointer-events:none; }
 .study-cut-map .map-orientation { font-size:10px; letter-spacing:2px; }
@@ -15,18 +15,21 @@
 .study-cut-map .anatomy-label { font-size:10px; fill:#68776c; }
 .study-cut-map .map-symbol-background { fill:#fffefa; fill-opacity:.88; }
 .study-cut-map .canal-marker { stroke-width:1.3; }
-#covering-map { background:radial-gradient(ellipse at 40% 35%,#fffefa,#f3f1e9); }
-#covering-map .covering-surface { stroke:#536b672f; stroke-width:1; }
-#covering-map .covering-cord { pointer-events:none; }
-#covering-map .sensory { stroke:url(#covering-sensory); }
-#covering-map .motor { stroke:url(#covering-motor); }
-#covering-map .mixed { stroke:url(#covering-mixed); }
+#covering-map { background:#fff; }
+#covering-map .covering-hit { fill:transparent; r:calc(18px / var(--cut-zoom,1)); }
+#covering-map .covering-pin-surface { fill:#286b63; fill-opacity:.8; stroke:#fff; stroke-width:2; r:calc(9px / var(--cut-zoom,1)); vector-effect:non-scaling-stroke; }
+#covering-map .covering-pin-number { fill:#fff; font-size:calc(10px / var(--cut-zoom,1)); font-weight:650; pointer-events:none; dominant-baseline:middle; transform:translateY(-3.5px); }
 #covering-map [data-covering].selected { filter:none; }
-#covering-map [data-covering].selected .covering-surface { stroke:#fffefa; stroke-width:2.5; }
-#covering-map [data-covering].selected .pial-surface { stroke:#915d48; stroke-width:17; }
-#covering-map [data-covering].selected .root-stroke { stroke-width:8; }
-#covering-map [data-covering].selected .ganglion-surface { stroke:#fffefa; stroke-width:2.5; }
-#covering-map [data-covering]:focus-visible { filter:drop-shadow(0 0 2px #286b63); }
+#covering-map [data-covering].selected .covering-pin-surface { fill:#b0804d; fill-opacity:1; stroke-width:3; }
+#covering-map [data-covering]:focus-visible { outline:none; }
+#covering-map [data-covering]:focus-visible .covering-hit { fill:#286b6320; stroke:#286b63; stroke-width:2; }
+.realistic-tissue,.realistic-covering { pointer-events:none; }
+.study-cut-map .map-labels > g { transform-box:fill-box; transform-origin:center; transform:scale(calc(1 / var(--cut-zoom,1))); }
+.gray-cut-frame { background:#fff; }
+.gray-cut-frame .laminar-territory { fill-opacity:.18; }
+.gray-cut-frame .gray-territory:hover { fill-opacity:.22; }
+.gray-cut-frame .gray-territory.selected { fill-opacity:.32; stroke:var(--region-color); stroke-width:2; }
+.gray-cut-frame .gray-territory:focus-visible { fill-opacity:.38; }
 #back-to-covering-map { display:none; }
 @media(max-width:760px) {
   #cord-svg.study-cut-map { max-height:none; }

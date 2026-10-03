@@ -1,12 +1,12 @@
 import { tracts, sources, structures, questions } from './content.js?v=6';
-import { createCrossSection } from './cross-section.js?v=9';
+import { createCrossSection } from './cross-section.js?v=10';
 import { illustrations } from './illustrations.js?v=4';
 import { setupBonePresentation } from './bone-presentation.js?v=4';
 import { setupModelViewer } from './model-viewer.js?v=4';
 import { setupInfoPages } from './info-pages.js?v=6';
-import { setupAnatomyPage } from './anatomy-page.js?v=9';
+import { setupAnatomyPage } from './anatomy-page.js?v=10';
 import { coverings } from './anatomy-content.js?v=6';
-import { setupGrayLevelExplorer } from './gray-level-explorer.js?v=8';
+import { setupGrayLevelExplorer } from './gray-level-explorer.js?v=10';
 
 const $=selector=>document.querySelector(selector);
 let selected=tracts[0].id,selectedStructure='spinous',filter='all',teacher=false,labels=true,scene=null;
