@@ -2,6 +2,8 @@
 
 Protocolo breve para evaluar la versión beta de potenciales de campo antes de ampliar Simu-LAB a current clamp, voltage clamp y farmacología temporal.
 
+Para una primera prueba sintética de 10–15 minutos, véase la [guía rápida para revisores](REVIEWER_QUICKSTART.md).
+
 ## Objetivo
 
 Comprobar con registros representativos que la aplicación:
@@ -124,4 +126,3 @@ La beta puede etiquetarse como `v0.1.0` cuando:
 - no quedan incidencias críticas abiertas;
 - las incidencias altas tienen corrección o una limitación documentada;
 - las diferencias frente a mediciones expertas quedan cuantificadas y justificadas.
-
