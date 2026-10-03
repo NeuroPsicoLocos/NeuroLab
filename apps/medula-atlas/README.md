@@ -1,4 +1,4 @@
-# Médula · Atlas interactivo (versión 8.0)
+# Médula · Atlas interactivo (versión 9.0)
 
 Explorador educativo de la médula espinal, su protección vertebral y sus principales vías. Hecho con HTML, CSS y JavaScript, sin framework ni servidor de aplicación. Three.js se utiliza únicamente para el modelo 3D y está incluido localmente.
 
@@ -37,6 +37,7 @@ Si abres `index.html` directamente con `file://`, aparece una guía de apertura.
 - Sección «Sustancia gris» con un esquema regional, histología comparativa de las láminas I–V y enlaces a microscopía virtual. Cada recurso indica su técnica, especie y fuente cuando esos datos están disponibles.
 - Comparador de cortes C6, T3, L4 y S3, con morfología diferente, astas y núcleos seleccionables y un modo para estudiar las diez láminas de Rexed.
 - Zoom de la selección hasta 4×, con orientación anatómica, retorno a la vista completa y fichas de cinco apartados. Las estructuras disponibles cambian por segmento.
+- Los cortes de tractos y cubiertas comparten el acabado SVG del comparador: contornos suaves, tonos marfil, sombras discretas y selección clara. Ambos incorporan acercamiento de la selección y retorno a la vista completa.
 - Sección «Quiénes somos» con la identidad común de NeuroPsicoLocos / Simu-LAB, contacto, criterios editoriales y accesos a otros módulos. Incluye una descarga de los modelos docentes del encéfalo desmontable procedentes de «3D printer».
 - Fichas con anatomía, conectividad, función, correlación clínica y bibliografía.
 - Filtros de vías sensitivas y motoras y rótulos ocultables para practicar identificación.
@@ -64,7 +65,9 @@ La vista longitudinal representa ocho pares cervicales, doce torácicos, cinco l
 
 Las nuevas imágenes mantienen un estilo común de ilustración médica con fondo marfil y colores suaves. Son ilustraciones docentes generadas con IA a partir de las cuatro imágenes del usuario. Se revisaron la orientación y las relaciones anatómicas generales; no son una reconstrucción histológica exacta. Las bandas de la sustancia gris no permiten asignar por sí solas las láminas I–X de Rexed. El recorrido longitudinal es conceptual y no identifica cuatro niveles medulares exactos.
 
-En el corte interactivo se utiliza una base sin territorios coloreados y una capa SVG independiente para las diez vías. Esto permite corregir la localización, seleccionar cada región y ocultar los rótulos sin depender de los colores dibujados por el generador. Las zonas de selección siguen siendo esquemáticas y no representan límites histológicos precisos.
+El mapa de vías utiliza el contorno SVG torácico del comparador y una capa independiente para las diez vías. Los territorios se adaptan desde sus coordenadas de referencia y se recortan a la sustancia blanca. Se pueden seleccionar bilateralmente, acercar, filtrar y estudiar con rótulos ocultos. La forma y la distribución siguen siendo esquemáticas y no representan áreas medidas ni límites histológicos precisos. La base ilustrada anterior permanece conservada entre los recursos del atlas.
+
+El mapa de cubiertas reutiliza esa forma torácica como referencia de tejido, con la piamadre siguiendo su contorno. Las otras cubiertas y el espacio con LCR se amplían y separan para estudiar su orden. El acercamiento de una meninge muestra un sector de su contorno; el de una raíz o ganglio encuadra esa estructura. El mapa no establece una correspondencia exacta entre cada raíz dibujada y un segmento medular. Las láminas anatómicas con textura continúan disponibles en su representación propia.
 
 Las correlaciones clínicas son ejemplos docentes. No sustituyen la valoración de un caso real.
 
@@ -97,6 +100,7 @@ medula-atlas/
 ├── info-pages.css           Diseño de sustancia gris y presentación del proyecto
 ├── anatomy.css              Regiones, cubiertas y controles de capas
 ├── gray-explorer.css        Comparador, selección y zoom de sustancia gris
+├── cut-presentation.css     Acabado y controles comunes de los otros cortes
 ├── src/
 │   ├── content.js           Tractos, estructuras, preguntas y bibliografía
 │   ├── anatomy-content.js   Regiones, meninges, raíces y sus fuentes
@@ -104,6 +108,8 @@ medula-atlas/
 │   ├── anatomy-page.js      Láminas, mapas SVG seleccionables y fichas
 │   ├── spinal-coverings.js  Cubiertas y nervios esquemáticos en Three.js
 │   ├── cross-section.js     Dibujo SVG y selección bilateral
+│   ├── cut-zoom.js          Encuadre y controles compartidos de acercamiento
+│   ├── covering-cut.js      Geometría y sectores de meninges y raíces
 │   ├── plate-regions.js     Territorios SVG sobre la base ilustrada
 │   ├── illustrations.js     Contenido y fuentes de las cuatro láminas
 │   ├── bone-presentation.js Alternancia entre lámina y modelo 3D
@@ -132,11 +138,13 @@ medula-atlas/
 └── .nojekyll                Compatibilidad con GitHub Pages
 ```
 
-Para corregir una descripción, edita el objeto correspondiente de `src/content.js`. Mantén separados los campos `anatomy`, `route`, `crossing`, `function` y `clinical`. Cada vía tiene identificador estable, color, abreviatura y referencias. Las regiones y rótulos del corte ilustrado se editan en `src/plate-regions.js`, sobre un lienzo de 1254 × 1254. La posición `label` conservada en `content.js` orienta la representación 3D.
+Para corregir una descripción, edita el objeto correspondiente de `src/content.js`. Mantén separados los campos `anatomy`, `route`, `crossing`, `function` y `clinical`. Cada vía tiene identificador estable, color, abreviatura y referencias. Las regiones y rótulos se editan en `src/plate-regions.js`, en coordenadas de referencia de 1254 × 1254. `cross-section.js` lleva el centro (627, 640) a (300, 254), aplica factores de dibujo de 0.3 y 0.37, refleja el lado derecho del sujeto y recorta los territorios a la sustancia blanca. Son ajustes docentes, sin escala física. La posición `label` conservada en `content.js` orienta la representación 3D.
 
 Las regiones, cubiertas y raíces se editan en `src/anatomy-content.js`, manteniendo sus cinco apartados y referencias. `buildSpinalSegments()` genera los 31 pares del dibujo; sus coordenadas son docentes. `src/anatomy-page.js` dibuja los dos SVG y coordina la selección con clic, toque, Enter o espacio. Funcionan sin WebGL. `src/spinal-coverings.js` construye las superficies y raíces 3D, mientras `src/spine-scene.js` mantiene cámara, iluminación y selección. Cambia el diseño en `anatomy.css`, sin mezclarlo con las descripciones científicas.
 
 La presentación de las láminas de «Anatomía» se edita en `src/anatomy-illustrations.js`: imágenes, textos alternativos, puntos y posiciones en porcentajes. Los botones, fichas y ambos mapas comparten la misma selección en `src/anatomy-page.js`. Si falla una imagen, su panel cambia al mapa. Los dos PNG y los prompts completos están en `assets/anatomy/`; el manifiesto también conserva dimensiones, hashes, revisión y límites.
+
+`covering-cut.js` conserva la geometría del corte de cubiertas y los sectores de acercamiento. `cut-zoom.js` encuadra la selección dentro del lienzo, mantiene su proporción y limita el aumento a 4×. Ambos mapas coordinan el zoom con sus fichas; cambiar la representación de cubiertas restaura la vista completa y conserva la estructura. En móvil, la selección lleva a la descripción y el botón de retorno deja accesibles los controles. Su diseño se edita en `cut-presentation.css`.
 
 Para cambiar el texto de las láminas generales, edita `src/illustrations.js`. Los cinco PNG están en `assets/illustrations/`; `generation-manifest.json` conserva los prompts completos, referencias y método de generación. Las referencias originales se conservan en la entrega local independiente y no se sirven desde este repositorio.
 
@@ -188,7 +196,7 @@ Conserva la carpeta completa al desplegar: las licencias, los manifiestos, las m
 
 ## Verificación
 
-Desde la carpeta del atlas, `npm run check` comprueba la sintaxis de sus veinte archivos JavaScript. Desde la raíz del repositorio, `node --test tests/*.test.mjs` verifica también la tarjeta del portal, las rutas del módulo, sus recursos esenciales y las traducciones del portal. `tests/medula-anatomy.test.mjs` comprueba los 31 pares, los cinco recuentos regionales, el descenso de raíces inferiores, la integridad de las fichas y las claves de las doce preguntas. `tests/medula-gray-levels.test.mjs` comprueba la disponibilidad y continuidad de selección entre segmentos, las fuentes de las fichas y la orientación, proporción y límites del zoom.
+Desde la carpeta del atlas, `npm run check` comprueba la sintaxis de sus veintidós archivos JavaScript. Desde la raíz del repositorio, `node --test tests/*.test.mjs` verifica también la tarjeta del portal, las rutas del módulo, sus recursos esenciales y las traducciones del portal. `tests/medula-anatomy.test.mjs` comprueba los 31 pares, los cinco recuentos regionales, el descenso de raíces inferiores, la integridad de las fichas y las claves de las doce preguntas. `tests/medula-gray-levels.test.mjs` comprueba la disponibilidad y continuidad de selección entre segmentos, las fuentes de las fichas y la orientación, proporción y límites del zoom. `tests/medula-cut-zoom.test.mjs` comprueba el encuadre común con diferentes lienzos, la reflexión anatómica de los tractos y los sectores de las ocho estructuras de cubiertas.
 
 La revisión de integración se documenta en [RELEASE_QA.md](../../docs/medula-atlas/RELEASE_QA.md). La evidencia de las versiones anteriores se conserva en la entrega local independiente. No se distribuyen capturas ni dependencias de pruebas dentro del atlas publicado.
 
