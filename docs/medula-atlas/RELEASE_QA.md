@@ -1,5 +1,18 @@
 # Revisión de integración de Médula
 
+## Localiza la lesión, versión 12.0
+
+- Actividad inversa con cinco casos ficticios numerados. Reutiliza los cuatro patrones T3 existentes (incluidas ambas hemimédulas) y sus fuentes. No añade un predictor clínico ni otra etiología.
+- Narrativas, tres pistas por caso y transiciones en `localization-content.js`; representación compartida en `lesion-geometry.js`, integración en `lesion-page.js` y presentación en `lesions.css`. El acceso `?actividad=localizar#lesions` abre el modo inverso.
+- Antes de comprobar, elegir un punto no inserta territorio coloreado, vías ni explicación en el DOM. Los cinco casos dieron acierto con la zona esperada. La elección de la hemimédula opuesta mostró la propuesta original y la solución con su regla de lateralidad. Tras comprobar quedan bloqueadas las selecciones hasta reiniciar o cambiar de caso.
+- Las pistas docentes se insertan una a una, hasta tres; no revelan la solución visual. Mostrar explicación presenta la ubicación esperada sin exigir respuesta. Al volver a estudiante se eliminan las pistas y una solución no contestada. Reiniciar, cambiar de caso y cambiar de actividad limpian el estado.
+- Enter y Espacio seleccionan puntos. El zoom se centra en la propuesta antes de comprobar; la comisura llega a 4×. Cambiar de caso y reiniciar vuelven al corte completo.
+- Se revisó el estado inicial y la respuesta con tabla a 336, 390, 900 y 1440 px sin desbordamiento horizontal. En móvil los hallazgos preceden al corte; los botones de ida y vuelta trasladan el foco y el encuadre. Las tres pistas no desbordaron a 390 px.
+- El modo anterior conserva su devolución de errores. La selección del corticoespinal lateral, el asta anterior en S3 y la vista de meninges siguieron funcionando. No se registraron errores ni advertencias de consola durante el recorrido.
+- Pasaron 87 pruebas, 27 módulos del atlas, 70 archivos JS/mjs y los dos bundles deterministas. Las seis pruebas nuevas cubren los cinco casos, selección sin revelar, respuesta bloqueada, lateralidad, reinicio, pistas graduales y salida de docente.
+
+Fecha: 3 de octubre de 2026. Revisión funcional y visual en el navegador integrado. Los casos son idealizados y limitados a T3; no constituyen validación clínica ni pilotaje con estudiantes. El estado es efímero, sin guardar ni enviar respuestas. La publicación se verifica tras la integración mediante GitHub Pages y la ruta pública.
+
 ## Lesiones educativas, versión 11.0
 
 - Cinco zonas de selección y cuatro patrones T3: hemimédula derecha/izquierda, columnas posteriores, anterior y comisura blanca anterior. Los casos son ficticios. El área coral no es una segmentación de lesión ni un territorio vascular medido.

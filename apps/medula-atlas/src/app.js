@@ -7,7 +7,7 @@ import { setupInfoPages } from './info-pages.js?v=6';
 import { setupAnatomyPage } from './anatomy-page.js?v=10';
 import { coverings } from './anatomy-content.js?v=6';
 import { setupGrayLevelExplorer } from './gray-level-explorer.js?v=10';
-import { setupLesionPage } from './lesion-page.js?v=11';
+import { setupLesionPage } from './lesion-page.js?v=12';
 
 const $=selector=>document.querySelector(selector);
 let selected=tracts[0].id,selectedStructure='spinous',filter='all',teacher=false,labels=true,scene=null;

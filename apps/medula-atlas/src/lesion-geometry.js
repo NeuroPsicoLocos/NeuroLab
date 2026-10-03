@@ -40,25 +40,35 @@ export function createLesionCut(svg, onSelect) {
       transform: `translate(${zone.pin.join(' ')})` };
     for (const [key, value] of Object.entries(attrs)) group.setAttribute(key, value);
     group.innerHTML = `<circle r="27" class="lesion-pin-hit"/><circle r="15" class="lesion-pin-circle"/><text y="1">${zone.code}</text>`;
-    group.addEventListener('click', () => onSelect(zone.id));
+    group.addEventListener('click', () => {
+      if (group.getAttribute('aria-disabled') !== 'true') onSelect(zone.id);
+    });
     group.addEventListener('keydown', event => {
-      if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onSelect(zone.id); }
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        if (group.getAttribute('aria-disabled') !== 'true') onSelect(zone.id);
+      }
     });
     svg.querySelector('.lesion-pins').append(group);
   }
   return {
-    select(lesson, revealed) {
+    select(lesson, revealed, { neutral = false, selectedId = lesson.zone.id, locked = false } = {}) {
       const { zone } = lesson;
       let territory;
       if (zone.pattern === 'hemi') territory = `<rect x="${zone.side === 'right' ? 0 : 300}" y="60" width="300" height="350"/>`;
       else if (zone.pattern === 'posterior') territory = `<g clip-path="url(#lesion-white-clip)"><g transform="${tractTransform}">${columnMarkup}</g></g>`;
       else if (zone.pattern === 'anterior') territory = '<rect x="100" y="178" width="400" height="235" mask="url(#lesion-spare-columns)"/>';
       else territory = '<ellipse cx="300" cy="280" rx="24" ry="9"/>';
-      svg.querySelector('.lesion-territory').innerHTML = territory;
+      // En la actividad inversa no se colorea el territorio correcto ni la propuesta.
+      svg.querySelector('.lesion-territory').innerHTML = neutral ? '' : territory;
       // Los tractos se muestran solo al resolver o revelar el caso.
       svg.querySelector('.lesion-pathways').innerHTML = revealed ? ['affected', 'spared'].map(status => `<g class="lesion-${status}" transform="${tractTransform}">${lesson[status].filter(item => plateRegions[item.id]).map(item => `<g data-lesion-tract="${item.id}" data-side="${item.side}" data-status="${status}">${tractMarkup(item.id, item.side)}</g>`).join('')}</g>`).join('') : '';
       svg.querySelector('.lesion-commissure').toggleAttribute('hidden', !(revealed && zone.pattern === 'commissure'));
-      for (const pin of svg.querySelectorAll('.lesion-pin')) pin.setAttribute('aria-pressed', pin.dataset.lesionZone === zone.id);
+      for (const pin of svg.querySelectorAll('.lesion-pin')) {
+        pin.setAttribute('aria-pressed', pin.dataset.lesionZone === selectedId);
+        pin.setAttribute('aria-disabled', locked);
+        pin.setAttribute('tabindex', locked ? '-1' : '0');
+      }
     }
   };
 }

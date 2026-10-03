@@ -1,4 +1,4 @@
-# Médula · Atlas interactivo (versión 11.0)
+# Médula · Atlas interactivo (versión 12.0)
 
 Explorador educativo de la médula espinal, su protección vertebral y sus principales vías. Hecho con HTML, CSS y JavaScript, sin framework ni servidor de aplicación. Three.js se utiliza únicamente para el modelo 3D y está incluido localmente.
 
@@ -47,7 +47,7 @@ Si abres `index.html` directamente con `file://`, aparece una guía de apertura.
 
 Las vías incluidas son los fascículos grácil y cuneiforme, los tractos corticoespinales lateral y anterior, los espinotalámicos lateral y anterior, los espinocerebelosos posterior y anterior, el vestibuloespinal lateral y una representación agrupada de las vías reticuloespinales.
 
-## Lesiones (versión 11)
+## Lesiones (versión 12)
 
 Abre [Lesiones](https://neurolab.neuropsicolocos.com/apps/medula-atlas/#lesions). Cinco zonas seleccionables representan cuatro patrones en T3: hemimédula derecha o izquierda (Brown-Séquard), columnas posteriores, región anterior y comisura blanca anterior.
 
@@ -55,15 +55,28 @@ Abre [Lesiones](https://neurolab.neuropsicolocos.com/apps/medula-atlas/#lesions)
 2. Lee el caso ficticio y elige una respuesta. El mapa resalta vías comprometidas y respetadas; la explicación incluye una tabla de hallazgos y los cinco apartados científicos.
 3. Reinicia el caso o cambia de zona para ocultar de nuevo la respuesta. En modo docente puedes mostrar u ocultar vías y explicación sin contestar, con una pregunta de discusión.
 
+### Localiza la lesión
+
+Abre [la actividad inversa](https://neurolab.neuropsicolocos.com/apps/medula-atlas/?actividad=localizar#lesions) o pulsa «Localiza la lesión» dentro de Lesiones.
+
+1. Lee los hallazgos de uno de los cinco casos ficticios, identificados solo por número.
+2. Propón territorio y lado con los botones o los puntos del corte. Antes de comprobar no aparecen el territorio coloreado, las vías ni la explicación. El punto seleccionado marca tu propuesta.
+3. Pulsa «Comprobar ubicación». La devolución conserva lo que elegiste y explica la ubicación esperada, los cruces y las modalidades respetadas. La respuesta queda bloqueada hasta reiniciar o cambiar de caso.
+4. En modo docente, revela hasta tres pistas sucesivas (modalidades, vías y cruces, razonamiento anatómico). También puedes mostrar u ocultar la solución sin responder. Al salir de docente se eliminan las pistas y se oculta una solución no contestada.
+
+En móvil, los hallazgos se presentan antes del corte. Los botones permiten ir al corte y volver al caso con foco de teclado. Cambiar de actividad, reiniciar o elegir otro caso limpia las respuestas y las pistas. El acceso con `?actividad=localizar#lesions` abre directamente la actividad inversa.
+
+Los casos reutilizan las reglas T3 ya presentes. Se pide elegir dentro de cinco zonas docentes, no establecer un diagnóstico clínico abierto. No se ha realizado un pilotaje con estudiantes.
+
 El zoom mantiene el encuadre hasta 4×. Cambiar de caso regresa a la vista completa. El estado vive únicamente en memoria, sin cuentas, persistencia ni envío de respuestas.
 
-Arquitectura: `src/lesion-content.js` contiene casos, reglas explícitas de lateralidad, fuentes y transiciones de estado; `src/lesion-geometry.js` reutiliza el corte T3 y los territorios cualitativos del atlas; `src/lesion-page.js` conecta el dibujo y los controles; `lesions.css` define la presentación. No se calculan déficits por intersección de píxeles ni por volumen de lesión.
+Arquitectura: `src/lesion-content.js` contiene casos, reglas explícitas de lateralidad, fuentes y transiciones de estado; `src/localization-content.js` añade las narrativas, las pistas progresivas y las transiciones de la actividad inversa, reutilizando esas reglas; `src/lesion-geometry.js` reutiliza el corte T3 y los territorios cualitativos del atlas; `src/lesion-page.js` conecta el dibujo y los controles; `lesions.css` define la presentación. No se calculan déficits por intersección de píxeles ni por volumen de lesión.
 
 Se destacan columnas posteriores, vía corticoespinal lateral, vía espinotalámica lateral y fibras comisurales termoalgésicas. No es una lista exhaustiva de estructuras afectadas. El patrón comisural es segmentario y distinto del síndrome medular central traumático. No se estiman dermatomas exactos, gravedad, recuperación, causa ni efectos autonómicos. T3 designa un segmento medular; no se cambia el nivel del mapa ni se establece correspondencia vertebral. Los patrones puros son aproximaciones docentes.
 
 Fuentes revisadas el 3 de octubre de 2026: material universitario de UTHealth y artículos clínicos de Miranda et al. (2007, PMID 17394028), Klakeel et al. (2015, PMID 25552812) y McKinley et al. (2021, PMID 30939076). Cada ficha enlaza sus fuentes. Los casos no reproducen pacientes de esos artículos.
 
-Pruebas específicas: `node --test tests/medula-lesions.test.mjs` desde la raíz del repositorio. Verifican lateralidad, preservación de vías, diferencia entre patrón comisural y vías largas, reinicio y ocultación de respuestas al cambiar de caso o salir del modo docente. Revisión manual: teclado, ambas hemimédulas, acierto/error, cuatro patrones, zoom, modo docente, móvil y navegación previa.
+Pruebas específicas: `node --test tests/medula-lesions.test.mjs tests/medula-localization.test.mjs` desde la raíz del repositorio. Verifican lateralidad, bloqueo tras comprobar, pistas docentes progresivas, ausencia de revelación al elegir, preservación de vías, diferencia entre patrón comisural y vías largas, reinicio y ocultación de respuestas al cambiar de caso o salir del modo docente. Revisión manual: teclado, ambas hemimédulas, acierto/error, cuatro patrones, zoom, modo docente, móvil y navegación previa.
 
 ## Alcance anatómico
 
