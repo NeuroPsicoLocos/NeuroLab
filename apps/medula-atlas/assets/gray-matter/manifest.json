@@ -1,0 +1,27 @@
+{
+  "retrieved": "2026-10-03",
+  "images": [
+    {
+      "file": "rexed-laminae.svg",
+      "author": "ExplicitImplicity",
+      "source": "https://commons.wikimedia.org/wiki/File:Spinalcord_trirev_rexedlamina.svg",
+      "download": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Spinalcord_trirev_rexedlamina.svg",
+      "license": "CC BY-SA 3.0",
+      "modified": false,
+      "sha256": "e7943bb233c0db8b6cd6142b8e05ee442619ae6999dd7dcf85b15a9acc3dcc77",
+      "bytes": 47630
+    },
+    {
+      "file": "rexed-cat-fig4.webp",
+      "author": "Veshchitskii, Shkorbatova and Merkulyeva (2022)",
+      "source": "https://doi.org/10.3389/fnana.2022.1034395",
+      "figure": 4,
+      "download": "https://www.frontiersin.org/files/Articles/1034395/xml-images/fnana-16-1034395-g004.webp",
+      "license": "CC BY 4.0",
+      "species": "cat",
+      "modified": false,
+      "sha256": "a37d0ed3c1158cd90940ee7f5245310ffabfe1407b8cfcb0f566f94c3b00721d",
+      "bytes": 1095038
+    }
+  ]
+}

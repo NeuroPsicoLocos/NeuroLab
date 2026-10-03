@@ -1,0 +1,352 @@
+/* La ilustración conserva su textura; el SVG aporta color, foco y selección. */
+#cord-svg.illustrated-map {
+  max-height: 490px;
+}
+.illustrated-map .tract-shape {
+  fill: var(--tract-color);
+  fill-opacity: .32;
+  stroke: var(--tract-color);
+  stroke-opacity: .5;
+  stroke-width: 2;
+}
+.illustrated-map .tract-shape.selected {
+  fill-opacity: .58;
+  stroke-opacity: 1;
+  stroke-width: 5;
+}
+.illustrated-map .tract-shape:hover {
+  fill-opacity: .65;
+  stroke-opacity: 1;
+  stroke-width: 5;
+}
+.illustrated-map .tract-shape:focus-visible {
+  stroke: #183f43;
+  stroke-width: 7;
+  stroke-opacity: 1;
+}
+.illustrated-map .tract-shape.muted {
+  fill-opacity: 0;
+  stroke-opacity: 0;
+}
+.illustrated-map.filtering .atlas-base-image {
+  opacity: .55;
+}
+.illustrated-map.filtering .tract-shape:not(.muted) {
+  fill-opacity: .62;
+  stroke-opacity: .8;
+}
+.illustrated-map .map-orientation {
+  font-size: 25px;
+  letter-spacing: 5px;
+}
+.illustrated-map .tract-symbol {
+  font-size: 28px;
+  fill: #294b45;
+  font-weight: 650;
+}
+.illustrated-map .anatomy-label {
+  font-size: 22px;
+  fill: #6d7264;
+}
+.map-symbol-background {
+  fill: #fffefa;
+  fill-opacity: .85;
+}
+.map-labels {
+  pointer-events: none;
+}
+.canal-marker {
+  fill: #fffefa;
+  stroke: #7f8979;
+  stroke-width: 2;
+}
+.anatomy-plate-link {
+  display: block;
+  border: 0;
+  border-top: 1px solid var(--line);
+  padding: 14px 20px;
+  width: 100%;
+  background: #f5f6ee;
+  color: var(--teal);
+  text-align: left;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+/* Galería: miniaturas, lámina y claves de lectura sin texto incrustado. */
+.plates-page {
+  display: grid;
+  grid-template-columns: 235px minmax(360px, 1fr) 285px;
+  gap: 18px;
+  align-items: start;
+}
+.plate-selector,
+.plate-notes {
+  padding: 20px;
+}
+.plate-selector > p {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 10px 0 20px;
+}
+#plate-options {
+  display: grid;
+  gap: 8px;
+}
+#plate-options button {
+  border: 1px solid var(--line);
+  background: #fffefa;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+#plate-options button.active {
+  border-color: #9bb5a5;
+  background: #eaf0e7;
+}
+#plate-options button:hover {
+  border-color: #89a998;
+}
+#plate-options img {
+  width: 65px;
+  height: 68px;
+  object-fit: contain;
+  background: white;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+#plate-options span {
+  display: block;
+}
+#plate-options small {
+  display: block;
+  font-size: 9px;
+  margin-bottom: 3px;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+#plate-fullsize {
+  font-size: 10px;
+  text-decoration: none;
+}
+.plate-viewer figure {
+  margin: 0;
+}
+.plate-image-frame {
+  min-height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  margin: 0 15px;
+  border-radius: 9px;
+  overflow: hidden;
+}
+#plate-image {
+  width: 100%;
+  height: auto;
+  max-height: 670px;
+  object-fit: contain;
+  display: block;
+}
+#plate-image.portrait-plate {
+  max-width: 440px;
+}
+.plate-viewer figcaption {
+  margin: 20px 24px 24px;
+  border-top: 1px solid var(--line);
+  padding-top: 15px;
+}
+.plate-viewer figcaption h2 {
+  font-family: Georgia, serif;
+  font-size: 25px;
+  font-weight: 400;
+}
+.plate-viewer figcaption p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--muted);
+  margin-bottom: 0;
+}
+.plate-note {
+  border-bottom: 1px solid var(--line);
+  padding: 15px 0;
+}
+.plate-note h3 {
+  font-size: 12px;
+  font-weight: 650;
+  margin: 0 0 6px;
+}
+.plate-note p {
+  font-size: 11px;
+  color: #54635b;
+  line-height: 1.8;
+  margin: 0;
+}
+.plate-caution {
+  font-size: 10px;
+  line-height: 1.7;
+  color: var(--muted);
+  margin: 20px 0 0;
+}
+.plate-notes .primary-button {
+  width: 100%;
+}
+@media (max-width: 1150px) {
+  .plates-page {
+    grid-template-columns: 210px minmax(340px, 1fr);
+  }
+  .plate-notes {
+    grid-column: 1 / -1;
+  }
+  #plate-notes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 25px;
+  }
+  .plate-notes .primary-button {
+    width: auto;
+  }
+}
+@media (max-width: 760px) {
+  .main-nav {
+    gap: 15px;
+  }
+  .nav-btn {
+    font-size: 11px;
+  }
+  #cord-svg.illustrated-map {
+    max-height: none;
+  }
+  .map-direction {
+    font-size: 8px;
+    max-width: 108px;
+    text-align: right;
+  }
+  .plates-page {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .plate-selector,
+  .plate-notes {
+    padding: 18px;
+  }
+  .plate-selector > p {
+    margin-bottom: 14px;
+  }
+  #plate-options {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  #plate-options button {
+    padding: 8px;
+    gap: 7px;
+    font-size: 10px;
+  }
+  #plate-options img {
+    width: 45px;
+    height: 47px;
+  }
+  .plate-image-frame {
+    min-height: 230px;
+    margin: 0 10px;
+  }
+  #plate-image {
+    max-height: 650px;
+  }
+  .plate-viewer figcaption {
+    margin: 17px 18px 20px;
+  }
+  .plate-viewer figcaption h2 {
+    font-size: 24px;
+  }
+  #plate-notes {
+    display: block;
+  }
+}
+@media print {
+  .plates-page,
+  .anatomy-plate-link {
+    display: none !important;
+  }
+}
+/* La lámina y el modelo comparten fichas; sus controles se muestran por separado. */
+[data-model-only][hidden], .bone-art[hidden] { display: none; }
+.bone-presentation-tabs {
+  display: flex;
+  gap: 4px;
+  margin: 0 12px 12px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.bone-presentation-tabs button {
+  flex: 1;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+  padding: 9px 3px;
+}
+.bone-presentation-tabs button.active { background: var(--teal-pale); color: var(--teal); }
+.bone-art { margin: 0 12px 16px; }
+.bone-art-image { position: relative; overflow: hidden; border-radius: 10px; background: #fffefa; }
+.bone-art img { display: block; width: 100%; height: auto; }
+.bone-art figcaption { margin: 10px 6px 0; color: var(--muted); font-size: 10px; line-height: 1.7; }
+.bone-pin {
+  position: absolute;
+  left: var(--pin-x);
+  top: var(--pin-y);
+  transform: translate(-50%, -50%);
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  padding: 0;
+}
+.bone-pin::after {
+  content: '';
+  display: block;
+  margin: auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--teal);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 4px #ffffff70;
+}
+.bone-pin:hover::after, .bone-pin[aria-pressed="true"]::after { box-shadow: 0 0 0 5px #42776b50; }
+.bone-pin:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+
+/* Visor de estudio con sombras suaves y una ampliación accesible. */
+.spine-viewport { height: 410px; background: radial-gradient(ellipse at 42% 35%, #435b63, #1a2c32 85%); }
+.model-tools { padding: 12px 18px 6px; }
+.model-tools button { width: 100%; font-size: 11px; }
+.model-tools p { font-size: 9px; line-height: 1.7; color: var(--muted); margin: 10px 0; }
+.model-tools a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.model-dialog { width: min(920px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 20px; border: 1px solid var(--line); border-radius: 16px; color: var(--ink); background: #fafaf5; overflow: auto; }
+.model-dialog::backdrop { background: #13272acc; backdrop-filter: blur(4px); }
+.model-dialog-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 16px; }
+.model-dialog-heading h2 { margin: 5px 0 0; font-size: 22px; }
+.model-dialog .spine-viewport { margin: 0; height: min(58dvh, 520px); min-height: 240px; }
+.model-dialog .view-buttons { max-width: 440px; margin-inline: auto; }
+.model-dialog .bone-controls { max-width: 500px; margin-inline: auto; border: 0; }
+.model-dialog .model-tools { padding: 0 20px; }
+.model-dialog .model-tools button { display: none; }
+.model-dialog .structure-description { padding: 10px 16px; margin: 0; border-top: 1px solid var(--line); }
+@media (max-width: 760px) {
+  .spine-viewport { height: 380px; }
+  .model-dialog { width: calc(100vw - 16px); max-height: calc(100dvh - 16px); padding: 12px; }
+  .model-dialog-heading h2 { font-size: 17px; }
+  .model-dialog-heading button { font-size: 10px; padding: 8px; }
+  .model-dialog .spine-viewport { height: 44dvh; }
+}

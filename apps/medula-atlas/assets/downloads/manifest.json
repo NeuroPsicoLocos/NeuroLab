@@ -1,0 +1,84 @@
+{
+  "collection": "Encéfalo desmontable",
+  "sourceProject": "3D printer",
+  "packaged": "2026-10-03",
+  "originalsModified": false,
+  "scope": "Modelos docentes aproximados; piezas y scripts originales, sin fotografías",
+  "files": [
+    {
+      "file": "models/brain_section_approx.obj",
+      "bytes": 1064472,
+      "sha256": "656050fd49a5534f1928834e802d31c6c738a666e9ec73904c1c82de6d562eb6"
+    },
+    {
+      "file": "models/brain_section_approx.stl",
+      "bytes": 5952168,
+      "sha256": "d8f5ba130f2057a62dc2eaef49bccacb6b4282d77481f016d0b485998973e36c"
+    },
+    {
+      "file": "models/modular_encephalon/brainstem.obj",
+      "bytes": 47749,
+      "sha256": "88bf6a3328c536bb0a1041c99e0199c8698ae61d8713cfbf697757c318b4a0f4"
+    },
+    {
+      "file": "models/modular_encephalon/brainstem.stl",
+      "bytes": 328691,
+      "sha256": "be205b4d38d4ecb08654483e39da5e5dc062a04b3fbfeb37b05c9eab83006e4b"
+    },
+    {
+      "file": "models/modular_encephalon/cerebellum.obj",
+      "bytes": 111337,
+      "sha256": "a0adc9443ae02650db0e61e78dc386a9e0e2316f755e2ba7fcd344dd57b14f22"
+    },
+    {
+      "file": "models/modular_encephalon/cerebellum.stl",
+      "bytes": 728715,
+      "sha256": "d43d8f19dcdd563bd41e225d986a613e183bbb30be38ecb70e4665f0a6ac52d5"
+    },
+    {
+      "file": "models/modular_encephalon/left_cerebral_hemisphere.obj",
+      "bytes": 240380,
+      "sha256": "7b455354fca3e34c2d8aa6e0d5baf1439315051d819aa5006e7f2edf7828650a"
+    },
+    {
+      "file": "models/modular_encephalon/left_cerebral_hemisphere.stl",
+      "bytes": 1527218,
+      "sha256": "b030c5a9b83455b09ac45d4afdb075ecc912114e40653f7612831692f4070bb6"
+    },
+    {
+      "file": "models/modular_encephalon/right_cerebral_hemisphere.obj",
+      "bytes": 237038,
+      "sha256": "8d4e8f48538e71bc0ce86ce0744c5deb457912216a29116f9a95aa9fd3a36218"
+    },
+    {
+      "file": "models/modular_encephalon/right_cerebral_hemisphere.stl",
+      "bytes": 1509158,
+      "sha256": "9f9e2a4bf79146208ca67cb0f96dcef9a1bd915441b37a8433bf847881e3d4be"
+    },
+    {
+      "file": "models/modular_encephalon/vascular_arch_simplified.obj",
+      "bytes": 11096,
+      "sha256": "8d2d8024fbfde11682e5b724cbb1e0a4f4a27c8ae29cca62fbf9e912874c9fe2"
+    },
+    {
+      "file": "models/modular_encephalon/vascular_arch_simplified.stl",
+      "bytes": 77790,
+      "sha256": "ce03eee3e978fd8603ef2f4455555625281d025daf0145788560fb3e25e7fe58"
+    },
+    {
+      "file": "README.md",
+      "bytes": 3280,
+      "sha256": "4d1f71005c7331357995c5eb242806a66ca77826e75d5272cffd0e9d700e6f48"
+    },
+    {
+      "file": "scripts/generate_brain_section_model.py",
+      "bytes": 12775,
+      "sha256": "a241f0780f7f5fadca40da4704fe62f93590753841a2c823932fe2f4e3880540"
+    },
+    {
+      "file": "scripts/generate_modular_encephalon.py",
+      "bytes": 4854,
+      "sha256": "a06f0fbc4055f357460a025dba4780551c07fc3344995724673f23861059b2d8"
+    }
+  ]
+}
