@@ -4,7 +4,7 @@ import { illustrations } from './illustrations.js?v=4';
 import { setupBonePresentation } from './bone-presentation.js?v=4';
 import { setupModelViewer } from './model-viewer.js?v=4';
 import { setupInfoPages } from './info-pages.js?v=6';
-import { setupAnatomyPage } from './anatomy-page.js?v=6';
+import { setupAnatomyPage } from './anatomy-page.js?v=7';
 import { coverings } from './anatomy-content.js?v=6';
 
 const $=selector=>document.querySelector(selector);

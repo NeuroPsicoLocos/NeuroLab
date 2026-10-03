@@ -11,8 +11,8 @@
   <link rel="stylesheet" href="./illustrations.css?v=4">
   <script type="importmap">{"imports":{"three":"./assets/vendor/three.module.js"}}</script>
   <link rel="stylesheet" href="./info-pages.css?v=6">
-  <link rel="stylesheet" href="./anatomy.css?v=6">
-  <script defer src="./src/start.js?v=6"></script>
+  <link rel="stylesheet" href="./anatomy.css?v=7">
+  <script defer src="./src/start.js?v=7"></script>
 </head>
 <body>
   <a class="skip-link" href="#cross-section">Ir al corte medular</a>
@@ -130,13 +130,21 @@
       <div class="study-context panel"><strong>31 segmentos · 31 pares</strong><p>Ocho cervicales, doce torácicos, cinco lumbares, cinco sacros y uno coccígeo. Un segmento medular se define por sus raíces, no por una vértebra del mismo número. En el adulto, el cono suele terminar cerca del nivel vertebral L1–L2; por debajo continúan raíces y filum terminale.</p></div>
       <div class="anatomy-layout">
         <article class="anatomy-card panel"><header><span class="step">01 / ORGANIZACIÓN LONGITUDINAL</span><h2>Regiones y nervios espinales</h2><p>Selecciona una región para consultar su organización y sus conexiones.</p></header>
+          <div class="anatomy-mode" role="group" aria-label="Representación de las regiones"><button data-anatomy-view="plate" class="active" aria-pressed="true">Lámina anatómica</button><button data-anatomy-view="map" aria-pressed="false">Mapa de estudio</button></div>
+          <figure data-anatomy-panel="plate" class="anatomy-plate"><div id="regions-illustration" class="anatomy-plate-frame portrait"></div><figcaption><strong id="regions-plate-selection" class="plate-selection" aria-live="polite"></strong><p id="regions-plate-caption"></p><a id="regions-plate-fullsize" target="_blank" rel="noopener noreferrer">Ver lámina completa ↗</a><small>Ilustración docente generada con IA.</small></figcaption></figure>
+          <div data-anatomy-panel="map" hidden>
           <svg id="region-map" viewBox="0 0 430 770" role="group" aria-label="Mapa interactivo de regiones medulares"></svg>
           <p class="diagram-caption">Comparación esquemática, sin proporciones reales. Las líneas representan cada par de raíces; no son dermatomas ni un mapa para localizar una lesión.</p>
+          </div>
           <div id="region-options" class="anatomy-options" aria-label="Regiones medulares"></div><div id="region-detail" class="anatomy-detail" aria-live="polite"></div>
         </article>
         <article class="anatomy-card panel"><header><span class="step">02 / CUBIERTAS Y CONEXIONES</span><h2>Meninges, raíces y nervio mixto</h2><p>Selecciona una capa, una raíz o el ganglio. Posterior arriba, anterior abajo.</p></header>
+          <div class="anatomy-mode" role="group" aria-label="Representación de las cubiertas"><button data-anatomy-view="plate" class="active" aria-pressed="true">Lámina anatómica</button><button data-anatomy-view="map" aria-pressed="false">Mapa de estudio</button></div>
+          <figure data-anatomy-panel="plate" class="anatomy-plate"><div id="coverings-illustration" class="anatomy-plate-frame"></div><figcaption><strong id="coverings-plate-selection" class="plate-selection" aria-live="polite"></strong><p id="coverings-plate-caption"></p><a id="coverings-plate-fullsize" target="_blank" rel="noopener noreferrer">Ver lámina completa ↗</a><small>Ilustración docente generada con IA.</small></figcaption></figure>
+          <div data-anatomy-panel="map" hidden>
           <svg id="covering-map" viewBox="0 0 560 460" role="group" aria-label="Esquema interactivo de meninges y raíces"></svg>
           <p class="diagram-caption">Espesores y separaciones ampliados. El LCR ocupa el espacio subaracnoideo, entre aracnoides y piamadre. Ambos ramos del nervio son mixtos.</p>
+          </div>
           <div id="covering-options" class="anatomy-options" aria-label="Cubiertas y nervios espinales"></div><div id="covering-detail" class="anatomy-detail" aria-live="polite"></div>
           <div class="resource-body anatomy-3d-link"><button id="open-coverings-model" class="secondary-button">Ver cubiertas y raíces en 3D ↗</button></div>
         </article>
