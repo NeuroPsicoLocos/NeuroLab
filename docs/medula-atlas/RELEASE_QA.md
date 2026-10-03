@@ -2,6 +2,17 @@
 
 Fecha: 3 de octubre de 2026. Módulo: `apps/medula-atlas/`.
 
+## Acabado común de los cortes anteriores, versión 9.0
+
+- Pasaron las 75 pruebas, la sintaxis de los 22 módulos del atlas y los 63 archivos JavaScript del repositorio, y los dos bundles deterministas.
+- Los mapas de tractos y cubiertas reutilizan el contorno torácico del comparador. Se revisaron sus gradientes, sombras, selección y orientación. La piamadre sigue el contorno medular; los territorios de las vías se recortan a la sustancia blanca.
+- Se seleccionaron los diez tractos y las ocho estructuras de cubiertas, se comprobaron las cinco partes de cada ficha y se activó el acercamiento de cada selección. El ganglio llegó a 4×; cambiar entre lámina y mapa restauró el encuadre y conservó la estructura seleccionada.
+- Un clic en el corticoespinal lateral derecho indicó el lado derecho del sujeto en el zoom. Enter y espacio seleccionaron tractos, ganglio y piamadre en los SVG. Los filtros conservaron seis vías sensitivas y cuatro motoras; las vías ocultas salieron del recorrido de teclado. Ocultar y restaurar los rótulos funcionó.
+- Ambos paneles se comprobaron a 336, 390, 900 y 1440 px, sin desbordamiento horizontal. En móvil se revisaron el ganglio ampliado, la navegación entre ficha y corte y el acceso a los controles.
+- El modo docente y el comparador de sustancia gris siguieron disponibles. No se registraron errores ni advertencias de consola durante el recorrido.
+
+Los contornos y territorios son docentes, sin escala física ni límites histológicos medidos. Las cubiertas conservan espesores y separaciones ampliados; su zoom muestra un sector del contorno. El dibujo de raíces no determina una equivalencia exacta entre niveles medulares y vertebrales. Las láminas con textura y sus fuentes permanecen conservadas.
+
 ## Niveles y zoom de sustancia gris, versión 8.0
 
 - Pasaron las 72 pruebas del repositorio, la sintaxis de los 20 módulos del atlas y los 60 archivos JavaScript del repositorio, y la verificación de los dos bundles deterministas.

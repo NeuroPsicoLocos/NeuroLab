@@ -1,10 +1,10 @@
 import { tracts, sources, structures, questions } from './content.js?v=6';
-import { createCrossSection } from './cross-section.js?v=4';
+import { createCrossSection } from './cross-section.js?v=9';
 import { illustrations } from './illustrations.js?v=4';
 import { setupBonePresentation } from './bone-presentation.js?v=4';
 import { setupModelViewer } from './model-viewer.js?v=4';
 import { setupInfoPages } from './info-pages.js?v=6';
-import { setupAnatomyPage } from './anatomy-page.js?v=7';
+import { setupAnatomyPage } from './anatomy-page.js?v=9';
 import { coverings } from './anatomy-content.js?v=6';
 import { setupGrayLevelExplorer } from './gray-level-explorer.js?v=8';
 

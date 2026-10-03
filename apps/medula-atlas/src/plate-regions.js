@@ -1,5 +1,6 @@
 /**
- * Zonas docentes ajustadas a la ilustración 01-corte-base-v2.png (1254 × 1254).
+ * Territorios docentes en coordenadas de referencia de 1254 × 1254.
+ * cross-section.js los adapta al contorno torácico común y recorta a la blanca.
  * Son superficies de selección aproximadas, no segmentaciones histológicas.
  * Se define un lado; el otro se obtiene por simetría.
  */

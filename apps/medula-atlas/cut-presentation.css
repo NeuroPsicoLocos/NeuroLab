@@ -1,0 +1,38 @@
+/* Acabado común para vías, cubiertas y el comparador de sustancia gris. */
+.cut-tools { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:0; padding:12px 20px; border-block:1px solid var(--line); background:var(--card); }
+.cut-tools button { min-height:44px; font-size:.75rem; padding:9px 12px; }
+.cut-tools button:disabled { opacity:.45; cursor:default; }
+.cut-tools output { flex:1 1 100%; font-size:.7rem; color:var(--muted); line-height:1.6; }
+.section-map:has(.study-cut-map) { background:radial-gradient(ellipse at 45% 38%,#fffefa,#f3f1e9); }
+#cord-svg.study-cut-map { max-height:490px; aspect-ratio:1.25; }
+.study-cut-map .tract-shape { fill:var(--tract-color); fill-opacity:.4; stroke:var(--tract-color); stroke-opacity:.6; stroke-width:1; vector-effect:non-scaling-stroke; }
+.study-cut-map .tract-shape.selected { fill-opacity:.82; stroke:#fffefa; stroke-opacity:1; stroke-width:2; }
+.study-cut-map .tract-shape:hover { fill-opacity:.72; stroke-opacity:1; stroke-width:2; }
+.study-cut-map .tract-shape:focus-visible { outline:none; stroke:#286b63; stroke-width:3; filter:none; }
+.study-cut-map .tract-shape.muted { fill-opacity:0; stroke-opacity:0; pointer-events:none; }
+.study-cut-map .map-orientation { font-size:10px; letter-spacing:2px; }
+.study-cut-map .tract-symbol { font-size:12px; fill:#294b45; font-weight:650; }
+.study-cut-map .anatomy-label { font-size:10px; fill:#68776c; }
+.study-cut-map .map-symbol-background { fill:#fffefa; fill-opacity:.88; }
+.study-cut-map .canal-marker { stroke-width:1.3; }
+#covering-map { background:radial-gradient(ellipse at 40% 35%,#fffefa,#f3f1e9); }
+#covering-map .covering-surface { stroke:#536b672f; stroke-width:1; }
+#covering-map .covering-cord { pointer-events:none; }
+#covering-map .sensory { stroke:url(#covering-sensory); }
+#covering-map .motor { stroke:url(#covering-motor); }
+#covering-map .mixed { stroke:url(#covering-mixed); }
+#covering-map [data-covering].selected { filter:none; }
+#covering-map [data-covering].selected .covering-surface { stroke:#fffefa; stroke-width:2.5; }
+#covering-map [data-covering].selected .pial-surface { stroke:#915d48; stroke-width:17; }
+#covering-map [data-covering].selected .root-stroke { stroke-width:8; }
+#covering-map [data-covering].selected .ganglion-surface { stroke:#fffefa; stroke-width:2.5; }
+#covering-map [data-covering]:focus-visible { filter:drop-shadow(0 0 2px #286b63); }
+#back-to-covering-map { display:none; }
+@media(max-width:760px) {
+  #cord-svg.study-cut-map { max-height:none; }
+  .cut-tools { padding:12px 16px; }
+  #back-to-covering-map { display:block; margin:20px 22px 0; min-height:44px; }
+}
+@media print {
+  .cut-tools,#back-to-covering-map { display:none!important; }
+}

@@ -13,7 +13,8 @@
   <link rel="stylesheet" href="./info-pages.css?v=6">
   <link rel="stylesheet" href="./anatomy.css?v=7">
   <link rel="stylesheet" href="./gray-explorer.css?v=8">
-  <script defer src="./src/start.js?v=8"></script>
+  <link rel="stylesheet" href="./cut-presentation.css?v=9">
+  <script defer src="./src/start.js?v=9"></script>
 </head>
 <body>
   <a class="skip-link" href="#cross-section">Ir al corte medular</a>
@@ -109,7 +110,8 @@
         <div class="filter-bar" role="group" aria-label="Filtrar vías">
           <button data-filter="all" class="active" aria-pressed="true">Todas</button><button data-filter="ascending" aria-pressed="false"><span class="dot ascending-dot"></span>Sensitivas ↑</button><button data-filter="descending" aria-pressed="false"><span class="dot descending-dot"></span>Motoras ↓</button>
         </div>
-        <div class="section-map"><svg id="cord-svg" viewBox="0 0 620 490" aria-labelledby="map-title map-description"><title id="map-title">Corte transversal de la médula torácica alta</title><desc id="map-description">Posterior arriba y anterior abajo. Derecha anatómica a la izquierda de la imagen. Cada zona coloreada representa un tracto seleccionable.</desc></svg></div>
+        <div id="tract-cut-tools" class="cut-tools" role="group" aria-label="Acercamiento del corte de vías"></div>
+        <div class="section-map"><svg id="cord-svg" viewBox="0 0 600 480" role="group" aria-labelledby="map-title map-description"><title id="map-title">Corte transversal de la médula torácica alta</title><desc id="map-description">Posterior arriba y anterior abajo. Derecha anatómica a la izquierda de la imagen. Cada zona coloreada representa un tracto seleccionable en sustancia blanca. La geometría y sus territorios son aproximados.</desc></svg></div>
         <div class="map-caption"><span class="selection-indicator"></span><span id="selected-map-label">Fascículo grácil</span><span class="map-direction">Derecha del sujeto a la izquierda</span></div>
         <p class="anatomy-note">Esquema funcional no proporcional. Las áreas de los tractos son aproximadas y pueden solaparse en la anatomía real.</p>
         <div class="tract-index-heading"><h3>Selecciona un tracto</h3><span id="tract-count">10 vías</span></div>
@@ -143,10 +145,11 @@
           <div class="anatomy-mode" role="group" aria-label="Representación de las cubiertas"><button data-anatomy-view="plate" class="active" aria-pressed="true">Lámina anatómica</button><button data-anatomy-view="map" aria-pressed="false">Mapa de estudio</button></div>
           <figure data-anatomy-panel="plate" class="anatomy-plate"><div id="coverings-illustration" class="anatomy-plate-frame"></div><figcaption><strong id="coverings-plate-selection" class="plate-selection" aria-live="polite"></strong><p id="coverings-plate-caption"></p><a id="coverings-plate-fullsize" target="_blank" rel="noopener noreferrer">Ver lámina completa ↗</a><small>Ilustración docente generada con IA.</small></figcaption></figure>
           <div data-anatomy-panel="map" hidden>
+          <div id="covering-cut-tools" class="cut-tools" role="group" aria-label="Acercamiento del corte de cubiertas"></div>
           <svg id="covering-map" viewBox="0 0 560 460" role="group" aria-label="Esquema interactivo de meninges y raíces"></svg>
-          <p class="diagram-caption">Espesores y separaciones ampliados. El LCR ocupa el espacio subaracnoideo, entre aracnoides y piamadre. Ambos ramos del nervio son mixtos.</p>
+          <p class="diagram-caption">Posterior arriba y anterior abajo. Espesores y separaciones ampliados, sin escala física. El acercamiento de una cubierta muestra un sector de su contorno. El LCR ocupa el espacio subaracnoideo, entre aracnoides y piamadre. Ambos ramos del nervio son mixtos.</p>
           </div>
-          <div id="covering-options" class="anatomy-options" aria-label="Cubiertas y nervios espinales"></div><div id="covering-detail" class="anatomy-detail" aria-live="polite"></div>
+          <div id="covering-options" class="anatomy-options" aria-label="Cubiertas y nervios espinales"></div><button id="back-to-covering-map" class="secondary-button">↑ Volver al corte</button><div id="covering-detail" class="anatomy-detail" aria-live="polite"></div>
           <div class="resource-body anatomy-3d-link"><button id="open-coverings-model" class="secondary-button">Ver cubiertas y raíces en 3D ↗</button></div>
         </article>
       </div>
