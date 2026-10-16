@@ -36,14 +36,14 @@ export const illustrations = [
   },
   {
     id: 'vertebral', title: 'Canal vertebral y meninges',
-    subtitle: 'Relaciones de protección', image: '04-vertebras-meninges-v2.png',
-    alt: 'Tres vértebras en corte oblicuo, con la médula en su canal, capas meníngeas y una salida lateral del nervio espinal.',
-    caption: 'El corte oblicuo permite ver la médula detrás de los cuerpos vertebrales y la disposición de sus cubiertas y raíces.',
+    subtitle: 'Relaciones de protección', image: '04-canal-controlado.svg',
+    alt: 'Dos vistas separadas: médula continua en el canal vertebral en vista sagital; corte transversal con dorsal arriba, ventral abajo, meninges y raíces con ganglio sólo dorsal.',
+    caption: 'Esquema vectorial para revisión: A muestra continuidad craneocaudal; B es un corte transversal independiente. No asigna equivalencias entre segmentos medulares y niveles vertebrales.',
     notes: [
       ['Canal vertebral', 'El cuerpo y el arco vertebral delimitan el foramen. La continuidad de los forámenes forma el canal vertebral.'],
       ['Cubiertas', 'Desde la médula hacia fuera: piamadre, espacio subaracnoideo, aracnoides y duramadre.'],
       ['Raíces y nervio', 'La raíz dorsal se asocia con un ganglio sensitivo. Se une con la raíz ventral para formar un nervio espinal.'],
-      ['Leer un corte abierto', 'Las cubiertas y el hueso se muestran abiertos para facilitar la observación; no representan su disposición intacta.']
-    ], sources: ['vertebra', 'meninges']
+      ['Vistas separadas', 'En A las raíces se omiten; en B se omite el hueso y se representa un solo lado. El espacio epidural es externo a la dura; el subdural es potencial. Revisión anatómica experta pendiente.']
+    ], sources: ['vertebra', 'meninges', 'spinalnerves', 'csf']
   }
 ];

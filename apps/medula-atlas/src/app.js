@@ -1,6 +1,6 @@
 import { tracts, sources, structures, questions } from './content.js?v=6';
 import { createCrossSection } from './cross-section.js?v=10';
-import { illustrations } from './illustrations.js?v=4';
+import { illustrations } from './illustrations.js?v=5';
 import { setupBonePresentation } from './bone-presentation.js?v=4';
 import { setupModelViewer } from './model-viewer.js?v=4';
 import { setupInfoPages } from './info-pages.js?v=6';
