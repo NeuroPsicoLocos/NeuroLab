@@ -1,0 +1,11 @@
+import {ionReading} from './ions.mjs';
+import {initialScene,sceneTransition,sceneText,sceneFeedback,sceneEvents,LAST} from './state.mjs';
+import {renderScene} from './render.mjs';
+const el=id=>document.getElementById(id);let scene=initialScene(),clock=null,zoomed=false;
+function clearClock(){if(clock!==null)clearInterval(clock);clock=null;}
+function paint(){const [title,why]=sceneText(scene);el('stage-title').textContent=title;el('stage-text').textContent=why;el('progress').textContent=`Etapa ${scene.step+1} de ${LAST+1} · ${scene.playing?'reproduciendo':'pausada'}`;el('scene-picture').innerHTML=renderScene(scene);el('previous').disabled=scene.step===0;el('next').disabled=scene.step===LAST;el('play-pause').textContent=scene.playing?'Pausar':'Reproducir';el('voltage').value=String(scene.vm);el('chloride').value=String(scene.eCl);el('ion-reading').textContent=ionReading(scene,sceneEvents(scene));el('mode').value=scene.mode;el('speed').value=String(scene.speed);el('compare-note').textContent='La misma liberación de GABA se conserva al cambiar la vista. El recorrido se pausa en la misma etapa para comparar.';}
+function schedule(){clearClock();if(scene.playing)clock=setInterval(()=>{scene=sceneTransition(scene,'tick');paint();if(!scene.playing)clearClock();},3500/scene.speed);}
+function act(action,value){scene=sceneTransition(scene,action,value);paint();schedule();if(action==='reset'){el('prediction').value='';el('feedback').textContent=sceneFeedback('');}}
+el('voltage').onchange=()=>act('voltage',+el('voltage').value);el('chloride').onchange=()=>act('chloride',+el('chloride').value);el('mode').onchange=()=>act('mode',el('mode').value);el('speed').onchange=()=>act('speed',+el('speed').value);el('next').onclick=()=>act('next');el('previous').onclick=()=>act('back');el('reset').onclick=()=>act('reset');el('play-pause').onclick=()=>act(scene.playing?'pause':'play');el('check').onclick=()=>{el('feedback').textContent=sceneFeedback(el('prediction').value);};
+el('zoom').onclick=()=>{zoomed=!zoomed;el('scene-picture').className=zoomed?'scene-scroll is-zoomed':'scene-scroll';el('zoom').textContent=zoomed?'Ver corte completo':'Ampliar dibujo';el('zoom').setAttribute('aria-pressed',String(zoomed));};
+paint();

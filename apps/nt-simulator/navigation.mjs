@@ -1,0 +1,2 @@
+export const NAV_VIEWS=Object.freeze([{id:'transmission',name:'Sinapsis',step:1},{id:'receptors',name:'Receptores',step:2},{id:'potentials',name:'Respuesta celular',step:3},{id:'pharmacology',name:'Farmacología',step:4},{id:'notes',name:'Guía y fuentes',step:null}]);
+export function resolveView(hash,containerForId=()=>null){let id;try{id=decodeURIComponent(String(hash||'').replace(/^#/,''));}catch{return 'transmission';}if(NAV_VIEWS.some(v=>v.id===id))return id;const container=containerForId(id);return NAV_VIEWS.some(v=>v.id===container)?container:'transmission';}
