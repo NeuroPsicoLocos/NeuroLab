@@ -1,6 +1,6 @@
 import { tracts, sources, structures, questions } from './content.js?v=6';
 import { createCrossSection } from './cross-section.js?v=10';
-import { illustrations } from './illustrations.js?v=5';
+import { illustrations } from './illustrations.js?v=6';
 import { setupBonePresentation } from './bone-presentation.js?v=4';
 import { setupModelViewer } from './model-viewer.js?v=4';
 import { setupInfoPages } from './info-pages.js?v=6';
@@ -140,7 +140,8 @@ function selectPlate(id) {
   image.src = `./assets/illustrations/${plate.image}`;
   image.alt = plate.alt;
   image.classList.toggle('portrait-plate', id === 'longitudinal');
-  $('#plate-fullsize').href = image.src;
+  $('#plate-fullsize').href = plate.fullsizeImage ? `./assets/illustrations/${plate.fullsizeImage}` : image.src;
+  $('#plate-anatomy-legend').hidden = id !== 'vertebral';
   $('#plate-kicker').textContent = plate.subtitle.toUpperCase();
   $('#plate-title').textContent = plate.title;
   $('#plate-caption').textContent = plate.caption;
@@ -154,7 +155,8 @@ document.querySelectorAll('[data-open-plate]').forEach(button => button.addEvent
   window.scrollTo({top: 0, behavior: 'instant'});
 }));
 $('#plate-to-map').addEventListener('click', () => { openPage('explore'); $('#cross-section').scrollIntoView({block: 'start'}); });
-selectPlate('tracts');
+const initialPlate = new URLSearchParams(location.search).get('plate');
+selectPlate(illustrations.some(plate => plate.id === initialPlate) ? initialPlate : 'tracts');
 
 /** Autoevaluación en memoria de sesión, sin cuentas ni almacenamiento externo. */
 function renderQuestion(){

@@ -36,14 +36,14 @@ export const illustrations = [
   },
   {
     id: 'vertebral', title: 'Canal vertebral y meninges',
-    subtitle: 'Relaciones de protección', image: '04-canal-controlado.svg',
-    alt: 'Dos vistas separadas: médula continua en el canal vertebral en vista sagital; corte transversal con dorsal arriba, ventral abajo, meninges y raíces con ganglio sólo dorsal.',
-    caption: 'Esquema vectorial para revisión: A muestra continuidad craneocaudal; B es un corte transversal independiente. No asigna equivalencias entre segmentos medulares y niveles vertebrales.',
+    subtitle: 'Relaciones de protección', image: '04-canal-realista-v6.png', fullsizeImage: 'v6-ampliar.html',
+    alt: 'Ilustración V6: exposición longitudinal del canal con médula vertical, raíces y ganglio; detalle transversal independiente con dorsal arriba, fisura anterior abajo y raíces proyectadas.',
+    caption: 'Ilustración docente V6. A muestra continuidad longitudinal y salida radicular; B es una organización transversal independiente con raíces proyectadas. Sin correspondencia exacta de nivel o escala. Revisión anatómica pendiente.',
     notes: [
       ['Canal vertebral', 'El cuerpo y el arco vertebral delimitan el foramen. La continuidad de los forámenes forma el canal vertebral.'],
       ['Cubiertas', 'Desde la médula hacia fuera: piamadre, espacio subaracnoideo, aracnoides y duramadre.'],
       ['Raíces y nervio', 'La raíz dorsal se asocia con un ganglio sensitivo. Se une con la raíz ventral para formar un nervio espinal.'],
-      ['Vistas separadas', 'En A las raíces se omiten; en B se omite el hueso y se representa un solo lado. El espacio epidural es externo a la dura; el subdural es potencial. Revisión anatómica experta pendiente.']
+      ['Vistas separadas', 'En A se expone una salida radicular. En B se omite el hueso; las raíces se representan en proyección. La revisión experta debe comprobar el recorte de manguitos y las proporciones regionales; esta imagen no acredita precisión clínica.']
     ], sources: ['vertebra', 'meninges', 'spinalnerves', 'csf']
   }
 ];

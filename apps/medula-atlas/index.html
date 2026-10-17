@@ -15,7 +15,8 @@
   <link rel="stylesheet" href="./gray-explorer.css?v=8">
   <link rel="stylesheet" href="./cut-presentation.css?v=10">
   <link rel="stylesheet" href="./lesions.css?v=12">
-  <script defer src="./src/start.js?v=13"></script>
+  <script defer src="./src/start.js?v=14"></script>
+  <link rel="stylesheet" href="./plate-v6.css?v=1">
 </head>
 <body>
   <a class="skip-link" href="#cross-section">Ir al corte medular</a>
@@ -62,13 +63,13 @@
         <div class="panel-heading"><div><span class="step">01 / CONTEXTO</span><h2>Protección vertebral</h2></div><span class="small-tag" id="bone-view-kind">Lámina</span></div>
         <div class="bone-presentation-tabs" role="group" aria-label="Representación de las vértebras"><button data-bone-presentation="illustration" class="active" aria-pressed="true">Lámina anatómica</button><button data-bone-presentation="model" aria-pressed="false">Modelo 3D</button></div>
         <figure id="bone-illustration" class="bone-art">
-          <div class="bone-art-image"><img src="./assets/illustrations/04-vertebras-meninges-v2.png" alt="Ilustración de vértebras abiertas que muestra la médula, sus cubiertas y la salida de las raíces nerviosas.">
-            <button class="bone-pin" data-structure="body" style="--pin-x:31%;--pin-y:66%" aria-label="Cuerpo vertebral en la lámina" title="Cuerpo vertebral"></button>
-            <button class="bone-pin" data-structure="cord" style="--pin-x:38%;--pin-y:41%" aria-label="Médula espinal en la lámina" title="Médula espinal"></button>
-            <button class="bone-pin" data-structure="canal" style="--pin-x:56%;--pin-y:20%" aria-label="Canal vertebral en la lámina" title="Canal vertebral"></button>
-            <button class="bone-pin" data-structure="spinous" style="--pin-x:82%;--pin-y:71%" aria-label="Apófisis espinosa en la lámina" title="Apófisis espinosa"></button>
+          <div class="bone-art-image"><img src="./assets/illustrations/04-canal-realista-v6.png" alt="Ilustración V6: vista longitudinal con médula continua, cuerpos anteriores a la izquierda y arco posterior a la derecha; a su lado, organización transversal independiente.">
+            <button class="bone-pin" data-structure="body" style="--pin-x:13.038%;--pin-y:68.618%" aria-label="Cuerpo vertebral en la lámina" title="Cuerpo vertebral"></button>
+            <button class="bone-pin" data-structure="cord" style="--pin-x:25.838%;--pin-y:38.829%" aria-label="Médula espinal en la lámina" title="Médula espinal"></button>
+            <button class="bone-pin" data-structure="canal" style="--pin-x:29.251%;--pin-y:62.102%" aria-label="Canal vertebral en la lámina" title="Canal vertebral"></button>
+            <button class="bone-pin" data-structure="spinous" style="--pin-x:44.611%;--pin-y:75.135%" aria-label="Apófisis espinosa en la lámina" title="Apófisis espinosa"></button>
           </div>
-          <figcaption>Selecciona un punto o una estructura para leer su descripción. Ilustración docente no proporcional.</figcaption>
+          <figcaption>Ilustración docente V6. En A: craneal arriba, ventral izquierda; en B: dorsal arriba. Los cuatro puntos señalan estructuras de A. <a href="./assets/illustrations/v6-ampliar.html" target="_blank" rel="noopener noreferrer">Ampliar con rótulos ↗</a></figcaption>
         </figure>
         <div id="spine-model-slot"><div id="spine-model-content" data-model-only hidden>
         <div id="spine-viewport" class="spine-viewport" aria-label="Modelo 3D de las vértebras T2 a T4, canal vertebral y médula. Usa las vistas o arrastra para girar.">
@@ -127,7 +128,7 @@
     </section>
     <section id="plates-page" class="plates-page" hidden aria-label="Láminas anatómicas">
       <aside class="plate-selector panel"><span class="step">CUATRO PERSPECTIVAS</span><h2>Láminas anatómicas</h2><p>Una misma médula, distintas formas de observarla.</p><div id="plate-options"></div></aside>
-      <section class="plate-viewer panel"><div class="panel-heading"><span class="step" id="plate-kicker"></span><a id="plate-fullsize" target="_blank" rel="noopener noreferrer">Ver imagen completa ↗</a></div><figure><div class="plate-image-frame"><img id="plate-image" src="./assets/illustrations/01-vias-v2.png" alt="" decoding="async"></div><figcaption><h2 id="plate-title"></h2><p id="plate-caption"></p></figcaption></figure></section>
+      <section class="plate-viewer panel"><div class="panel-heading"><span class="step" id="plate-kicker"></span><a id="plate-fullsize" target="_blank" rel="noopener noreferrer">Ver imagen completa ↗</a></div><figure><div class="plate-image-frame"><img id="plate-image" src="./assets/illustrations/01-vias-v2.png" alt="" decoding="async"></div><div id="plate-anatomy-legend" class="plate-anatomy-legend" hidden><div><strong>A · Vista longitudinal</strong><p>Craneal arriba, caudal abajo. Ventral a la izquierda; dorsal a la derecha. La médula continúa dentro del canal.</p></div><div><strong>B · Organización transversal</strong><p>Dorsal arriba; ventral abajo. Fisura mediana anterior inferior y surco posterior superficial superior. Raíces en proyección.</p></div><div><strong>Raíces y ganglio</strong><p>Ganglio en el trayecto dorsal; raíz ventral sin ganglio sensitivo. Raicillas continuas con la médula; unión distal al ganglio. Manguitos abiertos por disección.</p></div><div><strong>Cubiertas y escala</strong><p>Pia → subaracnoideo (LCR) → aracnoides → dura; epidural por fuera. La pintura no acredita límites microscópicos o proporciones métricas.</p></div></div><figcaption><h2 id="plate-title"></h2><p id="plate-caption"></p></figcaption></figure></section>
       <aside class="plate-notes panel"><span class="step">CLAVES PARA LEER LA LÁMINA</span><div id="plate-notes"></div><p class="plate-caution">Ilustración docente no proporcional. Los límites y recorridos son orientativos.</p><button id="plate-to-map" class="primary-button">Explorar tractos →</button></aside>
     </section>
     <section id="anatomy-page" hidden aria-labelledby="anatomy-title">
@@ -183,7 +184,7 @@
       <p>El corte representa un segmento medular torácico alto (T3), con fascículos grácil y cuneiforme. T3 designa aquí el segmento de médula, no la vértebra del mismo número. El modelo óseo utiliza las mallas de T2, T3 y T4 de BodyParts3D. La médula y los discos añadidos son esquemáticos; el corte docente no establece una correspondencia exacta entre vértebra y segmento.</p>
       <p>Los colores y los límites de los tractos son recursos docentes. No son una segmentación histológica ni una reconstrucción de imagen médica. El modelo 3D añade meninges y dos salidas nerviosas bilaterales de forma esquemática; omite vasos, ligamentos y costillas. Las aperturas y los espesores de las cubiertas se amplían para estudiar su orden. El canal vertebral es el espacio óseo que aloja la médula; el conducto central es una estructura diferente, situada dentro de ella.</p>
       <p>La sección Anatomía compara las cinco regiones medulares y las salidas de 31 pares de nervios. Las posiciones y longitudes del SVG son ilustrativas, no sirven para convertir un nivel vertebral en un segmento medular. Las raíces inferiores descienden formando la cola de caballo; la médula no se prolonga hasta el sacro. Las referencias aportadas se usaron como orientación visual, con la distinción entre siete vértebras cervicales y ocho pares de nervios cervicales.</p>
-      <p>Tres láminas docentes proceden de generación con IA. La lámina de canal vertebral se sustituyó localmente por un esquema vectorial original con vistas separadas y bibliografía; está pendiente de revisión anatómica experta. Los rótulos y controles se añadieron por separado; las bandas de la lámina de sustancia gris no son una delimitación exacta de las diez láminas de Rexed.</p>
+      <p>Tres láminas docentes proceden de generación con IA. La ilustración V6 del canal vertebral, aprobada editorialmente por GENERAL, se utiliza en Explorar y Láminas. Es una composición docente generada y editada con IA; la aprobación no constituye validación científica del atlas. Los rótulos y controles se añadieron por separado; las bandas de la lámina de sustancia gris no son una delimitación exacta de las diez láminas de Rexed.</p>
       <p>La sección <a href="#gray">Sustancia gris</a> incluye un esquema con licencia abierta, histología comparativa de gato y enlaces a preparaciones de microscopía virtual. Cada recurso conserva su autoría y fuente, e indica su especie y técnica cuando están disponibles. El neuroarte de Greg Dunn y Brian Edwards se consulta en la web del autor.</p>
       <p>Las mallas óseas proceden de BodyParts3D / Anatomography 4.3, © Database Center for Life Science (DBCLS), con licencia CC BY-SA 2.1 Japan. Se aplicaron una subdivisión suave, normales continuas, rotación de ejes y escala uniforme; se conserva la disposición relativa de las vértebras. Son modelos de atlas, no una tomografía de un paciente. Los grupos de selección del cuerpo, arco y apófisis son aproximados.</p>
       <h3>Bibliografía consultada</h3><div id="source-list"></div>

@@ -1,0 +1,4 @@
+.bone-art figcaption{font-size:12px}.bone-art-image{overflow:visible}
+.plate-anatomy-legend{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:16px 20px;border-top:1px solid #d5dfd8;font:14px/1.55 system-ui;color:#2d4a47}.plate-anatomy-legend[hidden]{display:none}.plate-anatomy-legend p{font:inherit;margin:6px 0 0}.plate-anatomy-legend strong{font-size:15px}@media(max-width:760px){.plate-anatomy-legend{grid-template-columns:1fr;font-size:15px;padding:16px}.plate-anatomy-legend strong{font-size:16px}.bone-art figcaption{font-size:13px;line-height:1.6}.bone-art figcaption a{display:inline-block;padding:8px 0}}
+
+#plate-fullsize{font-size:14px;min-height:44px;display:inline-flex;align-items:center}.bone-pin{width:44px;height:44px}@media(max-width:760px){#plate-options button{font-size:14px;min-height:60px}.plate-note p{font-size:14px;line-height:1.6}.plate-note h3{font-size:16px}}
