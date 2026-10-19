@@ -4,13 +4,13 @@ export const grayResources = {
   images: [
     {
       id: 'regional', title: 'Regiones de la sustancia gris', type: 'Esquema anatómico',
-      image: 'rexed-laminae.svg',
-      alt: 'Esquema de un corte medular con zonas del asta posterior, región intermedia, asta anterior y conducto central señaladas con letras.',
-      metadata: 'Corte esquemático · rótulos originales en inglés',
+      image: 'gris-c6-regional-v1.png', interactive: './regional.html',
+      alt: 'Corte cervical idealizado con astas posteriores, región intermedia y astas anteriores; abre las áreas y láminas seleccionables.',
+      metadata: 'C6 medular idealizado · áreas seleccionables en español',
       caption: 'Permite ubicar la zona marginal, la sustancia gelatinosa, las regiones intermedia y ventral, y el conducto central. Es una guía regional; no delimita por sí sola las diez láminas de Rexed.',
-      credit: 'ExplicitImplicity · Wikimedia Commons',
-      source: 'https://commons.wikimedia.org/wiki/File:Spinalcord_trirev_rexedlamina.svg',
-      license: 'CC BY-SA 3.0', licenseURL: 'https://creativecommons.org/licenses/by-sa/3.0/'
+      credit: 'Ilustración original generada desde geometría controlada de NeuroLab; esquema Wikimedia conservado en comparación',
+      source: './docs/regiones-c6.html',
+      license: 'Procedencia, fuentes y límites docentes', licenseURL: './docs/regiones-c6.html'
     },
     {
       id: 'histology', title: 'Láminas I a V bajo el microscopio', type: 'Histología comparativa',

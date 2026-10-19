@@ -1,5 +1,5 @@
 import { projectInfo } from './project-info.js?v=6';
-import { grayResources } from './gray-resources.js?v=5';
+import { grayResources } from './gray-resources.js?v=6';
 
 const escape = value => String(value).replace(/[&<>"']/g, character => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[character]));
 const link = (url, text) => `<a href="${escape(url)}" target="_blank" rel="noopener noreferrer">${escape(text)} ↗</a>`;
@@ -8,9 +8,10 @@ const link = (url, text) => `<a href="${escape(url)}" target="_blank" rel="noope
 export function setupInfoPages() {
   document.querySelector('#gray-images').innerHTML = grayResources.images.map(item => {
     const image = `./assets/gray-matter/${item.image}`;
+    const destination = item.interactive || image;
     return `<article class="gray-image-card panel"><div class="resource-heading"><span class="resource-kind">${escape(item.type)}</span><h2>${escape(item.title)}</h2><p class="resource-meta">${escape(item.metadata)}</p></div>
-      <a class="gray-image-link" href="${image}" target="_blank" rel="noopener noreferrer" aria-label="Ampliar ${escape(item.title)}"><img src="${image}" alt="${escape(item.alt)}" loading="lazy"></a>
-      <div class="resource-body"><p>${escape(item.caption)}</p><div class="resource-actions">${link(image, 'Ampliar imagen')}${link(item.source, 'Fuente y contexto')}</div><p class="resource-credit">${escape(item.credit)} · ${link(item.licenseURL, item.license)}. Sin modificaciones.</p></div></article>`;
+      <a class="gray-image-link" href="${escape(destination)}" target="_blank" rel="noopener noreferrer" aria-label="Ampliar ${escape(item.title)}"><img src="${image}" alt="${escape(item.alt)}" loading="lazy"></a>
+      <div class="resource-body"><p>${escape(item.caption)}</p><div class="resource-actions">${link(destination, item.interactive ? 'Identificar regiones' : 'Ampliar imagen')}${link(item.source, 'Fuente y contexto')}</div><p class="resource-credit">${escape(item.credit)} · ${link(item.licenseURL, item.license)}${item.interactive ? '. Áreas y límites esquemáticos.' : '. Sin modificaciones.'}</p></div></article>`;
   }).join('');
   document.querySelector('#gray-viewers').innerHTML = grayResources.viewers.map(item => `<article class="resource-card panel"><span class="resource-kind">${escape(item.type)}</span><h3>${escape(item.title)}</h3><p class="resource-meta">${escape(item.metadata)}</p><p>${escape(item.text)}</p>${link(item.url, item.action)}<p class="resource-credit">${escape(item.credit)}</p></article>`).join('');
   document.querySelector('#gray-check-date').textContent = `Fuentes comprobadas el ${grayResources.checked}. Los visores se abren en otra pestaña.`;
