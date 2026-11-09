@@ -5,6 +5,14 @@
   const SUPPORTED_LANGUAGES = new Set(["es", "en"]);
   const translations = {
     es: {
+      "portal.brain.status": "Módulo docente",
+      "portal.brain.domain": "Neurociencia de sistemas · Español",
+      "portal.brain.title": "Redes cerebrales",
+      "portal.brain.description": "Siete sistemas cerebrales: mapa conceptual, ejemplos, comparación y autoevaluación con fuentes y límites de interpretación.",
+      "portal.brain.item1": "Fichas y componentes accesibles",
+      "portal.brain.item2": "Comparación de funciones",
+      "portal.brain.item3": "Cuestionario con explicaciones",
+      "portal.brain.open": "Explorar redes",
       "common.languageLabel": "Idioma",
       "common.spanish": "Español",
       "common.english": "English",
@@ -239,6 +247,14 @@
       "psp.export.studentNote": "La configuración y la verdad conocida se omiten de la exportación estudiante.",
     },
     en: {
+      "portal.brain.status": "Learning module",
+      "portal.brain.domain": "Systems neuroscience · Spanish",
+      "portal.brain.title": "Brain networks",
+      "portal.brain.description": "Seven brain systems: conceptual map, examples, comparison and self-assessment with sources and interpretation limits. Module content in Spanish.",
+      "portal.brain.item1": "Accessible system descriptions",
+      "portal.brain.item2": "Compare contributions",
+      "portal.brain.item3": "Quiz with explanations",
+      "portal.brain.open": "Explore networks (ES)",
       "common.languageLabel": "Language",
       "common.spanish": "Español",
       "common.english": "English",
