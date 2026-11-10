@@ -1,0 +1,12 @@
+<svg role="img" xmlns="http://www.w3.org/2000/svg" width="900" height="500" viewBox="0 0 900 500">
+  <rect x="0" y="0" width="900" height="500" fill="white"/>
+  <line x1="110" y1="420" x2="860" y2="420" stroke="#5B6770" stroke-width="3"/>
+  <line x1="110" y1="420" x2="110" y2="40" stroke="#5B6770" stroke-width="3"/>
+  <line x1="230" y1="420" x2="230" y2="432" stroke="#5B6770" stroke-width="3"/><text x="230" y="465" font-family="Carlito" font-size="30" fill="#1C2430" text-anchor="middle">6–8 meses</text><line x1="480" y1="420" x2="480" y2="432" stroke="#5B6770" stroke-width="3"/><text x="480" y="465" font-family="Carlito" font-size="30" fill="#1C2430" text-anchor="middle">8–10 meses</text><line x1="730" y1="420" x2="730" y2="432" stroke="#5B6770" stroke-width="3"/><text x="730" y="465" font-family="Carlito" font-size="30" fill="#1C2430" text-anchor="middle">10–12 meses</text>
+  <text x="40" y="240" font-family="Carlito" font-size="28" fill="#5B6770" text-anchor="middle" transform="rotate(-90 40 240)">Discriminación (relativa)</text>
+  <path d="M 150 170 C 330 160, 520 120, 820 80" fill="none" stroke="#134074" stroke-width="9" stroke-linecap="round"/>
+  <path d="M 150 185 C 330 200, 520 300, 820 360" fill="none" stroke="#C9822B" stroke-width="9" stroke-linecap="round" stroke-dasharray="22 12"/>
+  <text x="150" y="72" font-family="Carlito" font-size="30" font-weight="700" fill="#134074">Contrastes de la lengua nativa</text>
+  <text x="520" y="385" font-family="Carlito" font-size="30" font-weight="700" fill="#C9822B">Contrastes no nativos</text>
+  
+  </svg>
