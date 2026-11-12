@@ -789,3 +789,7 @@ footer p {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Related learning resources, kept distinct by domain. */
+.learning-group{margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,.18)}
+.learning-group h4{margin:0;font-size:clamp(27px,3vw,40px);letter-spacing:-.035em}
