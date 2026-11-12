@@ -5,6 +5,14 @@
   const SUPPORTED_LANGUAGES = new Set(["es", "en"]);
   const translations = {
     es: {
+      "portal.neurogenesis.status": "Material docente · ES",
+      "portal.neurogenesis.domain": "Neurodesarrollo · embriología",
+      "portal.neurogenesis.title": "NeuroGénesis",
+      "portal.neurogenesis.description": "Atlas interactivo del desarrollo embrionario del sistema nervioso: conecta etapas, estructuras y mecanismos.",
+      "portal.neurogenesis.item1": "Cronología y neurulación paso a paso",
+      "portal.neurogenesis.item2": "Vesículas, células y correlaciones clínicas",
+      "portal.neurogenesis.item3": "Doce preguntas, bibliografía y modo docente",
+      "portal.neurogenesis.open": "Explorar NeuroGénesis",
       "portal.brain.status": "Módulo docente",
       "portal.brain.domain": "Neurociencia de sistemas · Español",
       "portal.brain.title": "Redes cerebrales",
@@ -247,6 +255,14 @@
       "psp.export.studentNote": "La configuración y la verdad conocida se omiten de la exportación estudiante.",
     },
     en: {
+      "portal.neurogenesis.status": "Learning resource · ES",
+      "portal.neurogenesis.domain": "Neurodevelopment · embryology",
+      "portal.neurogenesis.title": "NeuroGénesis",
+      "portal.neurogenesis.description": "Interactive atlas of nervous-system embryonic development: connect stages, structures and mechanisms. Content in Spanish.",
+      "portal.neurogenesis.item1": "Timeline and step-by-step neurulation",
+      "portal.neurogenesis.item2": "Vesicles, cells and clinical correlations",
+      "portal.neurogenesis.item3": "Twelve questions, references and teacher mode",
+      "portal.neurogenesis.open": "Explore NeuroGénesis (ES)",
       "portal.brain.status": "Learning module",
       "portal.brain.domain": "Systems neuroscience · Spanish",
       "portal.brain.title": "Brain networks",
