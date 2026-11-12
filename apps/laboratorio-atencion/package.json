@@ -1,0 +1,1 @@
+{"name":"neurolab-laboratorio-atencion","private":true,"type":"module","scripts":{"build":"esbuild src/main.tsx --bundle --minify --jsx=automatic --define:process.env.NODE_ENV=\"\\\"production\\\"\" --outfile=app.bundle.js --legal-comments=eof"},"dependencies":{"react":"19.2.6","react-dom":"19.2.6"},"devDependencies":{"esbuild":"0.25.12"}}

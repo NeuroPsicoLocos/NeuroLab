@@ -5,6 +5,14 @@
   const SUPPORTED_LANGUAGES = new Set(["es", "en"]);
   const translations = {
     es: {
+      "portal.atencion.status": "Experiencia didáctica · ES",
+      "portal.atencion.domain": "Neuropsicología · atención",
+      "portal.atencion.title": "Laboratorio de atención",
+      "portal.atencion.description": "Explora selección, interferencia, vigilancia y atención dividida con cuatro retos breves y una reflexión clínica.",
+      "portal.atencion.item1": "Búsqueda visual y colores en conflicto",
+      "portal.atencion.item2": "Vigilancia y doble regla",
+      "portal.atencion.item3": "Resultados didácticos, sin diagnóstico",
+      "portal.atencion.open": "Probar la experiencia",
       "portal.neurogenesis.status": "Material docente · ES",
       "portal.neurogenesis.domain": "Neurodesarrollo · embriología",
       "portal.neurogenesis.title": "NeuroGénesis",
@@ -255,6 +263,14 @@
       "psp.export.studentNote": "La configuración y la verdad conocida se omiten de la exportación estudiante.",
     },
     en: {
+      "portal.atencion.status": "Educational experience · ES",
+      "portal.atencion.domain": "Neuropsychology · attention",
+      "portal.atencion.title": "Attention laboratory",
+      "portal.atencion.description": "Explore selection, interference, vigilance and divided attention through four short challenges and clinical reflection.",
+      "portal.atencion.item1": "Visual search and conflicting colors",
+      "portal.atencion.item2": "Vigilance and dual rules",
+      "portal.atencion.item3": "Educational results, not diagnosis",
+      "portal.atencion.open": "Try the experience",
       "portal.neurogenesis.status": "Learning resource · ES",
       "portal.neurogenesis.domain": "Neurodevelopment · embryology",
       "portal.neurogenesis.title": "NeuroGénesis",
