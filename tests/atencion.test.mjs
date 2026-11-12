@@ -16,3 +16,10 @@ test('attention runtime is static, local, and includes licenses and disclaimers'
  assert.doesNotMatch(src,/fetch\(|localStorage|sendBeacon|next\/|https:/);
  for(const p of ['app.bundle.js','styles.css','licenses/react-LICENSE.txt','licenses/react-dom-LICENSE.txt','licenses/scheduler-LICENSE.txt'])await access(new URL('apps/laboratorio-atencion/'+p,root));
 });
+
+test('attention uses NeuroLab branding in source and deployed bundle',async()=>{
+ for(const p of ['src/App.tsx','app.bundle.js']){
+  const text=await read('apps/laboratorio-atencion/'+p);
+  assert.doesNotMatch(text,/centro\s*k/i);assert.match(text,/NEUROLAB/);
+ }
+});

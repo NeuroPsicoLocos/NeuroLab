@@ -46,7 +46,7 @@ export default function Home(){
 
   return <main className={`stage-${String(stage).replace(".","-")}`} data-triangle-seen={String(sawTriangle)}>
     <a className="back-link" href="../../#aprender">← NeuroLab · Aprender</a>
-    <header><a href="#" className="logo"><i/>LABORATORIO DE ATENCIÓN</a><div className="steps">{[1,2,3,4].map((x,i)=><span key={x} className={stage>=i+1?"on":""}>{String(x).padStart(2,"0")}</span>)}</div><span className="timer">{stage>0&&stage<5?`${String(Math.floor(elapsed/60)).padStart(2,"0")}:${String(elapsed%60).padStart(2,"0")}`:"CENTRO K"}</span></header>
+    <header><a href="#" className="logo"><i/>LABORATORIO DE ATENCIÓN</a><div className="steps">{[1,2,3,4].map((x,i)=><span key={x} className={stage>=i+1?"on":""}>{String(x).padStart(2,"0")}</span>)}</div><span className="timer">{stage>0&&stage<5?`${String(Math.floor(elapsed/60)).padStart(2,"0")}:${String(elapsed%60).padStart(2,"0")}`:"NEUROLAB"}</span></header>
 
     {stage===0&&<section className="intro screen"><div className="noise"/><div className="introCopy"><span className="kicker">EXPERIMENTO 01 · MÓDULO III</span><h1>Esta página intentará<br/><em>hacerte fallar.</em></h1><p>No cierres otras aplicaciones. No silencies tu teléfono.<br/>Solo presta atención… si puedes.</p><button onClick={()=>setStage(1)}>ACEPTO EL RETO <b>↗</b></button><small>Duración aproximada: 3 minutos · No es una prueba diagnóstica · No se guardan ni envían respuestas</small></div><div className="focusOrb"><div/><span>FOCUS</span><b>?</b></div><div className="scrollHint">DESLIZA PARA ENTRAR <i/></div></section>}
 
